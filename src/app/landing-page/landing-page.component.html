@@ -1,0 +1,27 @@
+<div class="landing-container">
+    <h1>Welcome to the Assistant App</h1>
+    <p>You have successfully logged in. Choose an option below:</p>
+    
+    <!-- Task Management Button -->
+    <button routerLink="/tasks" class="button blue-button">
+      Task Management
+    </button>
+  
+    <!-- Budget Management Button -->
+    <button routerLink="/budgets" class="button blue-button">
+      Budget Management
+    </button>
+  
+    <!-- Logout Button -->
+    <button (click)="logout()" class="button red-button">
+      Logout
+    </button>
+
+    <button *ngIf="role === 'admin'" (click)="adminOnlyFunction()">
+        Admin Only Button
+      </button>
+      
+      <!-- Common Button for All Users -->
+      <button>Common Button</button>
+  </div>
+  
