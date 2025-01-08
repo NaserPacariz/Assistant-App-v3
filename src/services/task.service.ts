@@ -24,12 +24,12 @@ export class TaskService {
     });
   }
 
-  getTasks(userId: string): Observable<any> {
+  getTasks(endpoint: string): Observable<any> {
     const token = localStorage.getItem('token');
-    return this.http.get(`${this.BASE_URL}/tasks/${userId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-  }
+    const headers = { Authorization: `Bearer ${token}` };
+    return this.http.get(`${this.BASE_URL}/${endpoint}`, { headers });
+}
+
   
 
   createTask(task: any): Observable<any> {

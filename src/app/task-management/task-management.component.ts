@@ -74,47 +74,64 @@ throw new Error('Method not implemented.');
 
   ngOnInit() {
     const token = localStorage.getItem('token');
-    console.log('Token from localStorage:', token); // Debug the token
-    if (token) {
-      const decodedToken = JSON.parse(atob(token.split('.')[1]));
-      console.log('Decoded Token:', decodedToken); // Debug decoded token
-      this.role = decodedToken.role || null;
-      this.userId = decodedToken.uid || null; // Get the user ID dynamically
-      console.log('User Role:', this.role, 'User ID:', this.userId); // Debug role and userId
-    }
+    const role = localStorage.getItem('role');
+    const uid = localStorage.getItem('uid');
 
-    if (this.role === 'admin') {
-        // Admins fetch all tasks
-        this.fetchAllTasks();
-    } else if (this.userId) {
-        // Non-admin users fetch their own tasks
-        this.fetchTasks(this.userId);
+    if (token && role && uid) {
+        this.role = role;
+        this.userId = uid;
+
+        // Fetch tasks based on role
+        if (this.role === 'admin') {
+            this.fetchTasks(); // Admin fetches all tasks
+        } else if (this.role === 'user') {
+            this.fetchTasks(this.userId); // User fetches their tasks
+        }
     } else {
         console.error('Unable to determine role or user ID.');
     }
-  }
+}
 
-  fetchTasks(userId: string) {
-    if (!userId) {
-      console.error('User ID is missing!');
-      return;
-    }
 
-    console.log('Fetching tasks for userId:', this.userId); // Debug userId
 
-    this.taskService.getTasks(userId).subscribe(
-      (tasks) => {
-        console.log('Response from API (tasks):', tasks);
-        this.tasks = tasks ? Object.values(tasks) : []; // Convert object to array if necessary
-      },
-      (error) => {
-        console.error('Error fetching tasks:', error);
-        if (error.status === 403) {
-          alert('Access denied. You do not have permission to view these tasks.');
-        }
+fetchTasks(userId?: string): void {
+  const endpoint = this.role === 'admin' ? 'tasks' : `tasks/${userId}`;
+  this.taskService.getTasks(endpoint).subscribe(
+    (tasks) => {
+      console.log('Fetched tasks:', tasks);
+
+      if (this.role === 'admin' && tasks) {
+        // Explicitly type `tasks` to resolve the error
+        const typedTasks = tasks as { [userId: string]: { [taskId: string]: any } };
+        this.tasks = Object.entries(typedTasks).flatMap(([userId, userTasks]) => {
+          // Explicitly type `userTasks` to resolve the error
+          const typedUserTasks = userTasks as { [taskId: string]: any };
+          return Object.entries(typedUserTasks).map(([taskId, taskData]) => ({
+            id: taskId, // Task ID
+            userId: userId, // User ID
+            ...taskData, // Task details
+          }));
+        });
+      } else {
+        // For non-admin users, just convert the tasks object into an array
+        this.tasks = tasks ? Object.values(tasks) : [];
       }
-    );
-  }
+
+      console.log('Transformed tasks for display:', this.tasks);
+    },
+    (error) => {
+      console.error('Error fetching tasks:', error);
+      if (error.status === 403) {
+        alert('Access denied. You do not have permission to view these tasks.');
+      }
+    }
+  );
+}
+
+
+
+
+
 
   addTask() {
     const targetUserId = this.role === 'admin' ? this.selectedUserId : this.userId;

@@ -1,14 +1,17 @@
 <!-- Admin: Display All Tasks -->
-<div *ngIf="role === 'admin'">
-  <h3>Admin: Task Management</h3>
-  <div *ngFor="let task of tasks" style="margin-bottom: 10px;">
-    <p><strong>{{ task.title }}</strong></p>
-    <p>{{ task.description }}</p>
-    <p>Due: {{ task.dueDate }}</p>
-    <button (click)="deleteTask(task.id)">Delete Task</button>
+<div>
+  <h2>Admin: Task Management</h2>
+
+  <!-- Task List -->
+  <div *ngFor="let task of tasks" style="margin-bottom: 20px; border: 1px solid #ccc; padding: 10px; border-radius: 5px;">
+    <p><strong>Title:</strong> {{ task.title || 'No Title' }}</p>
+    <p><strong>Description:</strong> {{ task.description || 'No Description' }}</p>
+    <p><strong>Due Date:</strong> {{ task.dueDate || 'No Due Date' }}</p>
+    <button (click)="deleteTask(task.id)" style="margin-right: 10px;">Delete Task</button>
     <button (click)="editTask(task)">Edit Task</button>
   </div>
 </div>
+
 
 <!-- User: Display Their Tasks -->
 <div *ngIf="role !== 'admin'">

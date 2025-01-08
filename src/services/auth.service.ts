@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, from } from 'rxjs';
 import { tap, switchMap } from 'rxjs/operators';
-import { Auth, signInWithEmailAndPassword } from '@angular/fire/auth';
+import { Auth, getAuth, signInWithEmailAndPassword } from '@angular/fire/auth';
 
 // Define an interface for the expected login response
 interface LoginResponse {
@@ -21,27 +21,26 @@ export class AuthService {
 
   // Login method
   login(email: string, password: string): Observable<any> {
-    return from(signInWithEmailAndPassword(this.firebaseAuth, email, password)).pipe(
-      switchMap((userCredential) => {
-        // Get Firebase token
-        return from(userCredential.user.getIdToken()).pipe(
-          switchMap((firebaseToken) => {
-            // Call the backend to handle roles and custom claims
-            return this.http.post(`${this.BASE_URL}/login`, { email, firebaseToken }).pipe(
-              tap((res: any) => {
-                if (res.token) {
-                  localStorage.setItem('token', res.token);
+    const auth = getAuth();
+    return new Observable((observer) => {
+        signInWithEmailAndPassword(auth, email, password)
+            .then(async (userCredential) => {
+                const idToken = await userCredential.user.getIdToken(); // Get the ID token
+                const payload = { firebaseToken: idToken }; // Send ID token to backend
 
-                  // Decode the token
-                  const decodedToken = JSON.parse(atob(res.token.split('.')[1]));
-                  localStorage.setItem('role', decodedToken.role || 'user');
-                  localStorage.setItem('userId', decodedToken.uid); // Save userId in localStorage
-                }
-              })
-            );
-          })
-        );
-      })
-    );
-  }
+                this.http.post(`${this.BASE_URL}/login`, payload).subscribe(
+                    (res: any) => {
+                        localStorage.setItem('token', res.token); // Save custom token in local storage
+                        localStorage.setItem('role', res.role); // Save role for frontend use
+                        localStorage.setItem('uid', userCredential.user.uid); // Save UID
+                        observer.next(res);
+                        observer.complete();
+                    },
+                    (err) => observer.error(err)
+                );
+            })
+            .catch((error) => observer.error(error));
+    });
+}
+
 }
