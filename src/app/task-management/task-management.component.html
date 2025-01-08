@@ -1,27 +1,21 @@
-<!-- For admin: Only view tasks -->
+<!-- Admin: Display All Tasks -->
 <div *ngIf="role === 'admin'">
-  <h3>Admin: Task List</h3>
+  <h3>Admin: Task Management</h3>
   <div *ngFor="let task of tasks" style="margin-bottom: 10px;">
     <p><strong>{{ task.title }}</strong></p>
     <p>{{ task.description }}</p>
     <p>Due: {{ task.dueDate }}</p>
+    <button (click)="deleteTask(task.id)">Delete Task</button>
+    <button (click)="editTask(task)">Edit Task</button>
   </div>
 </div>
 
-<!-- For user: Full task management -->
-<div *ngIf="role === 'user'">
+<!-- User: Display Their Tasks -->
+<div *ngIf="role !== 'admin'">
   <h3>User: Task Management</h3>
-  <form (ngSubmit)="addTask()" style="margin-bottom: 20px;">
-    <input type="text" [(ngModel)]="taskTitle" name="taskTitle" placeholder="Task Title" required />
-    <textarea [(ngModel)]="taskDescription" name="taskDescription" placeholder="Task Description" required></textarea>
-    <input type="date" [(ngModel)]="dueDate" name="dueDate" required />
-    <button type="submit">Add Task</button>
-  </form>
   <div *ngFor="let task of tasks" style="margin-bottom: 10px;">
     <p><strong>{{ task.title }}</strong></p>
     <p>{{ task.description }}</p>
     <p>Due: {{ task.dueDate }}</p>
-    <button (click)="editTask(task)">Edit</button>
-    <button (click)="deleteTask(task.id)">Delete</button>
   </div>
 </div>

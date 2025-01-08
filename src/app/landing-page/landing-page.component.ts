@@ -16,9 +16,9 @@ export class LandingPageComponent {
   constructor(private router: Router) {}
 
   ngOnInit() {
-    this.role = localStorage.getItem('role'); // Get role from local storage
-    console.log('User Role:', this.role); // Optional: Check the role in console
-  }
+    this.role = localStorage.getItem('role'); // Fetch role from localStorage
+    console.log('User Role:', this.role); // Debugging
+  }  
 
   adminOnlyFunction() {
     console.log('Admin function accessed!');

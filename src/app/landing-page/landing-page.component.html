@@ -25,3 +25,10 @@
       <button>Common Button</button>
   </div>
   
+  <!-- Show admin-only buttons -->
+<button *ngIf="role === 'admin'" routerLink="/tasks">Task Management</button>
+<button *ngIf="role === 'admin'" routerLink="/budgets">Budget Management</button>
+
+<!-- Users can only view tasks and budgets -->
+<button *ngIf="role === 'user'" routerLink="/tasks">View Tasks</button>
+<button *ngIf="role === 'user'" routerLink="/budgets">View Budgets</button>
