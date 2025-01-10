@@ -58,9 +58,10 @@ import { RouterModule } from '@angular/router';
   `,
 })
 export class TaskManagementComponent implements OnInit {
-editTask(_t7: any) {
-throw new Error('Method not implemented.');
-}
+  editTask(userId: string, taskId: string): void {
+    // Implement your logic for editing a task here
+    console.log(`Edit task ${taskId} for user ${userId}`);
+  }
   taskTitle = '';
   taskDescription = '';
   dueDate = '';
@@ -69,6 +70,9 @@ throw new Error('Method not implemented.');
   userId: string = ''; // Use an empty string as a default
   adminUserId: string = ''; // For admin to fetch specific user's tasks
   selectedUserId: string = ''; // For admin to specify user ID for a new task
+  tasksByUser: any[] = []; // This will hold the transformed tasks grouped by userId
+  showTasks: boolean = false;
+
 
   constructor(private taskService: TaskService) {}
 
@@ -92,32 +96,27 @@ throw new Error('Method not implemented.');
     }
 }
 
-
-
 fetchTasks(userId?: string): void {
-  const endpoint = this.role === 'admin' ? 'tasks' : `tasks/${userId}`;
+  const endpoint = 'tasks'; // Admin fetches all tasks
   this.taskService.getTasks(endpoint).subscribe(
     (tasks) => {
       console.log('Fetched tasks:', tasks);
 
       if (this.role === 'admin' && tasks) {
-        // Explicitly type `tasks` to resolve the error
         const typedTasks = tasks as { [userId: string]: { [taskId: string]: any } };
-        this.tasks = Object.entries(typedTasks).flatMap(([userId, userTasks]) => {
-          // Explicitly type `userTasks` to resolve the error
-          const typedUserTasks = userTasks as { [taskId: string]: any };
-          return Object.entries(typedUserTasks).map(([taskId, taskData]) => ({
-            id: taskId, // Task ID
-            userId: userId, // User ID
-            ...taskData, // Task details
-          }));
-        });
+        this.tasksByUser = Object.entries(typedTasks).map(([userId, userTasks]) => ({
+          userId: userId,
+          tasks: Object.entries(userTasks as { [taskId: string]: any }).map(([taskId, taskData]) => ({
+            id: taskId,
+            ...taskData,
+          })),
+        }));
+        this.showTasks = true; // Show tasks when fetched
       } else {
-        // For non-admin users, just convert the tasks object into an array
-        this.tasks = tasks ? Object.values(tasks) : [];
+        console.error('Admin role required to fetch all tasks');
       }
 
-      console.log('Transformed tasks for display:', this.tasks);
+      console.log('Tasks grouped by user:', this.tasksByUser);
     },
     (error) => {
       console.error('Error fetching tasks:', error);
@@ -127,10 +126,6 @@ fetchTasks(userId?: string): void {
     }
   );
 }
-
-
-
-
 
 
   addTask() {
@@ -159,16 +154,25 @@ fetchTasks(userId?: string): void {
     );
   }
 
-  deleteTask(taskId: string) {
-    if (!this.userId) {
-      console.error('User ID is missing!');
+  deleteTask(taskId: string): void {
+    // Determine target user ID based on role
+    const targetUserId = this.role === 'admin' ? this.selectedUserId || this.adminUserId : this.userId;
+  
+    if (!targetUserId) {
+      console.error('Target User ID is missing!');
       return;
     }
-
-    this.taskService.deleteTask(this.userId, taskId).subscribe(
+  
+    // Call the service to delete the task
+    this.taskService.deleteTask(targetUserId, taskId).subscribe(
       () => {
-        console.log('Task deleted successfully');
-        this.fetchTasks(this.userId); // Refresh task list
+        console.log(`Task ${taskId} deleted successfully.`);
+        // Refresh tasks for admin or user
+        if (this.role === 'admin') {
+          this.fetchTasks(); // Admin fetches all tasks
+        } else if (this.role === 'user') {
+          this.fetchTasks(this.userId); // User fetches their tasks
+        }
       },
       (error: any) => {
         console.error('Error deleting task:', error);
@@ -178,6 +182,7 @@ fetchTasks(userId?: string): void {
       }
     );
   }
+  
   fetchAllTasks() {
     this.taskService.getAllTasks().subscribe({
         next: (tasks) => {
@@ -192,5 +197,4 @@ fetchTasks(userId?: string): void {
         },
     });
 }
-
 }

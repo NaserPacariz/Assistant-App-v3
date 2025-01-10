@@ -1,24 +1,134 @@
-<!-- Admin: Display All Tasks -->
-<div>
-  <h2>Admin: Task Management</h2>
+<div class="task-management-container">
+  <h1 class="page-title">Admin: Task Management</h1>
 
-  <!-- Task List -->
-  <div *ngFor="let task of tasks" style="margin-bottom: 20px; border: 1px solid #ccc; padding: 10px; border-radius: 5px;">
-    <p><strong>Title:</strong> {{ task.title || 'No Title' }}</p>
-    <p><strong>Description:</strong> {{ task.description || 'No Description' }}</p>
-    <p><strong>Due Date:</strong> {{ task.dueDate || 'No Due Date' }}</p>
-    <button (click)="deleteTask(task.id)" style="margin-right: 10px;">Delete Task</button>
-    <button (click)="editTask(task)">Edit Task</button>
-  </div>
-</div>
+  <!-- Fetch User Tasks Section -->
+  <section class="admin-actions card">
+    <h3>Fetch User Tasks</h3>
+    <div class="input-group">
+      <input
+        type="text"
+        [(ngModel)]="adminUserId"
+        name="adminUserId"
+        class="input-field"
+        placeholder="Enter User ID"
+      />
+      <button class="btn btn-primary" (click)="fetchTasks(adminUserId)">Fetch Tasks</button>
+    </div>
+  </section>
 
+  <!-- Task List Section -->
+  <section *ngIf="showTasks && tasksByUser.length > 0" class="task-list card">
+    <h3>All Tasks</h3>
+    <div *ngFor="let user of tasksByUser" class="user-task-group">
+      <h4 class="user-header">
+        <i class="fas fa-user"></i> User: {{ user.userId }}
+      </h4>
+      <div *ngFor="let task of user.tasks" class="task-item">
+        <div class="task-details">
+          <p><strong>Task:</strong> {{ task.title || "Untitled" }}</p>
+          <p><strong>Description:</strong> {{ task.description || "No description" }}</p>
+          <p><strong>Due Date:</strong> {{ task.dueDate || "No due date" }}</p>
+        </div>
+        <div class="task-actions">
+          <button class="btn btn-danger" (click)="deleteTask(task.id)">
+            <i class="fas fa-trash-alt"></i> Delete
+          </button>
+          <button class="btn btn-warning" (click)="editTask(user.userId, task.id)">
+            <i class="fas fa-edit"></i> Edit
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<!-- User: Display Their Tasks -->
-<div *ngIf="role !== 'admin'">
-  <h3>User: Task Management</h3>
-  <div *ngFor="let task of tasks" style="margin-bottom: 10px;">
-    <p><strong>{{ task.title }}</strong></p>
-    <p>{{ task.description }}</p>
-    <p>Due: {{ task.dueDate }}</p>
-  </div>
+  <p *ngIf="!showTasks" class="no-tasks-message">
+    Click "Fetch Tasks" to display the tasks.
+  </p>
+
+  <!-- Add Task Form -->
+  <section class="add-task-form card">
+    <h3>Add a New Task</h3>
+    <form (ngSubmit)="addTask()">
+      <div class="form-group">
+        <label for="taskTitle">Task Title</label>
+        <input
+          id="taskTitle"
+          type="text"
+          [(ngModel)]="taskTitle"
+          name="taskTitle"
+          class="input-field"
+          placeholder="Enter Task Title"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="taskDescription">Task Description</label>
+        <textarea
+          id="taskDescription"
+          [(ngModel)]="taskDescription"
+          name="taskDescription"
+          class="input-field"
+          placeholder="Enter Task Description"
+          required
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="dueDate">Due Date</label>
+        <input
+          id="dueDate"
+          type="date"
+          [(ngModel)]="dueDate"
+          name="dueDate"
+          class="input-field"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="selectedUserId">Assign to User ID</label>
+        <input
+          id="selectedUserId"
+          type="text"
+          [(ngModel)]="selectedUserId"
+          name="selectedUserId"
+          class="input-field"
+          placeholder="Enter User ID"
+          required
+        />
+      </div>
+
+      <button type="submit" class="btn btn-success">Add Task</button>
+    </form>
+  </section>
+
+  <!-- Task List Section -->
+  <section *ngIf="tasksByUser.length > 0" class="task-list card">
+    <h3>All Tasks</h3>
+    <div *ngFor="let user of tasksByUser" class="user-task-group">
+      <h4 class="user-header">
+        <i class="fas fa-user"></i> User: {{ user.userId }}
+      </h4>
+      <div *ngFor="let task of user.tasks" class="task-item">
+        <div class="task-details">
+          <p><strong>Task:</strong> {{ task.title || "Untitled" }}</p>
+          <p><strong>Description:</strong> {{ task.description || "No description" }}</p>
+          <p><strong>Due Date:</strong> {{ task.dueDate || "No due date" }}</p>
+        </div>
+        <div class="task-actions">
+          <button class="btn btn-danger" (click)="deleteTask(task.id)">
+            <i class="fas fa-trash-alt"></i> Delete
+          </button>
+          <button class="btn btn-warning" (click)="editTask(user.userId, task.id)">
+            <i class="fas fa-edit"></i> Edit
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <p *ngIf="tasksByUser.length === 0" class="no-tasks-message">
+    No tasks available. Please fetch or add tasks.
+  </p>
 </div>
