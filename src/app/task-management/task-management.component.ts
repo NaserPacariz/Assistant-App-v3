@@ -81,23 +81,24 @@ export class TaskManagementComponent implements OnInit {
   constructor(private taskService: TaskService) {}
 
   ngOnInit() {
-    const token = localStorage.getItem('token');
-    const role = localStorage.getItem('role');
-    const uid = localStorage.getItem('uid');
-  
-    if (token && role && uid) {
-      this.role = role;
-      this.userId = uid;
-  
-      // No automatic fetch here
-      console.log(`Role: ${this.role}, UserID: ${this.userId}`);
-      if (this.role === 'user') {
-        this.fetchTasks(this.userId); // Fetch tasks only for the user
-      }
-    } else {
-      console.error('Unable to determine role or user ID.');
+  const token = localStorage.getItem('token');
+  const role = localStorage.getItem('role');
+  const uid = localStorage.getItem('uid');
+
+  if (token && role && uid) {
+    this.role = role;
+    this.userId = uid;
+
+    // Only fetch tasks for users; admins fetch manually
+    console.log(`Role: ${this.role}, UserID: ${this.userId}`);
+    if (this.role === 'user') {
+      this.fetchTasks(this.userId); // Fetch tasks for users
     }
+  } else {
+    console.error('Unable to determine role or user ID.');
   }
+}
+
   
 
   fetchTasks(userId?: string): void {
@@ -219,13 +220,14 @@ export class TaskManagementComponent implements OnInit {
       console.error('No task or user selected for editing');
       return;
     }
-
+  
     const updatedTask = {
       title: this.taskTitle,
       description: this.taskDescription,
       dueDate: this.dueDate,
+      status: 'pending', // Include default or existing value for required fields
     };
-
+  
     this.taskService.updateTask(this.editingUserId, this.editingTaskId, updatedTask).subscribe(
       (response: any) => {
         console.log('Task updated successfully:', response);
@@ -237,6 +239,8 @@ export class TaskManagementComponent implements OnInit {
       }
     );
   }
+  
+  
 
   // Method to cancel editing
   cancelEdit(): void {
