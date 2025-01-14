@@ -127,6 +127,9 @@
     <h2>My Tasks</h2>
     <section *ngIf="tasks.length > 0" class="task-list card">
       <h3>Your Tasks</h3>
+      <button (click)="fetchTasks()" class="btn btn-primary">
+        Fetch Tasks
+      </button>      
       <div *ngFor="let task of tasks" class="task-item">
         <div class="task-details">
           <p><strong>Task:</strong> {{ task.title || "Untitled" }}</p>

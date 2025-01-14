@@ -101,39 +101,63 @@ export class TaskManagementComponent implements OnInit {
 
   
 
-  fetchTasks(userId?: string): void {
-    const endpoint = this.role === 'admin' ? 'tasks' : `tasks/${this.userId}`; // Admin fetches all tasks, user fetches their tasks
-  
-    this.taskService.getTasks(endpoint).subscribe(
-      (tasks) => {
-        console.log('Fetched tasks:', tasks);
-  
-        if (this.role === 'admin' && tasks) {
-          const typedTasks = tasks as { [userId: string]: { [taskId: string]: any } };
-          this.tasksByUser = Object.entries(typedTasks).map(([userId, userTasks]) => ({
-            userId: userId,
-            tasks: Object.entries(userTasks as { [taskId: string]: any }).map(([taskId, taskData]) => ({
-              id: taskId,
-              ...taskData,
-            })),
+fetchTasks(userId?: string): void {
+  const endpoint = this.role === 'admin' ? 'tasks' : `tasks/${userId || this.userId}`;
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    console.error('No token found in local storage!');
+    alert('You must log in again to fetch tasks.');
+    return;
+  }
+
+  console.log(`Fetching tasks for endpoint: ${endpoint}, role: ${this.role}, token: ${token}`);
+
+  this.taskService.getTasks(endpoint).subscribe(
+    (tasks) => {
+      console.log('Fetched tasks:', tasks);
+
+      if (this.role === 'admin' && tasks) {
+        const typedTasks = tasks as { [userId: string]: { [taskId: string]: any } };
+        this.tasksByUser = Object.entries(typedTasks).map(([userId, userTasks]) => ({
+          userId: userId,
+          tasks: Object.entries(userTasks as { [taskId: string]: any }).map(([taskId, taskData]) => ({
+            id: taskId,
+            ...taskData,
+          })),
+        }));
+        this.showTasks = true; // Show tasks for admin
+      } else if (this.role === 'user') {
+        if (tasks && Object.keys(tasks).length > 0) {
+          // Transform tasks into an array for display
+          this.tasks = Object.entries(tasks).map(([taskId, taskData]: [string, any]) => ({
+            id: taskId,
+            title: taskData.title || 'Untitled',
+            description: taskData.description || 'No description',
+            dueDate: taskData.dueDate || 'No due date',
+            status: taskData.status || 'pending',
           }));
-          this.showTasks = true; // Show tasks for admin
-        } else if (this.role === 'user' && Array.isArray(tasks)) {
-          this.tasks = tasks; // Directly assign tasks for users
           this.showTasks = true; // Show tasks for user
         } else {
-          console.error('Unexpected tasks format.');
+          console.warn('No tasks found for the user. Ensure tasks exist or verify the API response.');
+          this.tasks = []; // Ensure the tasks list is empty
+          alert('No tasks available to display.');
         }
-      },
-      (error) => {
-        console.error('Error fetching tasks:', error);
-        if (error.status === 403) {
-          alert('Access denied. You do not have permission to view these tasks.');
-        }
+      } else {
+        console.error('Unexpected tasks format for the current role.');
       }
-    );
-  }
-  
+    },
+    (error) => {
+      console.error('Error fetching tasks:', error);
+      if (error.status === 403) {
+        alert('Access denied. You do not have permission to view these tasks.');
+      } else {
+        alert('An error occurred while fetching tasks. Please try again.');
+      }
+    }
+  );
+}
+
 
 
   addTask() {

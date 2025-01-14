@@ -17,11 +17,16 @@ export class TaskService {
   constructor(private http: HttpClient) {}
 
   private getHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found in local storage!');
+      throw new Error('Unauthorized: Token is required');
+    }
     return new HttpHeaders({
-      Authorization: `Bearer ${token}`, // Add the token to the Authorization header
+      Authorization: `Bearer ${token}`,
     });
   }
+  
 
   deleteTask(userId: string, taskId: string) {
     const token = localStorage.getItem('token'); // Get token from local storage
@@ -37,18 +42,21 @@ export class TaskService {
   getTasks(endpoint: string): Observable<any> {
     const token = localStorage.getItem('token');
     if (!token) {
-      console.error('No token found!');
+      console.error('No token found in local storage!');
       throw new Error('Unauthorized: Token is required');
     }
   
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`, // Pass the token in the header
     });
   
     const url = `${this.BASE_URL}/${endpoint}`;
-    console.log(`Fetching tasks from: ${url}`);
-    return this.http.get(url, { headers }); // Use this.http.get instead of this.HttpClient.get
+    console.log(`Making GET request to URL: ${url}`);
+    return this.http.get(url, { headers }); // Ensure headers are passed with the request
   }
+  
+  
+  
   
   
   
