@@ -58,78 +58,136 @@ import { RouterModule } from '@angular/router';
   `,
 })
 export class TaskManagementComponent implements OnInit {
-  editTask(userId: string, taskId: string): void {
-    // Implement your logic for editing a task here
-    console.log(`Edit task ${taskId} for user ${userId}`);
-  }
+  isAddTaskModalVisible = false; // Track modal visibility
+  isEditTaskModalVisible = false; // For edit task modal
   taskTitle = '';
   taskDescription = '';
   dueDate = '';
-  tasks: any[] = []; // Always an array
-  role: string | null = null;
-  userId: string = ''; // Use an empty string as a default
-  adminUserId: string = ''; // For admin to fetch specific user's tasks
-  selectedUserId: string = ''; // For admin to specify user ID for a new task
-  tasksByUser: any[] = []; // This will hold the transformed tasks grouped by userId
-  showTasks: boolean = false;
-  loading: boolean = false;
+  selectedUserId = '';
   editingTaskId: string | null = null; // To track the task being edited
   editingUserId: string | null = null; // To track the user of the task being edited
-
-
+  tasks: any[] = [];
+  tasksByUser: any[] = [];
+  role: string | null = null;
+  userId: string = '';
+  adminUserId: string = '';
+  showTasks: boolean = false;
+  loading: boolean = false;
+  users: any[] = []; // To store the list of users
 
   constructor(private taskService: TaskService) {}
 
   ngOnInit() {
-  const token = localStorage.getItem('token');
-  const role = localStorage.getItem('role');
-  const uid = localStorage.getItem('uid');
+    const token = localStorage.getItem('token');
+    const role = localStorage.getItem('role');
+    const uid = localStorage.getItem('uid');
 
-  if (token && role && uid) {
-    this.role = role;
-    this.userId = uid;
+    if (token && role && uid) {
+      this.role = role;
+      this.userId = uid;
 
-    // Only fetch tasks for users; admins fetch manually
-    console.log(`Role: ${this.role}, UserID: ${this.userId}`);
-    if (this.role === 'user') {
-      this.fetchTasks(this.userId); // Fetch tasks for users
+      // Only fetch tasks for users; admins fetch manually
+      console.log(`Role: ${this.role}, UserID: ${this.userId}`);
+      if (this.role === 'user') {
+        this.fetchTasks(this.userId); // Fetch tasks for users
+      }
+    } else {
+      console.error('Unable to determine role or user ID.');
     }
-  } else {
-    console.error('Unable to determine role or user ID.');
   }
-}
+
+  // Open the Add Task modal
+  openAddTaskModal(): void {
+    this.isAddTaskModalVisible = true;
+    this.clearTaskForm(); // Clear the form to ensure a clean state
+  }
+
+  // Close the Add Task modal
+  closeAddTaskModal(): void {
+    this.isAddTaskModalVisible = false;
+  }
+
+  // Open the Edit Task modal
+  openEditTaskModal(task: any, userId: string): void {
+    this.isEditTaskModalVisible = true;
+    this.editingTaskId = task.id;
+    this.editingUserId = userId;
+  
+    // Populate the form with the task details
+    this.taskTitle = task.title;
+    this.taskDescription = task.description;
+    this.dueDate = task.dueDate;
+  }
+
+  // Close the Edit Task modal
+  closeEditTaskModal(): void {
+    this.isEditTaskModalVisible = false;
+    this.clearTaskForm(); // Reset the form fields
+  }
+
+  // Clear form fields
+  private clearTaskForm(): void {
+    this.taskTitle = '';
+    this.taskDescription = '';
+    this.dueDate = '';
+    this.selectedUserId = '';
+    this.editingTaskId = null;
+    this.editingUserId = null;
+  }
 
   
 
 fetchTasks(userId?: string): void {
-  const endpoint = this.role === 'admin' ? 'tasks' : `tasks/${userId || this.userId}`;
   const token = localStorage.getItem('token');
-
+  
   if (!token) {
     console.error('No token found in local storage!');
     alert('You must log in again to fetch tasks.');
     return;
   }
 
+  // If admin and userId is provided, fetch tasks for the specific user
+  const endpoint =
+    this.role === 'admin' && userId ? `tasks/${userId}` : 
+    this.role === 'admin' ? 'tasks' : 
+    `tasks/${this.userId}`;
+  
   console.log(`Fetching tasks for endpoint: ${endpoint}, role: ${this.role}, token: ${token}`);
+  this.loading = true;
 
   this.taskService.getTasks(endpoint).subscribe(
     (tasks) => {
       console.log('Fetched tasks:', tasks);
+      this.loading = false;
 
       if (this.role === 'admin' && tasks) {
-        const typedTasks = tasks as { [userId: string]: { [taskId: string]: any } };
-        this.tasksByUser = Object.entries(typedTasks).map(([userId, userTasks]) => ({
-          userId: userId,
-          tasks: Object.entries(userTasks as { [taskId: string]: any }).map(([taskId, taskData]) => ({
-            id: taskId,
-            ...taskData,
-          })),
-        }));
+        // Handle specific user's tasks if userId is provided
+        if (userId) {
+          const typedTasks = tasks as { [taskId: string]: any };
+          this.tasksByUser = [
+            {
+              userId: userId,
+              tasks: Object.entries(typedTasks).map(([taskId, taskData]) => ({
+                id: taskId,
+                ...taskData,
+              })),
+            },
+          ];
+        } else {
+          // Otherwise, fetch all tasks grouped by user
+          const typedTasks = tasks as { [userId: string]: { [taskId: string]: any } };
+          this.tasksByUser = Object.entries(typedTasks).map(([userId, userTasks]) => ({
+            userId: userId,
+            tasks: Object.entries(userTasks).map(([taskId, taskData]) => ({
+              id: taskId,
+              ...taskData,
+            })),
+          }));
+        }
         this.showTasks = true; // Show tasks for admin
       } else if (this.role === 'user') {
+        // Transform tasks for users
         if (tasks && Object.keys(tasks).length > 0) {
-          // Transform tasks into an array for display
           this.tasks = Object.entries(tasks).map(([taskId, taskData]: [string, any]) => ({
             id: taskId,
             title: taskData.title || 'Untitled',
@@ -139,8 +197,8 @@ fetchTasks(userId?: string): void {
           }));
           this.showTasks = true; // Show tasks for user
         } else {
-          console.warn('No tasks found for the user. Ensure tasks exist or verify the API response.');
-          this.tasks = []; // Ensure the tasks list is empty
+          console.warn('No tasks found for the user.');
+          this.tasks = []; // Clear tasks list
           alert('No tasks available to display.');
         }
       } else {
@@ -149,6 +207,7 @@ fetchTasks(userId?: string): void {
     },
     (error) => {
       console.error('Error fetching tasks:', error);
+      this.loading = false;
       if (error.status === 403) {
         alert('Access denied. You do not have permission to view these tasks.');
       } else {
@@ -157,6 +216,7 @@ fetchTasks(userId?: string): void {
     }
   );
 }
+
 
 
 
@@ -249,20 +309,21 @@ fetchTasks(userId?: string): void {
       title: this.taskTitle,
       description: this.taskDescription,
       dueDate: this.dueDate,
-      status: 'pending', // Include default or existing value for required fields
+      status: 'pending', // Ensure this has a valid default value
     };
   
-    this.taskService.updateTask(this.editingUserId, this.editingTaskId, updatedTask).subscribe(
+    this.taskService.updateTask(this.editingUserId!, this.editingTaskId, updatedTask).subscribe(
       (response: any) => {
         console.log('Task updated successfully:', response);
-        this.fetchTasks(); // Refresh tasks after update
-        this.cancelEdit(); // Exit edit mode
+        this.fetchTasks(this.editingUserId!); // Fetch tasks for the user
+        this.closeEditTaskModal(); // Close the modal
       },
       (error: any) => {
         console.error('Error updating task:', error);
       }
     );
   }
+  
   
   
 

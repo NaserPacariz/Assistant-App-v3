@@ -55,12 +55,17 @@ export class TaskService {
     return this.http.get(url, { headers }); // Ensure headers are passed with the request
   }
   
+  getUsers(): Observable<any[]> {
+    const token = localStorage.getItem('token');
   
+    if (!token) {
+      throw new Error('User is not authenticated');
+    }
   
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    return this.http.get<any[]>('http://localhost:4000/users', { headers });
+  }
   
-  
-  
-
   createTask(task: any): Observable<any> {
     const headers = this.getHeaders(); // Add headers
     return this.http.post(`${this.BASE_URL}/tasks`, task, { headers });
