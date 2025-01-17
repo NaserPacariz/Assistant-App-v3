@@ -6,10 +6,12 @@ import { authGuard } from './route.guard';
 import { LandingPageComponent } from './app/landing-page/landing-page.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' }, // Default route
-  { path: 'login', component: LoginComponent }, // Login page
-  { path: 'tasks', component: TaskManagementComponent }, // Task management page
-  { path: 'budgets', component: BudgetManagementComponent }, // Budget management page
-  { path: 'home', component: LandingPageComponent }, // Landing page after login
-  { path: '**', redirectTo: '/login' }, // Wildcard route (keep it at the end)
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
+  { path: 'tasks', component: TaskManagementComponent },
+  { path: 'budgets', component: BudgetManagementComponent },
+  { path: 'home', component: LandingPageComponent },
+  { path: '**', redirectTo: 'login' },
 ];
+
+

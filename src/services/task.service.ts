@@ -18,6 +18,7 @@ export class TaskService {
 
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
+    console.log('Authorization Token:', token); // Log the token
     if (!token) {
       console.error('No token found in local storage!');
       throw new Error('Unauthorized: Token is required');
@@ -26,6 +27,7 @@ export class TaskService {
       Authorization: `Bearer ${token}`,
     });
   }
+  
   
 
   deleteTask(userId: string, taskId: string) {
@@ -83,6 +85,12 @@ export class TaskService {
       updatedTask,
       { headers }
     );
+  }
+
+  getTasksByUserId(userId: string): Observable<any> {
+    const url = `${this.BASE_URL}/tasks/${userId}`;
+    console.log('GET request URL:', url); // Log the URL
+    return this.http.get(url, { headers: this.getHeaders() });
   }
   
 }

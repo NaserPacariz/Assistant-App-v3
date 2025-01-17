@@ -284,4 +284,28 @@ filteredUsers: any[] = [];
     this.assignUserInput = userId; // Set the input value to the selected user ID
     this.filteredUsers = []; // Clear the dropdown
   }
+
+  fetchTasksForUser(userId: string) {
+    console.log('Fetching tasks for user:', userId);
+    const targetId = this.users.find(user => user.uid === userId)?.email.split('@')[0]; // Use email prefix
+    console.log('Using targetId:', targetId); // Debug log
+  
+    if (!targetId) {
+      alert('No tasks found for the selected user.');
+      return;
+    }
+  
+    this.taskService.getTasksByUserId(targetId || userId).subscribe({
+      next: (tasks) => {
+        console.log('Tasks fetched for user:', targetId, tasks);
+        this.tasks = tasks;
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching tasks for user:', targetId, error);
+        this.loading = false;
+      }
+    });
+  }
+  
 }
