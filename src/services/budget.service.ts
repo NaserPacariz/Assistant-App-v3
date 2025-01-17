@@ -23,12 +23,13 @@ export class BudgetService {
 
   // Add budget
   addBudget(userId: string, amount: number, month: string): Observable<any> {
-    return this.getAuthHeaders().pipe(
+    return from(this.getAuthHeaders()).pipe(
       switchMap((headers) =>
         this.http.post(this.BASE_URL, { userId, amount, month }, { headers })
       )
     );
   }
+  
 
   fetchBudget(userId: string, month: string): Observable<any> {
     return this.getAuthHeaders().pipe(

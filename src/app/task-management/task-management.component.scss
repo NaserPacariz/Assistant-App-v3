@@ -148,30 +148,51 @@
   font-style: italic;
 }
 
-/* Plus Button */
 .add-task-button {
-  text-align: center;
-  margin: 20px 0;
+  display: inline-flex; /* Align items horizontally without extra space */
+  align-items: center;
+  justify-content: flex-start; /* Keep it aligned to the left */
+  padding: 5px 10px; /* Adjust padding to remove extra width */
+  border: 1px solid #007bff; /* Border wrapping both */
+  border-radius: 10px; /* Rounded corners */
+  background-color: #f9f9f9; /* Light background for contrast */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  max-width: fit-content; /* Ensure it fits the content */
+
+  &:hover {
+    border-color: #0056b3;
+    background-color: #e6f3ff; /* Subtle hover effect */
+  }
 
   .btn-add-task {
     background-color: transparent;
-    color: rgb(75, 75, 165);
-    font-size: 24px;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease;
+    color: #007bff; /* Blue color for the plus */
+    font-size: 24px; /* Adjust size of the plus */
+    border: none; /* Remove border from the plus */
+    cursor: pointer;
+    padding: 0;
+    margin-right: 5px; /* Spacing between the plus and text */
+    transition: transform 0.2s ease, color 0.2s ease;
 
     &:hover {
-      transform: scale(1.1);
-      background-color: #24417e;
+      color: #0056b3; /* Slightly darker blue on hover */
+    }
+  }
+
+  .create-task-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: #007bff;
+    transition: color 0.2s ease;
+
+    .btn-add-task:hover + & {
+      color: #0056b3; /* Change text color on button hover */
     }
   }
 }
+
 
 /* Modal Styles */
 .modal {
@@ -212,6 +233,7 @@
     font-size: 24px;
     text-align: center;
     margin-bottom: 20px;
+    color: #333;
   }
 
   .user-card-container {
@@ -222,18 +244,63 @@
   }
 
   .user-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 10px 15px;
-    background-color: #ffffff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    padding: 10px; /* Added more padding for better spacing */
     width: 250px; /* Set a fixed width for uniformity */
     text-align: center;
+    border-radius: 25px; /* More rounded corners */
+    background: linear-gradient(135deg, #e3f2fd, #bbdefb); /* Gradient background */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #bbdefb;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 
     p {
       margin: 5px 0;
-      font-size: 14px;
+      font-size: 16px;
       color: #333;
+      font-weight: 500;
+    }
+
+    p:last-child {
+      font-weight: bold;
+      color: #2890a7; /* Green for budget */
+    }
+  }
+
+  .user-card:hover {
+    transform: translateY(-5px); /* Slight upward motion */
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15); /* Stronger shadow on hover */
+    background: linear-gradient(135deg, #90caf9, #64b5f6); /* Darker gradient on hover */
+  }
+
+  .user-card.selected {
+    border: 3px solid #1976d2; /* Stronger blue border for selected user */
+    background: linear-gradient(135deg, #bbdefb, #90caf9); /* Slightly darker background */
+  }
+}
+
+/* Dropdown styles */
+.dropdown {
+  list-style: none;
+  padding: 0;
+  margin: 5px 0 0;
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 1000;
+  position: absolute;
+  width: 100%;
+
+  .dropdown-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+
+    &:hover {
+      background: #f0f8ff; /* Light blue */
     }
   }
 }
