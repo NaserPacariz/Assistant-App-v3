@@ -69,10 +69,16 @@ export class TaskService {
   }
   
   
-  createTask(task: any): Observable<any> {
-    const headers = this.getHeaders(); // Add headers
-    return this.http.post(`${this.BASE_URL}/tasks`, task, { headers });
+  createTask(userId: string, newTask: { title: string; description: string; dueDate: string; status: string }): Observable<any> {
+    const token = localStorage.getItem('token'); // Retrieve the token from local storage
+    const headers = { Authorization: `Bearer ${token}` };
+  
+    return this.http.post(`${this.BASE_URL}/tasks/${userId}`, newTask, { headers });
   }
+  
+  
+  
+  
 
   updateTask(userId: string, taskId: string, updatedTask: any) {
     const token = localStorage.getItem('token'); // Get token from local storage
@@ -88,10 +94,14 @@ export class TaskService {
   }
 
   getTasksByUserId(userId: string): Observable<any> {
-    const url = `${this.BASE_URL}/tasks/${userId}`;
-    console.log('GET request URL:', url); // Log the URL
-    return this.http.get(url, { headers: this.getHeaders() });
+    const token = localStorage.getItem('token'); // Retrieve the token from local storage
+    const headers = { Authorization: `Bearer ${token}` };
+  
+    return this.http.get(`${this.BASE_URL}/tasks/${userId}`, { headers });
   }
+  
+  
+  
   
 }
 

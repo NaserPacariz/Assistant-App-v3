@@ -1,5 +1,7 @@
 <div class="task-management-container">
   <h1 class="page-title">Task Management</h1>
+
+  <!-- User List -->
   <div class="user-list" *ngIf="users.length > 0">
     <h2>Manage Users</h2>
     <div class="user-card-container">
@@ -10,31 +12,70 @@
         [class.selected]="selectedUserId === user.uid"
       >
         <p><strong>Name:</strong> {{ user.email.split('@')[0] }}</p>
-        <p><strong>Budget:</strong> {{ user.budget | currency:'USD' }}</p> <!-- Display budget -->
+        <p><strong>Budget:</strong> {{ user.budget | currency: 'USD' }}</p>
       </div>
     </div>
-    
+
+    <!-- Task Edit Modal -->
+<div class="modal" *ngIf="isEditModalOpen">
+  <div class="modal-content">
+    <span class="close" (click)="closeEditTaskModal()">&times;</span>
+    <h2>Edit Task</h2>
+    <form (ngSubmit)="updateTask()">
+      <div>
+        <label for="title">Task Title</label>
+        <input
+          id="title"
+          type="text"
+          [(ngModel)]="editingTask.title"
+          name="title"
+          required
+        />
+      </div>
+      <div>
+        <label for="description">Task Description</label>
+        <textarea
+          id="description"
+          [(ngModel)]="editingTask.description"
+          name="description"
+          required
+        ></textarea>
+      </div>
+      <div>
+        <label for="dueDate">Due Date</label>
+        <input
+          id="dueDate"
+          type="date"
+          [(ngModel)]="editingTask.dueDate"
+          name="dueDate"
+          required
+        />
+      </div>
+      <div>
+        <label for="status">Status</label>
+        <select id="status" [(ngModel)]="editingTask.status" name="status" required>
+          <option value="pending">Pending</option>
+          <option value="completed">Completed</option>
+        </select>
+      </div>
+      <button type="submit">Update Task</button>
+    </form>
+  </div>
+</div>
+
+    <!-- Add Task Button -->
+    <div class="add-task-button">
+      <button class="btn-add-task" (click)="openAddTaskModal()">
+        + Create Task
+      </button>
+    </div>
   </div>
   
-  
-  
-  <!-- Fetch User Tasks Section -->
-  
-
-  <div class="add-task-button" (click)="openAddTaskModal()">
-    <button class="btn-add-task">
-      +
-    </button>
-    <span class="create-task-text">Create Task</span>
-  </div>
-  
-  
-
   <div class="modal" *ngIf="isAddTaskModalVisible">
     <div class="modal-content">
       <span class="close-button" (click)="closeAddTaskModal()">&times;</span>
-      <h3>{{ editingTaskId ? 'Edit Task' : 'Add a New Task' }}</h3>
-      <form (ngSubmit)="editingTaskId ? updateTask() : addTask()">
+      <h3>Add a New Task</h3>
+      <form (ngSubmit)="addTask()">
         <div class="form-group">
           <label for="taskTitle">Task Title</label>
           <input
@@ -69,18 +110,6 @@
             required
           />
         </div>
-        <div *ngIf="!editingTaskId" class="form-group">
-          <label for="selectedUserId">Assign to User </label>
-          <input
-            id="selectedUserId"
-            type="text"
-            [(ngModel)]="selectedUserId"
-            name="selectedUserId"
-            class="input-field"
-            placeholder="Enter User ID"
-            required
-          />
-        </div>
         <div class="form-group">
           <label for="assignUser">Assign to User</label>
           <input
@@ -90,112 +119,37 @@
             (input)="filterUsers()"
             name="assignUser"
             class="input-field"
-            placeholder="Enter User ID"
+            placeholder="Enter User Name"
             required
             autocomplete="off"
           />
           <ul *ngIf="filteredUsers.length > 0" class="dropdown">
             <li
               *ngFor="let user of filteredUsers"
-              (click)="selectUser(user.uid)"
+              (click)="selectUser(user)"
               class="dropdown-item"
             >
-              {{ user.email }}
+              {{ user.name }}
             </li>
           </ul>
-        </div>        
-        <div class="form-actions">
-          <button
-            type="submit"
-            class="btn"
-            [class.btn-success]="!editingTaskId"
-            [class.btn-primary]="editingTaskId"
-          >
-            {{ editingTaskId ? 'Update Task' : 'Add Task' }}
-          </button>
         </div>
+        
+        <button type="submit" class="btn btn-success">Create Task</button>
       </form>
     </div>
   </div>
-</div>
-
-<div class="modal" *ngIf="isEditTaskModalVisible">
-  <div class="modal-content">
-    <span class="close-button" (click)="closeEditTaskModal()">&times;</span>
-    <h3>Edit Task</h3>
-    <form (ngSubmit)="updateTask()">
-      <div class="form-group">
-        <label for="editTaskTitle">Task Title</label>
-        <input
-          id="editTaskTitle"
-          type="text"
-          [(ngModel)]="taskTitle"
-          name="taskTitle"
-          class="input-field"
-          placeholder="Enter Task Title"
-          required
-        />
-      </div>
-      <div class="form-group">
-        <label for="editTaskDescription">Task Description</label>
-        <textarea
-          id="editTaskDescription"
-          [(ngModel)]="taskDescription"
-          name="taskDescription"
-          class="input-field"
-          placeholder="Enter Task Description"
-          required
-        ></textarea>
-      </div>
-      <div class="form-group">
-        <label for="editDueDate">Due Date</label>
-        <input
-          id="editDueDate"
-          type="date"
-          [(ngModel)]="dueDate"
-          name="dueDate"
-          class="input-field"
-          required
-        />
-      </div>
-      <div class="form-actions">
-        <button type="submit" class="btn btn-primary">Update Task</button>
-        <button
-          type="button"
-          class="btn btn-warning"
-          (click)="closeEditTaskModal()"
-        >
-          Cancel
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
-
-
-<div class="task-list" *ngIf="tasks.length > 0">
-  <h3>Tasks for {{ selectedUserId }}</h3>
-  <div *ngFor="let task of tasks" class="task-item">
-    <p><strong>Title:</strong> {{ task.title }}</p>
-    <p><strong>Description:</strong> {{ task.description }}</p>
-    <p><strong>Due Date:</strong> {{ task.dueDate }}</p>
-    <p><strong>Status:</strong> {{ task.status }}</p>
-  </div>
-</div>
-
-<p *ngIf="tasks.length === 0" class="no-tasks-message">
-  No tasks available for this user.
-</p>
+  
+  
 
   <!-- Task List Section -->
-  <section *ngIf="tasks.length > 0" class="task-list card">
+  <div class="task-list card" *ngIf="tasks.length > 0">
     <h3>Tasks for User: {{ selectedUserId }}</h3>
     <div *ngFor="let task of tasks" class="task-item">
       <div class="task-details">
-        <p><strong>Title:</strong> {{ task.title }}</p>
-        <p><strong>Description:</strong> {{ task.description }}</p>
-        <p><strong>Due Date:</strong> {{ task.dueDate }}</p>
-        <p><strong>Status:</strong> {{ task.status }}</p>
+        <p><strong>Title:</strong> {{ task.title || 'Untitled' }}</p>
+        <p><strong>Description:</strong> {{ task.description || 'No description' }}</p>
+        <p><strong>Due Date:</strong> {{ task.dueDate || 'No due date' }}</p>
+        <p><strong>Status:</strong> {{ task.status || 'pending' }}</p>
       </div>
       <div class="task-actions">
         <button
@@ -203,37 +157,20 @@
           [disabled]="loading"
           (click)="deleteTask(task.id, selectedUserId)"
         >
-          <i class="fas fa-trash-alt"></i> Delete
+          Delete
         </button>
         <button
           class="btn btn-warning"
           (click)="openEditTaskModal(task, selectedUserId)"
         >
-          <i class="fas fa-edit"></i> Edit
+          Edit
         </button>
       </div>
     </div>
-  </section>
+  </div>
 
   <!-- No Tasks Message -->
-  <p *ngIf="!showTasks" class="no-tasks-message">
-    Click "Fetch Tasks" to display the tasks.
+  <p *ngIf="tasks.length === 0 && selectedUserId" class="no-tasks-message">
+    No tasks available for this user.
   </p>
-
-  <ng-container *ngIf="role === 'user'">
-    <h2>My Tasks</h2>
-    <section *ngIf="tasks.length > 0" class="task-list card">
-      <h3>Your Tasks</h3>
-      <button (click)="fetchTasks()" class="btn btn-primary">
-        Fetch Tasks
-      </button>      
-      <div *ngFor="let task of tasks" class="task-item">
-        <div class="task-details">
-          <p><strong>Task:</strong> {{ task.title || "Untitled" }}</p>
-          <p><strong>Description:</strong> {{ task.description || "No description" }}</p>
-          <p><strong>Due Date:</strong> {{ task.dueDate || "No due date" }}</p>
-        </div>
-      </div>
-    </section>
-    <p *ngIf="tasks.length === 0" class="no-tasks-message">You have no tasks assigned.</p>
-  </ng-container>
+</div>

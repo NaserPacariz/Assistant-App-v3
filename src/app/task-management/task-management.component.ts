@@ -12,6 +12,13 @@ import { RouterModule } from '@angular/router';
   imports: [FormsModule, CommonModule, RouterModule],
 })
 export class TaskManagementComponent implements OnInit {
+  filterUsersByName(): void {
+    const inputValue = this.assignUserInput.toLowerCase();
+    this.filteredUsers = this.users.filter((user) =>
+      user.name.toLowerCase().includes(inputValue)
+    );
+  }
+  
   isAddTaskModalVisible = false;
   isEditTaskModalVisible = false;
   taskTitle = '';
@@ -29,7 +36,12 @@ export class TaskManagementComponent implements OnInit {
   loading: boolean = false;
   users: any[] = []; // To store the list of users
   assignUserInput: string = '';
-filteredUsers: any[] = [];
+  filteredUsers: any[] = []; // List of users filtered by input
+  assignedUserId: string = ''; // Stores the selected user's ID
+  editingTask: any = null; // Holds the task being edited
+isEditModalOpen = false; // Controls the visibility of the edit modal
+  
+
 
   constructor(private taskService: TaskService) {}
 
@@ -158,105 +170,96 @@ filteredUsers: any[] = [];
   }
 
   addTask() {
-    const targetUserId = this.role === 'admin' ? this.selectedUserId : this.userId;
-
-    if (!targetUserId) {
-      console.error('Target User ID is missing!');
+    if (!this.assignedUserId) {
+      alert('Please select a user to assign the task.');
       return;
     }
-
+  
     const newTask = {
-      userId: targetUserId, // Dynamically set the user ID
-      title: this.taskTitle,
-      description: this.taskDescription,
-      dueDate: this.dueDate,
+      title: this.taskTitle.trim(),
+      description: this.taskDescription.trim(),
+      dueDate: this.dueDate || '', // Default to empty string
+      status: 'pending',
     };
-
-    this.taskService.createTask(newTask).subscribe(
-      (response) => {
-        console.log('Task created successfully:', response);
-        this.fetchTasks(targetUserId); // Refresh task list
+  
+    this.taskService.createTask(this.assignedUserId, newTask).subscribe({
+      next: () => {
+        alert('Task created successfully');
+        this.fetchTasks(this.assignedUserId); // Refresh task list
+        this.closeAddTaskModal();
       },
-      (error) => {
-        console.error('Error adding task:', error);
-      }
-    );
+      error: (error) => {
+        console.error('Error creating task:', error);
+        alert('Failed to create task.');
+      },
+    });
   }
+  
+
+  
+  
+  
+  
 
   deleteTask(taskId: string, userId: string): void {
     this.loading = true;
-    this.taskService.deleteTask(userId, taskId).subscribe(
-      () => {
+    this.taskService.deleteTask(userId, taskId).subscribe({
+      next: () => {
         console.log(`Task ${taskId} deleted successfully.`);
-        this.tasksByUser = this.tasksByUser
-          .map((user) => {
-            if (user.userId === userId) {
-              return {
-                ...user,
-                tasks: user.tasks.filter((task: { id: string }) => task.id !== taskId),
-              };
-            }
-            return user;
-          })
-          .filter((user) => user.tasks.length > 0);
+        this.tasks = this.tasks.filter((task) => task.id !== taskId);
         this.loading = false;
       },
-      (error: any) => {
+      error: (error) => {
         console.error('Error deleting task:', error);
         this.loading = false;
-        if (error.status === 403) {
-          alert('Access denied. Only admins can delete tasks.');
-        }
-      }
-    );
+      },
+    });
   }
+  
 
   updateTask(): void {
-    if (!this.editingTaskId || !this.editingUserId) {
-      console.error('No task or user selected for editing');
+    if (!this.editingTask) {
+      alert('No task selected for editing.');
       return;
     }
-
-    const updatedTask = {
-      title: this.taskTitle,
-      description: this.taskDescription,
-      dueDate: this.dueDate,
-      status: 'pending', // Ensure this has a valid default value
-    };
-
-    this.taskService.updateTask(this.editingUserId!, this.editingTaskId, updatedTask).subscribe(
-      (response: any) => {
-        console.log('Task updated successfully:', response);
-        this.fetchTasks(this.editingUserId!); // Fetch tasks for the user
+  
+    const { userId, id, ...updatedTaskData } = this.editingTask;
+  
+    this.taskService.updateTask(userId, id, updatedTaskData).subscribe({
+      next: () => {
+        alert('Task updated successfully!');
+        this.fetchTasksForUser(userId); // Refresh tasks for the user
         this.closeEditTaskModal(); // Close the modal
       },
-      (error: any) => {
+      error: (error) => {
         console.error('Error updating task:', error);
-      }
-    );
+        alert('Failed to update task.');
+      },
+    });
   }
+  
+  
 
   openAddTaskModal(): void {
     this.isAddTaskModalVisible = true;
     this.clearTaskForm();
   }
-
+  
   closeAddTaskModal(): void {
     this.isAddTaskModalVisible = false;
   }
+  
 
   openEditTaskModal(task: any, userId: string): void {
-    this.isEditTaskModalVisible = true;
-    this.editingTaskId = task.id;
-    this.editingUserId = userId;
-    this.taskTitle = task.title;
-    this.taskDescription = task.description;
-    this.dueDate = task.dueDate;
+    this.editingTask = { ...task }; // Clone the task data to avoid direct mutation
+    this.editingTask.userId = userId; // Add userId to the task for updating
+    this.isEditModalOpen = true;
   }
-
+  
+  // Method to close the edit modal
   closeEditTaskModal(): void {
-    this.isEditTaskModalVisible = false;
-    this.clearTaskForm();
+    this.editingTask = null;
+    this.isEditModalOpen = false;
   }
 
   private clearTaskForm(): void {
@@ -280,32 +283,27 @@ filteredUsers: any[] = [];
     );
   }
   
-  selectUser(userId: string) {
-    this.assignUserInput = userId; // Set the input value to the selected user ID
+  selectUser(user: any): void {
+    this.assignUserInput = user.name; // Set the input value to the selected user's name
+    this.assignedUserId = user.uid; // Assign the user ID to `assignedUserId`
     this.filteredUsers = []; // Clear the dropdown
   }
+  
 
-  fetchTasksForUser(userId: string) {
-    console.log('Fetching tasks for user:', userId);
-    const targetId = this.users.find(user => user.uid === userId)?.email.split('@')[0]; // Use email prefix
-    console.log('Using targetId:', targetId); // Debug log
-  
-    if (!targetId) {
-      alert('No tasks found for the selected user.');
-      return;
-    }
-  
-    this.taskService.getTasksByUserId(targetId || userId).subscribe({
+  fetchTasksForUser(userId: string): void {
+    this.selectedUserId = userId; // Store the selected user ID
+    this.taskService.getTasksByUserId(userId).subscribe({
       next: (tasks) => {
-        console.log('Tasks fetched for user:', targetId, tasks);
-        this.tasks = tasks;
-        this.loading = false;
+        console.log('Fetched tasks:', tasks); // Debugging log
+        this.tasks = Object.entries(tasks || {}).map(([taskId, taskData]: [string, any]) => ({
+          id: taskId,
+          ...taskData, // Spread task details (title, description, etc.)
+        }));
       },
       error: (error) => {
-        console.error('Error fetching tasks for user:', targetId, error);
-        this.loading = false;
-      }
+        console.error('Error fetching tasks for user:', error);
+        this.tasks = [];
+      },
     });
   }
-  
-}
+}  
