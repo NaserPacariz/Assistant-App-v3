@@ -171,6 +171,7 @@ isEditModalOpen = false; // Controls the visibility of the edit modal
 
   addTask() {
     if (!this.assignedUserId) {
+      console.error('Assigned User ID is missing!');
       alert('Please select a user to assign the task.');
       return;
     }
@@ -178,27 +179,29 @@ isEditModalOpen = false; // Controls the visibility of the edit modal
     const newTask = {
       title: this.taskTitle.trim(),
       description: this.taskDescription.trim(),
-      dueDate: this.dueDate || '', // Default to empty string
-      status: 'pending',
+      dueDate: this.dueDate || "", // Convert null to an empty string
+      status: 'pending', // Default status
     };
   
+    console.log('Creating task with payload:', newTask); // Debugging log
+  
     this.taskService.createTask(this.assignedUserId, newTask).subscribe({
-      next: () => {
-        alert('Task created successfully');
-        this.fetchTasks(this.assignedUserId); // Refresh task list
+      next: (response) => {
+        console.log('Task created successfully:', response);
+  
+        // Add the newly created task to the tasks array
+        const createdTask = { id: response.taskId, ...newTask };
+        this.tasks.push(createdTask);
+  
+        // Close the modal
         this.closeAddTaskModal();
       },
       error: (error) => {
         console.error('Error creating task:', error);
-        alert('Failed to create task.');
+        alert('Failed to create task. Please check the console for details.');
       },
     });
   }
-  
-
-  
-  
-  
   
 
   deleteTask(taskId: string, userId: string): void {
