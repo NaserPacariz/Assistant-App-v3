@@ -1,86 +1,57 @@
 .landing-container {
+  text-align: center;
+  margin-top: 50px;
+
+  h1 {
+    color: #007bff;
+    margin-bottom: 10px;
+  }
+
+  p {
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: #555;
+  }
+
+  .tab-container {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-  
-    h1 {
-      color: #007bff;
-      margin-bottom: 10px;
-    }
-  
-    .navigation-menu {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-  
-      .menu-item {
-        margin: 10px;
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: white;
-        text-decoration: none;
-        border-radius: 5px;
+    justify-content: center;
+    border-bottom: 2px solid #ccc;
+    margin-bottom: 20px;
+
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 16px;
+      border: none;
+      background: none;
+      color: #555;
+      transition: color 0.3s, border-bottom 0.3s;
+
+      &.active {
+        color: #007bff;
+        font-weight: bold;
+        border-bottom: 2px solid #007bff;
       }
-  
-      .menu-item:hover {
-        background-color: #0056b3;
-      }
-  
-      .logout-button {
-        margin-top: 20px;
-        padding: 10px 20px;
-        background-color: #dc3545;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-      }
-  
-      .logout-button:hover {
-        background-color: #bd2130;
+
+      &:hover {
+        color: #0056b3;
       }
     }
   }
 
-  .landing-container {
-    text-align: center;
-    margin-top: 50px;
-  
-    h1 {
-      color: #007bff;
-      margin-bottom: 10px;
-    }
-  
-    p {
-      margin-bottom: 20px;
-      font-size: 18px;
-      color: #555;
-    }
-  
-    .button {
-      display: block;
-      width: 200px;
-      padding: 10px;
-      margin: 10px auto;
-      font-size: 16px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      color: #fff;
-  
-      &.blue-button {
-        background-color: #007bff;
-      }
-  
-      &.red-button {
-        background-color: #dc3545;
-      }
-  
-      &:hover {
-        opacity: 0.9;
-      }
+  .logout-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 200px;
+
+    &:hover {
+      background-color: #bd2130;
     }
   }
-  
-  
+}

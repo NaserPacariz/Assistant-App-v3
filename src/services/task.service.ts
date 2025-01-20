@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root', // Service is provided globally
@@ -101,8 +101,36 @@ export class TaskService {
   }
   
   
+  addUser(email: string, budget: number): Observable<any> {
+    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+    if (!token) {
+      console.error('No token found in local storage!');
+      return throwError('Unauthorized: No token available');
+    }
   
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`, // Add token to Authorization header
+    });
   
+    const body = { email, budget }; // Request payload
+    return this.http.post(`${this.BASE_URL}/users`, body, { headers });
+  }
+  
+
+deleteUser(userId: string): Observable<any> {
+  const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+  if (!token) {
+    console.error('No token found in local storage!');
+    return throwError('Unauthorized: No token available');
+  }
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}` // Add token to Authorization header
+  });
+
+  return this.http.delete(`${this.BASE_URL}/users/${userId}`, { headers });
+}
+ 
 }
 
 

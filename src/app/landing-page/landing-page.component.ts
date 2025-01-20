@@ -13,6 +13,7 @@ import { RouterModule } from '@angular/router';
 
 export class LandingPageComponent {
   role: string | null = null; // Store role from localStorage
+  selectedTab: string = 'tasks'; // Default tab
   constructor(private router: Router) {}
 
   ngOnInit() {
@@ -23,8 +24,12 @@ export class LandingPageComponent {
   adminOnlyFunction() {
     console.log('Admin function accessed!');
   }
-  logout() {
-    localStorage.removeItem('token');
-    this.router.navigate(['/login']);
+  selectTab(tab: string): void {
+    this.selectedTab = tab;
+  }
+
+  logout(): void {
+    // Your logout logic here
+    console.log('Logging out...');
   }
 }

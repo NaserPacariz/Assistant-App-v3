@@ -18,7 +18,11 @@ export class TaskManagementComponent implements OnInit {
       user.name.toLowerCase().includes(inputValue)
     );
   }
-  
+  newUserEmail = '';
+  newUserBudget: number | null = null;
+  userToDelete: string | null = null; // Stores the UID of the user to delete
+  isAddUserModalVisible = false;
+  isDeleteDialogVisible = false
   isAddTaskModalVisible = false;
   isEditTaskModalVisible = false;
   taskTitle = '';
@@ -208,6 +212,13 @@ urgency: string = 'low'; // Default value
   }
   
 
+  confirmAndDeleteTask(taskId: string, userId: string): void {
+    const isConfirmed = window.confirm('Are you sure you want to delete this task?');
+    if (isConfirmed) {
+      this.deleteTask(taskId, userId); // Call the existing deleteTask method
+    }
+  }
+  
   deleteTask(taskId: string, userId: string): void {
     this.loading = true;
     this.taskService.deleteTask(userId, taskId).subscribe({
@@ -222,6 +233,7 @@ urgency: string = 'low'; // Default value
       },
     });
   }
+  
   
 
   updateTask(): void {
@@ -340,5 +352,62 @@ urgency: string = 'low'; // Default value
         return '';
     }
   }
-  
-}  
+  openAddUserModal(): void {
+    this.isAddUserModalVisible = true;
+  }
+
+  closeAddUserModal(): void {
+    this.isAddUserModalVisible = false;
+    this.newUserEmail = '';
+    this.newUserBudget = null;
+  }
+
+  addUser(): void {
+    if (!this.newUserEmail || this.newUserBudget === null) {
+      alert('Please provide valid email and budget.');
+      return;
+    }
+
+    this.taskService.addUser(this.newUserEmail, this.newUserBudget).subscribe({
+      next: (response) => {
+        alert('User added successfully!');
+        this.fetchUsers(); // Refresh the user list
+        this.closeAddUserModal();
+      },
+      error: (error) => {
+        console.error('Error adding user:', error);
+        alert('Failed to add user. Please check the console for details.');
+      },
+    });
+  }
+
+  confirmDeleteUser(uid: string): void {
+    this.userToDelete = uid;
+    this.isDeleteDialogVisible = true;
+  }
+
+  closeDeleteDialog(): void {
+    this.isDeleteDialogVisible = false;
+    this.userToDelete = null;
+  }
+
+  deleteUser(): void {
+    if (!this.userToDelete) {
+      return;
+    }
+
+    this.taskService.deleteUser(this.userToDelete).subscribe({
+      next: () => {
+        alert('User deleted successfully!');
+        this.fetchUsers(); // Refresh the user list
+        this.closeDeleteDialog();
+      },
+      error: (error) => {
+        console.error('Error deleting user:', error);
+        alert('Failed to delete user. Please check the console for details.');
+      },
+    });
+  }
+}
+
+
