@@ -225,7 +225,7 @@ urgency: string = 'low'; // Default value
   
 
   updateTask(): void {
-    if (!this.editingTask) {
+    if (!this.editingTask || !this.editingTask.id) {
       alert('No task selected for editing.');
       return;
     }
@@ -235,7 +235,13 @@ urgency: string = 'low'; // Default value
     this.taskService.updateTask(userId, id, updatedTaskData).subscribe({
       next: () => {
         alert('Task updated successfully!');
-        this.fetchTasksForUser(userId); // Refresh tasks for the user
+  
+        // Update the task in the local array
+        const taskIndex = this.tasks.findIndex((task) => task.id === id);
+        if (taskIndex > -1) {
+          this.tasks[taskIndex] = { id, userId, ...updatedTaskData };
+        }
+  
         this.closeEditTaskModal(); // Close the modal
       },
       error: (error) => {
@@ -244,7 +250,6 @@ urgency: string = 'low'; // Default value
       },
     });
   }
-  
   
 
   openAddTaskModal(): void {
@@ -265,16 +270,11 @@ urgency: string = 'low'; // Default value
   
 
   openEditTaskModal(task: any, userId: string): void {
-    this.editingTask = { 
-      title: task?.title || '', 
-      description: task?.description || '', 
-      dueDate: task?.dueDate || '', 
-      status: task?.status || 'pending', 
-      urgency: task?.urgency || 'low' // Default urgency
-    };
-    this.editingTask.userId = userId; // Assign userId for task updates
-    this.isEditModalOpen = true;
-  }
+  this.editingTask = { ...task }; // Clone the task data
+  this.editingTask.userId = userId; // Add userId to the task for backend update
+  this.isEditModalOpen = true;
+}
+
   
   
   // Method to close the edit modal
@@ -315,7 +315,6 @@ urgency: string = 'low'; // Default value
     this.selectedUserId = userId; // Store the selected user ID
     this.taskService.getTasksByUserId(userId).subscribe({
       next: (tasks) => {
-        console.log('Fetched tasks:', tasks); // Debugging log
         this.tasks = Object.entries(tasks || {}).map(([taskId, taskData]: [string, any]) => ({
           id: taskId,
           ...taskData, // Spread task details (title, description, etc.)
@@ -327,6 +326,7 @@ urgency: string = 'low'; // Default value
       },
     });
   }
+  
 
   getTaskClass(urgency: string): string {
     switch (urgency) {
