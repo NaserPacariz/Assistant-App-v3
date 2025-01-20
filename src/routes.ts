@@ -8,10 +8,8 @@ import { LandingPageComponent } from './app/landing-page/landing-page.component'
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'tasks', component: TaskManagementComponent },
-  { path: 'budgets', component: BudgetManagementComponent },
-  { path: 'home', component: LandingPageComponent },
+  { path: 'tasks', component: TaskManagementComponent, canActivate: [authGuard] }, // Protected
+  { path: 'budgets', component: BudgetManagementComponent, canActivate: [authGuard] }, // Protected
+  { path: 'home', component: LandingPageComponent, canActivate: [authGuard] }, // Protected
   { path: '**', redirectTo: 'login' },
 ];
-
-

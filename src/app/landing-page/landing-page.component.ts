@@ -29,7 +29,8 @@ export class LandingPageComponent {
   }
 
   logout(): void {
-    // Your logout logic here
+      localStorage.removeItem('token');
+      this.router.navigate(['/login']);
     console.log('Logging out...');
   }
 }

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router'; // Import Router for navigation
+import { RouterModule, Router, ActivatedRoute } from '@angular/router'; // Import Router for navigation
 import { AuthService } from '@services/auth.service';
 
 @Component({
@@ -38,7 +38,7 @@ export class LoginComponent {
   password = '';
   error: string | null = null;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute) {}
 
   onSubmit() {
     this.authService.login(this.email, this.password).subscribe(
@@ -52,5 +52,20 @@ export class LoginComponent {
         this.error = 'Login failed: Invalid email or password'; // User-friendly error message
       }
     );
+  }
+  login(): void {
+    const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home'; // Get the return URL
+    localStorage.setItem('returnUrl', returnUrl); // Save it to localStorage
+
+    this.authService.login(this.email, this.password).subscribe({
+      next: () => {
+        // Clear the return URL after successful login
+        localStorage.removeItem('returnUrl');
+      },
+      error: (err) => {
+        console.error('Login failed:', err);
+        alert('Invalid login credentials');
+      },
+    });
   }
 }
