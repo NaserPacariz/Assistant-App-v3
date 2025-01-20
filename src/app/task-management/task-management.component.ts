@@ -40,6 +40,8 @@ export class TaskManagementComponent implements OnInit {
   assignedUserId: string = ''; // Stores the selected user's ID
   editingTask: any = null; // Holds the task being edited
 isEditModalOpen = false; // Controls the visibility of the edit modal
+urgency: string = 'low'; // Default value
+
   
 
 
@@ -179,9 +181,11 @@ isEditModalOpen = false; // Controls the visibility of the edit modal
     const newTask = {
       title: this.taskTitle.trim(),
       description: this.taskDescription.trim(),
-      dueDate: this.dueDate || "", // Convert null to an empty string
-      status: 'pending', // Default status
+      dueDate: this.dueDate || '',
+      status: 'pending',
+      urgency: this.editingTask?.urgency || 'low' // Default to 'low'
     };
+    
   
     console.log('Creating task with payload:', newTask); // Debugging log
   
@@ -245,8 +249,15 @@ isEditModalOpen = false; // Controls the visibility of the edit modal
 
   openAddTaskModal(): void {
     this.isAddTaskModalVisible = true;
-    this.clearTaskForm();
+    this.editingTask = { 
+      title: '', 
+      description: '', 
+      dueDate: '', 
+      status: 'pending', 
+      urgency: 'low' // Default urgency
+    };
   }
+  
   
   closeAddTaskModal(): void {
     this.isAddTaskModalVisible = false;
@@ -254,10 +265,17 @@ isEditModalOpen = false; // Controls the visibility of the edit modal
   
 
   openEditTaskModal(task: any, userId: string): void {
-    this.editingTask = { ...task }; // Clone the task data to avoid direct mutation
-    this.editingTask.userId = userId; // Add userId to the task for updating
+    this.editingTask = { 
+      title: task?.title || '', 
+      description: task?.description || '', 
+      dueDate: task?.dueDate || '', 
+      status: task?.status || 'pending', 
+      urgency: task?.urgency || 'low' // Default urgency
+    };
+    this.editingTask.userId = userId; // Assign userId for task updates
     this.isEditModalOpen = true;
   }
+  
   
   // Method to close the edit modal
   closeEditTaskModal(): void {
@@ -309,4 +327,18 @@ isEditModalOpen = false; // Controls the visibility of the edit modal
       },
     });
   }
+
+  getTaskClass(urgency: string): string {
+    switch (urgency) {
+      case 'high':
+        return 'task-high';
+      case 'medium':
+        return 'task-medium';
+      case 'low':
+        return 'task-low';
+      default:
+        return '';
+    }
+  }
+  
 }  

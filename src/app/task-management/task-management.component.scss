@@ -390,3 +390,26 @@
   }
 }
 
+.task-item {
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+
+  &.task-high {
+    background-color: #ffcccc;
+    border-color: #ff0000;
+  }
+
+  &.task-medium {
+    background-color: #fff8cc;
+    border-color: #ffc107;
+  }
+
+  &.task-low {
+    background-color: #ccffcc;
+    border-color: #28a745;
+  }
+}
+
+

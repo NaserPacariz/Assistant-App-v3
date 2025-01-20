@@ -58,6 +58,14 @@
           <option value="completed">Completed</option>
         </select>
       </div>
+      <div>
+        <label for="urgency">Urgency</label>
+        <select id="urgency" [(ngModel)]="editingTask.urgency" name="urgency" required>
+          <option value="high">High (Red)</option>
+          <option value="medium">Medium (Yellow)</option>
+          <option value="low">Low (Green)</option>
+        </select>
+      </div>
       <button type="submit">Update Task</button>
     </form>
   </div>
@@ -133,6 +141,15 @@
             </li>
           </ul>
         </div>
+        <div>
+          <label for="urgency">Urgency</label>
+          <select id="urgency" [(ngModel)]="editingTask.urgency" name="urgency" required>
+            <option value="high">High (Red)</option>
+            <option value="medium">Medium (Yellow)</option>
+            <option value="low">Low (Green)</option>
+          </select>
+        </div>
+        
         
         <button type="submit" class="btn btn-success">Create Task</button>
       </form>
@@ -144,25 +161,19 @@
   <!-- Task List Section -->
   <div class="task-list card" *ngIf="tasks.length > 0">
     <h3>Tasks for User: {{ selectedUserId }}</h3>
-    <div *ngFor="let task of tasks" class="task-item">
+    <div *ngFor="let task of tasks" [ngClass]="getTaskClass(task.urgency)" class="task-item">
       <div class="task-details">
         <p><strong>Title:</strong> {{ task.title || 'Untitled' }}</p>
         <p><strong>Description:</strong> {{ task.description || 'No description' }}</p>
         <p><strong>Due Date:</strong> {{ task.dueDate || 'No due date' }}</p>
         <p><strong>Status:</strong> {{ task.status || 'pending' }}</p>
+        <p><strong>Urgency:</strong> {{ task.urgency }}</p>
       </div>
       <div class="task-actions">
-        <button
-          class="btn btn-danger"
-          [disabled]="loading"
-          (click)="deleteTask(task.id, selectedUserId)"
-        >
+        <button class="btn btn-danger" [disabled]="loading" (click)="deleteTask(task.id, selectedUserId)">
           Delete
         </button>
-        <button
-          class="btn btn-warning"
-          (click)="openEditTaskModal(task, selectedUserId)"
-        >
+        <button class="btn btn-warning" (click)="openEditTaskModal(task, selectedUserId)">
           Edit
         </button>
       </div>
