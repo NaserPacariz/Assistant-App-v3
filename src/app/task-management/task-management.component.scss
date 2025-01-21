@@ -53,15 +53,20 @@
 
 /* Buttons */
 .btn {
-  display: inline-block;
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: 600;
-  text-align: center;
-  border-radius: 6px;
-  cursor: pointer;
-  color: #fff;
-  transition: background 0.3s ease;
+  display: inline-flex; /* Use flex for better alignment */
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+  padding: 8px 12px; /* Uniform padding */
+  font-size: 14px; /* Standard font size */
+  font-weight: 600; /* Bold font */
+  text-align: center; /* Center text */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  color: #fff; /* White text */
+  transition: background 0.3s ease, transform 0.2s ease; /* Smooth hover effect */
+  width: 120px; /* Fixed width for uniform size */
+  height: 40px; /* Fixed height for uniform size */
+  box-sizing: border-box; /* Include padding in width/height */
 }
 
 .btn-primary {
@@ -91,6 +96,7 @@
 
 .btn-danger:hover {
   background-color: #c82333;
+  transform: scale(1.05); /* Slight scale-up effect on hover */
 }
 
 .btn-warning {
@@ -256,44 +262,98 @@
   .user-card-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
-    justify-content: center; /* Align items horizontally */
+    gap: 20px;
+    justify-content: center;
   }
-
+  
   .user-card {
-    cursor: pointer;
-    padding: 10px; /* Added more padding for better spacing */
-    width: 250px; /* Set a fixed width for uniformity */
+    position: relative; /* Enable positioning within the card */
+    display: flex;
+    flex-direction: column; /* Stack content vertically */
+    justify-content: space-between; /* Push content to edges */
+    align-items: flex-start; /* Align content to the left */
+    padding: 15px;
+    width: 300px;
+    height: 100px; /* Fixed height to ensure consistency */
     text-align: center;
-    border-radius: 25px; /* More rounded corners */
-    background: linear-gradient(135deg, #e3f2fd, #bbdefb); /* Gradient background */
+    border-radius: 15px;
+    background: linear-gradient(145deg, #e3f2fd, #bbdefb);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    border: 1px solid #bbdefb;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-    p {
-      margin: 5px 0;
-      font-size: 16px;
-      color: #333;
-      font-weight: 500;
+  
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+      background: linear-gradient(145deg, #90caf9, #64b5f6);
     }
-
-    p:last-child {
-      font-weight: bold;
-      color: #2890a7; /* Green for budget */
+  
+    &.selected {
+      border: 2px solid #1976d2;
+    }
+  
+    .user-card-content {
+      display: flex;
+      align-items: center;
+      gap: 50px;
+      margin-bottom: 15px;
+      margin-bottom: auto; /* Push the delete button to the bottom */
+  
+      .user-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: #f0f8ff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  
+        .profile-photo {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+  
+        .placeholder-icon {
+          font-size: 28px;
+          color: #007bff;
+        }
+      }
+  
+      .user-details {
+        flex: 1;
+  
+        p {
+          margin: 5px 0;
+          font-size: 16px;
+          color: #333;
+          font-weight: 500;
+        }
+  
+        p:last-child {
+          font-weight: bold;
+          color: #2890a7; /* Green for budget */
+        }
+      }
     }
   }
+}
 
-  .user-card:hover {
-    transform: translateY(-5px); /* Slight upward motion */
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15); /* Stronger shadow on hover */
-    background: linear-gradient(135deg, #90caf9, #64b5f6); /* Darker gradient on hover */
-  }
+.add-user-button {
+  display: flex;
+  justify-content: center; /* Center align */
+  margin-top: 10px;
 
-  .user-card.selected {
-    border: 3px solid #1976d2; /* Stronger blue border for selected user */
-    background: linear-gradient(135deg, #bbdefb, #90caf9); /* Slightly darker background */
+  .btn {
+    width: auto; /* Allow dynamic width for this specific button */
   }
+}
+
+.user-card .btn {
+  margin-top: 10px; /* Space between the button and content */
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Dropdown styles */
@@ -415,6 +475,44 @@
     background-color: #ccffcc;
     border-color: #28a745;
   }
+}
+
+.button-container {
+  position: absolute; /* Position relative to the card */
+    bottom: 15px; /* Distance from the bottom of the card */
+    right: 15px; /* Distance from the right of the card */
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.button-container .btn {
+  width: 120px; /* Fixed width for consistency */
+      height: 40px; /* Fixed height for buttons */
+      font-size: 14px;
+      padding: 0;
+}
+
+/* Icon Button Styling */
+.btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #dc3545; /* Red color for delete */
+  font-size: 24px; /* Adjust icon size */
+  transition: color 0.3s, transform 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-icon:hover {
+  color: #c82333; /* Darker red on hover */
+  transform: scale(1.1); /* Slightly enlarge icon on hover */
+}
+
+.btn-icon:focus {
+  outline: none; /* Remove focus outline */
 }
 
 

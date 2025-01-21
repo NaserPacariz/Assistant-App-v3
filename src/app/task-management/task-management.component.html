@@ -1,3 +1,8 @@
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+  rel="stylesheet"
+/>
+
 <div class="task-management-container">
   <h1 class="page-title">Task Management</h1>
 
@@ -11,125 +16,137 @@
         (click)="fetchTasksForUser(user.uid)"
         [class.selected]="selectedUserId === user.uid"
       >
-        <p><strong>Name:</strong> {{ user.email.split('@')[0] }}</p>
-        <p><strong>Budget:</strong> {{ user.budget | currency: 'USD' }}</p>
-        <button class="btn btn-danger" (click)="confirmDeleteUser(user.uid)">
-          Delete User
-        </button>
-      </div>
-    </div>
-
-    <div class="add-user-button">
-      <button class="btn btn-primary" (click)="openAddUserModal()">+ Add User</button>
-    </div>
-  
-    <!-- Add User Modal -->
-    <div class="modal" *ngIf="isAddUserModalVisible">
-      <div class="modal-content">
-        <span class="close-button" (click)="closeAddUserModal()">&times;</span>
-        <h3>Add a New User</h3>
-        <form (ngSubmit)="addUser()">
-          <div class="form-group">
-            <label for="email">User Email</label>
-            <input
-              id="email"
-              type="email"
-              [(ngModel)]="newUserEmail"
-              name="email"
-              class="input-field"
-              placeholder="Enter User Email"
-              required
+        <div class="user-card-content">
+          <!-- Placeholder for Profile Photo -->
+          <div class="user-avatar">
+            <img 
+              src="assets/default-profile.png" 
+              alt="User Avatar" 
+              *ngIf="user.photoURL" 
+              class="profile-photo"
             />
+            <span *ngIf="!user.photoURL" class="placeholder-icon">👤</span>
           </div>
-          <div class="form-group">
-            <label for="budget">Budget</label>
-            <input
-              id="budget"
-              type="number"
-              [(ngModel)]="newUserBudget"
-              name="budget"
-              class="input-field"
-              placeholder="Enter Initial Budget"
-              required
-            />
+          <div class="user-info">
+            <p class="user-name">{{ user.email.split('@')[0] }}</p>
+            <p class="user-budget">{{ user.budget | currency: 'USD' }}</p>
           </div>
-          <button type="submit" class="btn btn-success">Add User</button>
-        </form>
+          <div class="button-container">
+            <button class="btn-icon" (click)="confirmDeleteUser(user.uid)" title="Delete User">
+              <i class="fas fa-trash"></i> <!-- Font Awesome icon -->
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
-  
-    <!-- Confirmation Dialog -->
-    <div class="modal" *ngIf="isDeleteDialogVisible">
-      <div class="modal-content">
-        <p>Are you sure you want to delete this user?</p>
-        <button class="btn btn-danger" (click)="deleteUser()">Yes</button>
-        <button class="btn btn-secondary" (click)="closeDeleteDialog()">No</button>
-      </div>
-    </div>
-
-    <!-- Task Edit Modal -->
-<div class="modal" *ngIf="isEditModalOpen">
-  <div class="modal-content">
-    <span class="close" (click)="closeEditTaskModal()">&times;</span>
-    <h2>Edit Task</h2>
-    <form (ngSubmit)="updateTask()">
-      <div>
-        <label for="title">Task Title</label>
-        <input
-          id="title"
-          type="text"
-          [(ngModel)]="editingTask.title"
-          name="title"
-          required
-        />
-      </div>
-      <div>
-        <label for="description">Task Description</label>
-        <textarea
-          id="description"
-          [(ngModel)]="editingTask.description"
-          name="description"
-          required
-        ></textarea>
-      </div>
-      <div>
-        <label for="dueDate">Due Date</label>
-        <input
-          id="dueDate"
-          type="date"
-          [(ngModel)]="editingTask.dueDate"
-          name="dueDate"
-          required
-        />
-      </div>
-      <div>
-        <label for="status">Status</label>
-        <select id="status" [(ngModel)]="editingTask.status" name="status" required>
-          <option value="pending">Pending</option>
-          <option value="completed">Completed</option>
-        </select>
-      </div>
-      <div>
-        <label for="urgency">Urgency</label>
-        <select id="urgency" [(ngModel)]="editingTask.urgency" name="urgency" required>
-          <option value="high">High (Red)</option>
-          <option value="medium">Medium (Yellow)</option>
-          <option value="low">Low (Green)</option>
-        </select>
-      </div>
-      <button type="submit">Update Task</button>
-    </form>
-  </div>
-</div>
-
-    <!-- Add Task Button -->
-    <div class="add-task-button">
-      <button class="btn-add-task" (click)="openAddTaskModal()">
-        + Create Task
-      </button>
     </div>
   </div>
-  
+
+  <!-- Add User and Create Task Buttons -->
+  <div class="action-buttons">
+    <button class="btn btn-primary" (click)="openAddUserModal()">+ Add User</button>
+    <button class="btn btn-secondary" (click)="openAddTaskModal()">+ Create Task</button>
+  </div>
+
+  <!-- Add User Modal -->
+  <div class="modal" *ngIf="isAddUserModalVisible">
+    <div class="modal-content">
+      <span class="close-button" (click)="closeAddUserModal()">&times;</span>
+      <h3>Add a New User</h3>
+      <form (ngSubmit)="addUser()">
+        <div class="form-group">
+          <label for="email">User Email</label>
+          <input
+            id="email"
+            type="email"
+            [(ngModel)]="newUserEmail"
+            name="email"
+            class="input-field"
+            placeholder="Enter User Email"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="budget">Budget</label>
+          <input
+            id="budget"
+            type="number"
+            [(ngModel)]="newUserBudget"
+            name="budget"
+            class="input-field"
+            placeholder="Enter Initial Budget"
+            required
+          />
+        </div>
+        <button type="submit" class="btn btn-success">Add User</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Confirmation Dialog -->
+  <div class="modal" *ngIf="isDeleteDialogVisible">
+    <div class="modal-content">
+      <p>Are you sure you want to delete this user?</p>
+      <button class="btn btn-danger" (click)="deleteUser()">Yes</button>
+      <button class="btn btn-secondary" (click)="closeDeleteDialog()">No</button>
+    </div>
+  </div>
+
+  <!-- Task Edit Modal -->
+  <div class="modal" *ngIf="isEditModalOpen">
+    <div class="modal-content">
+      <span class="close" (click)="closeEditTaskModal()">&times;</span>
+      <h2>Edit Task</h2>
+      <form (ngSubmit)="updateTask()">
+        <div>
+          <label for="title">Task Title</label>
+          <input
+            id="title"
+            type="text"
+            [(ngModel)]="editingTask.title"
+            name="title"
+            required
+          />
+        </div>
+        <div>
+          <label for="description">Task Description</label>
+          <textarea
+            id="description"
+            [(ngModel)]="editingTask.description"
+            name="description"
+            required
+          ></textarea>
+        </div>
+        <div>
+          <label for="dueDate">Due Date</label>
+          <input
+            id="dueDate"
+            type="date"
+            [(ngModel)]="editingTask.dueDate"
+            name="dueDate"
+            required
+          />
+        </div>
+        <div>
+          <label for="status">Status</label>
+          <select id="status" [(ngModel)]="editingTask.status" name="status" required>
+            <option value="pending">Pending</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+        <div>
+          <label for="urgency">Urgency</label>
+          <select id="urgency" [(ngModel)]="editingTask.urgency" name="urgency" required>
+            <option value="high">High (Red)</option>
+            <option value="medium">Medium (Yellow)</option>
+            <option value="low">Low (Green)</option>
+          </select>
+        </div>
+        <button type="submit">Update Task</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Task Modal -->
   <div class="modal" *ngIf="isAddTaskModalVisible">
     <div class="modal-content">
       <span class="close-button" (click)="closeAddTaskModal()">&times;</span>
@@ -200,14 +217,10 @@
             <option value="low">Low (Green)</option>
           </select>
         </div>
-        
-        
         <button type="submit" class="btn btn-success">Create Task</button>
       </form>
     </div>
   </div>
-  
-  
 
   <!-- Task List Section -->
   <div class="task-list card" *ngIf="tasks.length > 0">
@@ -222,13 +235,12 @@
       </div>
       <div class="task-actions">
         <button
-  class="btn btn-danger"
-  [disabled]="loading"
-  (click)="confirmAndDeleteTask(task.id, selectedUserId)"
->
-  Delete
-</button>
-
+          class="btn btn-danger"
+          [disabled]="loading"
+          (click)="confirmAndDeleteTask(task.id, selectedUserId)"
+        >
+          Delete
+        </button>
         <button class="btn btn-warning" (click)="openEditTaskModal(task, selectedUserId)">
           Edit
         </button>
