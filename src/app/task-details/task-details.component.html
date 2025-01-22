@@ -1,0 +1,88 @@
+<div class="task-details-container">
+    <h2>Tasks for User: {{ userId }}</h2>
+  
+    <!-- Task Items -->
+    <div *ngFor="let task of tasks" class="task-item" [ngClass]="getTaskClass(task.urgency)">
+      <div>
+        <p><strong>Title:</strong> {{ task.title }}</p>
+        <p><strong>Description:</strong> {{ task.description }}</p>
+        <p><strong>Due Date:</strong> {{ task.dueDate }}</p>
+        <p><strong>Status:</strong> {{ task.status }}</p>
+        <p><strong>Urgency:</strong> {{ task.urgency }}</p>
+      </div>
+      <div class="task-actions">
+        <button class="btn btn-warning" (click)="openEditTaskModal(task)">Edit</button>
+        <button class="btn btn-danger" (click)="confirmAndDeleteTask(task.id)">Delete</button>
+      </div>
+    </div>
+  
+    <!-- Create Task Button -->
+    <div class="action-buttons">
+      <button class="btn btn-primary" (click)="openCreateTaskModal()">+ Create Task</button>
+    </div>
+  
+    <!-- Add Task Modal -->
+    <div class="modal" *ngIf="isAddTaskModalVisible">
+      <div class="modal-content">
+        <span class="close-button" (click)="closeAddTaskModal()">&times;</span>
+        <h3>Add a New Task</h3>
+        <form (ngSubmit)="addTask()">
+          <div class="form-group">
+            <label for="taskTitle">Task Title</label>
+            <input id="taskTitle" type="text" [(ngModel)]="taskTitle" name="taskTitle" required />
+          </div>
+          <div class="form-group">
+            <label for="taskDescription">Task Description</label>
+            <textarea id="taskDescription" [(ngModel)]="taskDescription" name="taskDescription" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="dueDate">Due Date</label>
+            <input id="dueDate" type="date" [(ngModel)]="dueDate" name="dueDate" required />
+          </div>
+          <div>
+            <label for="urgency">Urgency</label>
+            <select id="urgency" [(ngModel)]="urgency" name="urgency" required>
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-success">Create Task</button>
+          <button type="button" (click)="closeAddTaskModal()">Cancel</button>
+        </form>
+      </div>
+    </div>
+  
+    <!-- Edit Task Modal -->
+    <div class="modal" *ngIf="isEditModalOpen">
+      <div class="modal-content">
+        <span class="close-button" (click)="closeEditTaskModal()">&times;</span>
+        <h3>Edit Task</h3>
+        <form (ngSubmit)="updateTask()">
+          <div>
+            <label for="title">Task Title</label>
+            <input id="title" type="text" [(ngModel)]="editingTask.title" name="title" required />
+          </div>
+          <div>
+            <label for="description">Task Description</label>
+            <textarea id="description" [(ngModel)]="editingTask.description" name="description"></textarea>
+          </div>
+          <div>
+            <label for="dueDate">Due Date</label>
+            <input id="dueDate" type="date" [(ngModel)]="editingTask.dueDate" name="dueDate" required />
+          </div>
+          <div>
+            <label for="urgency">Urgency</label>
+            <select id="urgency" [(ngModel)]="editingTask.urgency" name="urgency" required>
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-success">Update Task</button>
+          <button type="button" (click)="closeEditTaskModal()">Cancel</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  

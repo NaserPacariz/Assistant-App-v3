@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { TaskService } from '@services/task.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   templateUrl: './task-management.component.html',
@@ -49,7 +50,7 @@ urgency: string = 'low'; // Default value
   
 
 
-  constructor(private taskService: TaskService) {}
+  constructor(private taskService: TaskService, private router: Router) {}
 
   ngOnInit() {
     const token = localStorage.getItem('token');
@@ -324,6 +325,7 @@ urgency: string = 'low'; // Default value
   
 
   fetchTasksForUser(userId: string): void {
+    this.router.navigate(['/tasks', userId]);
     this.selectedUserId = userId; // Store the selected user ID
     this.taskService.getTasksByUserId(userId).subscribe({
       next: (tasks) => {

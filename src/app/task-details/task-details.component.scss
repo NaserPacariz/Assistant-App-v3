@@ -1,0 +1,519 @@
+/* Container Styling */
+.task-management-container {
+    margin: 0 auto;
+    padding: 30px;
+    background: #f9f9f9;
+    border-radius: 15px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  /* Title */
+  .page-title {
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+  }
+  
+  /* Cards */
+  .card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Form Styling */
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .input-field {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+  }
+  
+  .input-field:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+  
+  /* Buttons */
+  .btn {
+    display: inline-flex; /* Use flex for better alignment */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    padding: 8px 12px; /* Uniform padding */
+    font-size: 14px; /* Standard font size */
+    font-weight: 600; /* Bold font */
+    text-align: center; /* Center text */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    color: #fff; /* White text */
+    transition: background 0.3s ease, transform 0.2s ease; /* Smooth hover effect */
+    width: 120px; /* Fixed width for uniform size */
+    height: 40px; /* Fixed height for uniform size */
+    box-sizing: border-box; /* Include padding in width/height */
+  }
+  
+  .btn-primary {
+    background-color: #007bff;
+  }
+  
+  .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+  
+  .btn-success {
+    background-color: #28a745;
+  }
+  
+  .btn-success:hover {
+    background-color: #1e7e34;
+  }
+  
+  .btn-danger {
+    background-color: #dc3545;
+  }
+  
+  .btn-danger:hover {
+    background-color: #c82333;
+    transform: scale(1.05); /* Slight scale-up effect on hover */
+  }
+  
+  .btn-warning {
+    background-color: #ffc107;
+    color: #212529;
+  }
+  
+  .btn-warning:hover {
+    background-color: #e0a800;
+    color: #212529;
+  }
+  
+  /* Task List Styling */
+  .user-task-group {
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 10px 15px;
+  }
+  
+  .user-header {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #007bff;
+  }
+  
+  .task-list {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .task-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    transition: transform 0.3s ease;
+  }
+  
+  .task-item:hover {
+    transform: scale(1.02);
+    background: #f8f9fa;
+  }
+  
+  .task-details {
+    margin-bottom: 10px;
+  }
+  
+  .task-details p {
+    margin: 0;
+    font-size: 14px;
+  }
+  
+  .task-actions {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .no-tasks-message {
+    text-align: center;
+    font-size: 16px;
+    color: #6c757d;
+    margin-top: 20px;
+    font-style: italic;
+  }
+  
+  .add-task-button {
+    display: inline-flex; /* Align items horizontally without extra space */
+    align-items: center;
+    justify-content: flex-start; /* Keep it aligned to the left */
+    padding: 5px 10px; /* Adjust padding to remove extra width */
+    border: 1px solid #007bff; /* Border wrapping both */
+    border-radius: 10px; /* Rounded corners */
+    background-color: #f9f9f9; /* Light background for contrast */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    max-width: fit-content; /* Ensure it fits the content */
+  
+    &:hover {
+      border-color: #0056b3;
+      background-color: #e6f3ff; /* Subtle hover effect */
+    }
+  
+    .btn-add-task {
+      background-color: transparent;
+      color: #007bff; /* Blue color for the plus */
+      font-size: 24px; /* Adjust size of the plus */
+      border: none; /* Remove border from the plus */
+      cursor: pointer;
+      padding: 0;
+      margin-right: 5px; /* Spacing between the plus and text */
+      transition: transform 0.2s ease, color 0.2s ease;
+  
+      &:hover {
+        color: #0056b3; /* Slightly darker blue on hover */
+      }
+    }
+  
+    .create-task-text {
+      font-size: 16px;
+      font-weight: 600;
+      color: #007bff;
+      transition: color 0.2s ease;
+  
+      .btn-add-task:hover + & {
+        color: #0056b3; /* Change text color on button hover */
+      }
+    }
+  }
+  
+  
+  /* Modal Styles */
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  
+    .modal-content {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      position: relative;
+  
+      .close-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 20px;
+        cursor: pointer;
+      }
+    }
+  }
+  
+  .user-list {
+    margin: 20px 0;
+  
+    h2 {
+      font-size: 24px;
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+  
+    .user-card-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+    
+    .user-card {
+      position: relative; /* Enable positioning within the card */
+      display: flex;
+      flex-direction: column; /* Stack content vertically */
+      justify-content: space-between; /* Push content to edges */
+      align-items: flex-start; /* Align content to the left */
+      padding: 15px;
+      width: 300px;
+      height: 100px; /* Fixed height to ensure consistency */
+      text-align: center;
+      border-radius: 15px;
+      background: linear-gradient(145deg, #e3f2fd, #bbdefb);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        background: linear-gradient(145deg, #90caf9, #64b5f6);
+      }
+    
+      &.selected {
+        border: 2px solid #1976d2;
+      }
+    
+      .user-card-content {
+        display: flex;
+        align-items: center;
+        gap: 50px;
+        margin-bottom: 15px;
+        margin-bottom: auto; /* Push the delete button to the bottom */
+    
+        .user-avatar {
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          background-color: #f0f8ff;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          overflow: hidden;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    
+          .profile-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+    
+          .placeholder-icon {
+            font-size: 28px;
+            color: #007bff;
+          }
+        }
+    
+        .user-details {
+          flex: 1;
+    
+          p {
+            margin: 5px 0;
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+          }
+    
+          p:last-child {
+            font-weight: bold;
+            color: #2890a7; /* Green for budget */
+          }
+        }
+      }
+    }
+  }
+  
+  .add-user-button {
+    display: flex;
+    justify-content: center; /* Center align */
+    margin-top: 10px;
+  
+    .btn {
+      width: auto; /* Allow dynamic width for this specific button */
+    }
+  }
+  
+  .user-card .btn {
+    margin-top: 10px; /* Space between the button and content */
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  /* Dropdown styles */
+  .dropdown {
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 0;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-height: 150px;
+    overflow-y: auto;
+    z-index: 1000;
+    position: absolute;
+    width: 100%;
+  
+    .dropdown-item {
+      padding: 10px 15px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+  
+      &:hover {
+        background: #f0f8ff; /* Light blue */
+      }
+    }
+  }
+  
+  .modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+    .modal-content {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      width: 400px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      position: relative;
+  
+      .close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 24px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+  
+      h2 {
+        margin-top: 0;
+      }
+  
+      form {
+        display: flex;
+        flex-direction: column;
+  
+        div {
+          margin-bottom: 15px;
+  
+          label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+          }
+  
+          input,
+          textarea,
+          select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+          }
+        }
+  
+        button {
+          background-color: #28a745;
+          color: #fff;
+          padding: 10px;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+  
+          &:hover {
+            background-color: #218838;
+          }
+        }
+      }
+    }
+  }
+  
+  .task-item {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+  
+    &.task-high {
+      background-color: #ffcccc;
+      border-color: #ff0000;
+    }
+  
+    &.task-medium {
+      background-color: #fff8cc;
+      border-color: #ffc107;
+    }
+  
+    &.task-low {
+      background-color: #ccffcc;
+      border-color: #28a745;
+    }
+  }
+  
+  .button-container {
+    position: absolute; /* Position relative to the card */
+      bottom: 15px; /* Distance from the bottom of the card */
+      right: 15px; /* Distance from the right of the card */
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+  }
+  
+  .button-container .btn {
+    width: 120px; /* Fixed width for consistency */
+        height: 40px; /* Fixed height for buttons */
+        font-size: 14px;
+        padding: 0;
+  }
+  
+  /* Icon Button Styling */
+  .btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #dc3545; /* Red color for delete */
+    font-size: 24px; /* Adjust icon size */
+    transition: color 0.3s, transform 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .btn-icon:hover {
+    color: #c82333; /* Darker red on hover */
+    transform: scale(1.1); /* Slightly enlarge icon on hover */
+  }
+  
+  .btn-icon:focus {
+    outline: none; /* Remove focus outline */
+  }
+  
+  
+  
