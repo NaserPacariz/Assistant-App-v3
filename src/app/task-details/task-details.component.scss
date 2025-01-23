@@ -515,5 +515,34 @@
     outline: none; /* Remove focus outline */
   }
   
+  .navigation-arrows {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+  
+    .arrow-btn {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+  
+      &:hover {
+        background-color: #0056b3;
+      }
+  
+      &:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+    }
+  }
+  
   
   

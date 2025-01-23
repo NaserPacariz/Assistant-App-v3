@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TaskService } from 'src/services/task.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { BudgetService } from '@services/budget.service';
 
 @Component({
   selector: 'app-task-details',
@@ -22,7 +23,7 @@ export class TaskDetailsComponent implements OnInit {
   dueDate: string = '';
   urgency: string = 'low';
 
-  constructor(private route: ActivatedRoute, private taskService: TaskService) {}
+  constructor(private route: ActivatedRoute, private taskService: TaskService, private budgetService: BudgetService) {}
 
   ngOnInit(): void {
     const userId = this.route.snapshot.paramMap.get('userId');
@@ -46,6 +47,7 @@ export class TaskDetailsComponent implements OnInit {
             id: taskId,
             ...taskData, // Spread task details
           }));
+          this.sortTasksByUrgency(); // Sort tasks after fetching
         } else {
           console.error('Unexpected tasks format:', response);
           this.tasks = []; // Fallback to empty array
@@ -82,6 +84,7 @@ export class TaskDetailsComponent implements OnInit {
     this.taskService.createTask(this.userId, newTask).subscribe({
       next: (response) => {
         this.tasks.push({ ...newTask, id: response.taskId });
+        this.sortTasksByUrgency(); // Sort tasks after adding
         this.closeAddTaskModal();
       },
       error: (error) => {
@@ -106,8 +109,16 @@ export class TaskDetailsComponent implements OnInit {
         next: () => {
           const index = this.tasks.findIndex((t) => t.id === this.editingTask.id);
           if (index > -1) {
+            // Update the task in the array
             this.tasks[index] = { ...this.editingTask };
+  
+            // Re-sort the tasks to reflect the updated urgency order
+            this.tasks.sort((a, b) => {
+              const urgencyOrder: { [key: string]: number } = { high: 1, medium: 2, low: 3 };
+              return urgencyOrder[a.urgency] - urgencyOrder[b.urgency];
+            });
           }
+  
           this.closeEditTaskModal();
         },
         error: (error) => {
@@ -116,6 +127,7 @@ export class TaskDetailsComponent implements OnInit {
       });
     }
   }
+  
 
   confirmAndDeleteTask(taskId: string): void {
     if (confirm('Are you sure you want to delete this task?')) {
@@ -146,4 +158,18 @@ export class TaskDetailsComponent implements OnInit {
         return '';
     }
   }
+  sortTasksByUrgency(): void {
+    const urgencyOrder: { high: number; medium: number; low: number } = {
+      high: 1,
+      medium: 2,
+      low: 3,
+    };
+  
+    this.tasks.sort((a, b) => {
+      const urgencyA = urgencyOrder[a.urgency as keyof typeof urgencyOrder] || 0;
+      const urgencyB = urgencyOrder[b.urgency as keyof typeof urgencyOrder] || 0;
+      return urgencyA - urgencyB;
+    });
+  }
+  
 }

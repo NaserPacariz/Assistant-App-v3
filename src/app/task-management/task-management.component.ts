@@ -235,6 +235,19 @@ urgency: string = 'low'; // Default value
     });
   }
   
+  sortTasksByUrgency(): void {
+    const urgencyOrder: { high: number; medium: number; low: number } = {
+      high: 1,
+      medium: 2,
+      low: 3,
+    };
+  
+    this.tasks.sort((a, b) => {
+      const urgencyA = urgencyOrder[a.urgency as keyof typeof urgencyOrder] || 0;
+      const urgencyB = urgencyOrder[b.urgency as keyof typeof urgencyOrder] || 0;
+      return urgencyA - urgencyB;
+    });
+  }
   
 
   updateTask(): void {
@@ -254,7 +267,7 @@ urgency: string = 'low'; // Default value
         if (taskIndex > -1) {
           this.tasks[taskIndex] = { id, userId, ...updatedTaskData };
         }
-  
+        this.sortTasksByUrgency(); // Sort tasks after updating
         this.closeEditTaskModal(); // Close the modal
       },
       error: (error) => {
@@ -333,6 +346,7 @@ urgency: string = 'low'; // Default value
           id: taskId,
           ...taskData, // Spread task details (title, description, etc.)
         }));
+        this.sortTasksByUrgency(); // Sort tasks after fetching
       },
       error: (error) => {
         console.error('Error fetching tasks for user:', error);
