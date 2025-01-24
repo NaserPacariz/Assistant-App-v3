@@ -12,28 +12,37 @@ import { CommonModule } from '@angular/common';
 })
 export class BudgetHistoryComponent implements OnInit {
   userId: string = '';
-  history: any[] = [];
+  totalBudget: number = 0;
 
-  constructor(private route: ActivatedRoute, private router: Router, private budgetService: BudgetService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private budgetService: BudgetService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.userId = this.route.snapshot.paramMap.get('userId') || '';
-    this.fetchBudgetHistory();
+    this.route.paramMap.subscribe((params) => {
+      const userId = params.get('userId');
+      if (userId) {
+        this.userId = userId;
+        this.fetchTotalBudget(this.userId);
+      } else {
+        console.error('User ID is null or undefined.');
+      }
+    });
   }
+  
 
-  fetchBudgetHistory(): void {
-    this.budgetService.getBudgetHistory(this.userId).subscribe({
-      next: (response) => {
-        this.history = response.history || [];
+  fetchTotalBudget(userId: string): void {
+    const currentMonth = new Date().toISOString().slice(0, 7);
+    this.budgetService.getBudget(userId, currentMonth).subscribe({
+      next: (data) => {
+        this.totalBudget = data?.amount || 0;
       },
       error: (error) => {
-        console.error('Failed to fetch budget history:', error);
-        this.history = [];
+        console.error('Failed to fetch total budget:', error);
       },
     });
   }
-
-  goBack(): void {
-    this.router.navigate([`/tasks/${this.userId}`]);
-  }
 }
+

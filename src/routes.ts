@@ -14,6 +14,6 @@ export const routes: Routes = [
   { path: 'tasks', component: TaskManagementComponent, canActivate: [authGuard] }, // Protected
   { path: 'budgets', component: BudgetManagementComponent, canActivate: [authGuard] }, // Protected
   { path: 'home', component: LandingPageComponent, canActivate: [authGuard] }, // Protected
-  { path: 'budget-history', component: BudgetHistoryComponent},
+  { path: 'budget-history/:userId', component: BudgetHistoryComponent },
   { path: '**', redirectTo: 'login' },
 ];

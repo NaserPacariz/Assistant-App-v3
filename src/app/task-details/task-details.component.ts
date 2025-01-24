@@ -15,8 +15,9 @@ import { Router } from '@angular/router';
 })
 export class TaskDetailsComponent implements OnInit {
   openBudgetHistory(): void {
-    this.router.navigate(['/budget-history']);
+    this.router.navigate(['/budget-history', this.userId]);
   }
+  
   userId: string = '';
   tasks: any[] = [];
   isAddTaskModalVisible: boolean = false;
@@ -31,6 +32,7 @@ export class TaskDetailsComponent implements OnInit {
   spendings = 0; // To update spendings
   budget: any = null; // This will now be an object, not an array
   loading = false;
+  totalBudget: number = 0; // Holds the total budget
 
   constructor(private route: ActivatedRoute, private taskService: TaskService, private budgetService: BudgetService, private router: Router) {}
 
@@ -39,10 +41,29 @@ export class TaskDetailsComponent implements OnInit {
     if (userId) {
       this.userId = userId;
       this.fetchTasksForUser(this.userId);
+      this.fetchTotalBudget(this.userId); // Fetch and store the total budget
     } else {
       console.error('User ID is null or undefined.');
     }
   }
+
+  fetchTotalBudget(userId: string): void {
+    const currentMonth = new Date().toISOString().slice(0, 7);
+    this.budgetService.getBudget(userId, currentMonth).subscribe({
+      next: (data) => {
+        this.totalBudget = data?.amount || 0;
+      },
+      error: (error) => {
+        console.error('Failed to fetch total budget:', error);
+        if (error.message.includes('Unauthorized')) {
+          // Handle unauthorized error, e.g., redirect to login
+          this.router.navigate(['/login']);
+        }
+      },
+    });
+  }
+  
+  
 
   fetchTasksForUser(userId: string): void {
     this.taskService.getTasksByUserId(userId).subscribe({

@@ -6,6 +6,7 @@
   <div class="action-buttons">
     <button class="btn btn-primary create-task-button" (click)="openCreateTaskModal()">+ Create Task</button>
   </div>
+  
   <div *ngFor="let task of tasks" class="task-item" [ngClass]="getTaskClass(task.urgency)">
     <div class="task-info">
       <p><strong>Title:</strong> {{ task.title }}</p>
@@ -35,6 +36,13 @@
         <button class="btn btn-primary" (click)="openBudgetHistory()">Budget History</button>
       
     </form>
+
+    <div class="total-budget-section">
+      <h3>Total Budget</h3>
+      <p *ngIf="totalBudget > 0">Your current budget: <strong>{{ totalBudget | currency }}</strong></p>
+      <p *ngIf="totalBudget <= 0">No budget available.</p>
+    </div>
+    
   
     <div class="budget-details" *ngIf="budget">
       <h3>Budget Details:</h3>
