@@ -4,15 +4,19 @@ import { TaskService } from 'src/services/task.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { BudgetService } from '@services/budget.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-task-details',
   templateUrl: './task-details.component.html',
   styleUrls: ['./task-details.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule], // Add FormsModule to imports
+  imports: [CommonModule, FormsModule] // Add FormsModule to imports
 })
 export class TaskDetailsComponent implements OnInit {
+  openBudgetHistory(): void {
+    this.router.navigate(['/budget-history']);
+  }
   userId: string = '';
   tasks: any[] = [];
   isAddTaskModalVisible: boolean = false;
@@ -22,8 +26,13 @@ export class TaskDetailsComponent implements OnInit {
   taskDescription: string = '';
   dueDate: string = '';
   urgency: string = 'low';
+  amount = 0;
+  month = '';
+  spendings = 0; // To update spendings
+  budget: any = null; // This will now be an object, not an array
+  loading = false;
 
-  constructor(private route: ActivatedRoute, private taskService: TaskService, private budgetService: BudgetService) {}
+  constructor(private route: ActivatedRoute, private taskService: TaskService, private budgetService: BudgetService, private router: Router) {}
 
   ngOnInit(): void {
     const userId = this.route.snapshot.paramMap.get('userId');
@@ -171,5 +180,58 @@ export class TaskDetailsComponent implements OnInit {
       return urgencyA - urgencyB;
     });
   }
-  
+  addBudget() {
+    this.loading = true;
+    this.budgetService.addBudget(this.userId, this.amount, this.month).subscribe({
+      next: () => {
+        alert('Budget added successfully');
+        this.loading = false;
+        this.fetchBudget(); // Auto-refresh after adding budget
+      },
+      error: (error) => {
+        console.error('Error adding budget:', error);
+        alert('Failed to add budget');
+        this.loading = false;
+      }
+    });
+  }
+
+  // Fetch Budget
+  fetchBudget() {
+    this.loading = true;
+    this.budgetService.getBudget(this.userId, this.month).subscribe({
+      next: (budget) => {
+        if (typeof budget === 'object' && budget !== null) {
+          this.budget = budget; // Set the budget only if it’s a valid object
+        } else {
+          this.budget = null; // Reset if no valid budget is found
+        }
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching budget:', error);
+        alert('Failed to fetch budget');
+        this.budget = null;
+        this.loading = false;
+      }
+    });
+  }
+
+  // Update Spendings
+  updateSpendings() {
+    this.loading = true;
+    this.budgetService.updateSpending(this.userId, this.month, this.spendings).subscribe({
+      next: (res) => {
+        console.log('Spendings updated successfully:', res);
+        alert('Spendings updated successfully!');
+        this.loading = false;
+        this.fetchBudget(); // Auto-refresh after updating spendings
+      },
+      error: (err) => {
+        console.error('Error updating spendings:', err);
+        alert('Failed to update spendings. Please check the server.');
+        this.loading = false;
+      }
+    });
+  }
 }

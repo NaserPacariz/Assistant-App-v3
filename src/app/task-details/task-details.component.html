@@ -20,9 +20,31 @@
     </div>
   </div>
   
-
+  <div class="container">
+    <form (ngSubmit)="addBudget()">
+      <input type="text1" [(ngModel)]="userId" name="userId" placeholder="User ID" required />
+      <input type="number" [(ngModel)]="amount" name="amount" placeholder="Budget Amount" required />
+      <input type="month" [(ngModel)]="month" name="month" required />
+      <button type="submit">Add Budget</button>
+    </form>
+  
+    <form (ngSubmit)="fetchBudget()">
+      <input type="text" [(ngModel)]="userId" name="userId" placeholder="User ID" required />
+      <input type="month" [(ngModel)]="month" name="month" required />
+      <button type="submit">Get Budget</button>
+        <button class="btn btn-primary" (click)="openBudgetHistory()">Budget History</button>
+      
+    </form>
+  
+    <div class="budget-details" *ngIf="budget">
+      <h3>Budget Details:</h3>
+      <p>Amount: {{ budget.amount }}</p>
+      <p>Spendings: {{ budget.spendings }}</p>
+    </div>
+  </div>
   <!-- No Tasks Message -->
   <p *ngIf="tasks.length === 0" class="no-tasks-message">No tasks available for this user.</p>
+  
 
   <!-- Add Task Modal -->
   <div class="modal" *ngIf="isAddTaskModalVisible">
@@ -91,4 +113,3 @@
       </form>
     </div>
   </div>
-</div>

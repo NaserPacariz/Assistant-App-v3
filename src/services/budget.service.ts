@@ -59,4 +59,13 @@ export class BudgetService {
         )
     );
 }
+
+getBudgetHistory(userId: string): Observable<any> {
+  return this.getAuthHeaders().pipe(
+    switchMap((headers) =>
+      this.http.get(`${this.BASE_URL}/history/${userId}`, { headers })
+    )
+  );
+}
+
 }

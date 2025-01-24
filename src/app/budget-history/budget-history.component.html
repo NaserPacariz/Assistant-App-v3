@@ -1,0 +1,28 @@
+<div class="budget-history-container">
+    <button class="btn btn-primary" (click)="goBack()">← Back</button>
+    <h2>Budget History for User {{ userId }}</h2>
+    <div *ngIf="history && history.length > 0; else noHistory">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Amount Added</th>
+            <th>Spendings</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let record of history">
+            <td>{{ record.date }}</td>
+            <td>{{ record.amountAdded }}</td>
+            <td>{{ record.spendings }}</td>
+            <td>{{ record.notes }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <ng-template #noHistory>
+      <p>No history available for this user.</p>
+    </ng-template>
+  </div>
+  
