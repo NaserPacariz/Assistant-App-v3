@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { BudgetService } from '@services/budget.service';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-task-details',
@@ -34,7 +35,7 @@ export class TaskDetailsComponent implements OnInit {
   loading = false;
   totalBudget: number = 0; // Holds the total budget
 
-  constructor(private route: ActivatedRoute, private taskService: TaskService, private budgetService: BudgetService, private router: Router) {}
+  constructor(private route: ActivatedRoute, private taskService: TaskService, private budgetService: BudgetService, private router: Router, private location: Location) {}
 
   ngOnInit(): void {
     const userId = this.route.snapshot.paramMap.get('userId');
@@ -45,6 +46,10 @@ export class TaskDetailsComponent implements OnInit {
     } else {
       console.error('User ID is null or undefined.');
     }
+  }
+
+  goBack(): void {
+    this.location.back(); // Navigates to the previous page
   }
 
   fetchTotalBudget(userId: string): void {

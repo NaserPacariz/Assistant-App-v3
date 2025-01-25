@@ -5,15 +5,15 @@
   <!-- Tabs -->
   <div class="tab-container">
     <button
-      (click)="selectTab('tasks')"
-      [class.active]="selectedTab === 'tasks'"
+      routerLink="/home/tasks"
+      routerLinkActive="active-tab"
       class="tab"
     >
       Task Management
     </button>
     <button
-      (click)="selectTab('budgets')"
-      [class.active]="selectedTab === 'budgets'"
+      routerLink="/home/budgets"
+      routerLinkActive="active-tab"
       class="tab"
     >
       Budget Management
@@ -21,12 +21,7 @@
   </div>
 
   <!-- Tab Content -->
-  <div *ngIf="selectedTab === 'tasks'">
-    <button routerLink="/tasks" class="button blue-button">Go to Tasks</button>
-  </div>
-  <div *ngIf="selectedTab === 'budgets'">
-    <button routerLink="/budgets" class="button blue-button">Go to Budgets</button>
-  </div>
+  <router-outlet></router-outlet>
 
   <!-- Logout Button -->
   <button (click)="logout()" class="logout-button">

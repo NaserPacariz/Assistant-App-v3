@@ -4,41 +4,44 @@
 />
 
 <div class="task-management-container">
-  <h1 class="page-title">Task Management</h1>
 
   <!-- User List -->
   <div class="user-list" *ngIf="users.length > 0">
     <h2>Manage Users</h2>
     <div class="user-card-container">
       <div
-        class="user-card"
-        *ngFor="let user of users"
-        (click)="fetchTasksForUser(user.uid)"
-        [class.selected]="selectedUserId === user.uid"
-      >
-        <div class="user-card-content">
-          <!-- Placeholder for Profile Photo -->
-          <div class="user-avatar">
-            <img 
-              src="assets/default-profile.png" 
-              alt="User Avatar" 
-              *ngIf="user.photoURL" 
-              class="profile-photo"
-            />
-            <span *ngIf="!user.photoURL" class="placeholder-icon">👤</span>
-          </div>
-          <div class="user-info">
-            <p class="user-name">{{ user.email.split('@')[0] }}</p>
-            <p class="user-budget">{{ user.budget | currency: 'USD' }}</p>
-          </div>
-          <div class="button-container">
-            <button class="btn-icon" (click)="confirmDeleteUser(user.uid)" title="Delete User">
-              <i class="fas fa-trash"></i> <!-- Font Awesome icon -->
-            </button>
-          </div>
-        </div>
-      </div>
+  class="user-card"
+  *ngFor="let user of users"
+  (click)="fetchTasksForUser(user.uid)"
+  [class.selected]="selectedUserId === user.uid"
+>
+  <div class="user-card-content">
+    <!-- Placeholder for Profile Photo -->
+    <div class="user-avatar">
+      <img 
+        src="assets/default-profile.png" 
+        alt="User Avatar" 
+        *ngIf="user.photoURL" 
+        class="profile-photo"
+      />
+      <span *ngIf="!user.photoURL" class="placeholder-icon">👤</span>
     </div>
+    <div class="user-info">
+      <p class="user-name">{{ user.email.split('@')[0] }}</p>
+      <p class="user-budget">{{ user.budget | currency: 'USD' }}</p>
+    </div>
+    <div class="button-container">
+      <button 
+        class="btn-icon" 
+        (click)="confirmDeleteUser(user.uid); $event.stopPropagation()" 
+        title="Delete User"
+      >
+        <i class="fas fa-trash"></i> <!-- Font Awesome icon -->
+      </button>
+    </div>
+  </div>
+</div>
+</div>
   </div>
 
   <!-- Add User and Create Task Buttons -->

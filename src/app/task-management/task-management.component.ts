@@ -21,7 +21,7 @@ export class TaskManagementComponent implements OnInit {
   }
   newUserEmail = '';
   newUserBudget: number | null = null;
-  userToDelete: string | null = null; // Stores the UID of the user to delete
+  userToDelete: string | null = null; // Track which user is being deleted
   isAddUserModalVisible = false;
   isDeleteDialogVisible = false
   isAddTaskModalVisible = false;

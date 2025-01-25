@@ -680,6 +680,39 @@
       color: #28a745; // Green for positive budget
     }
   }
+
+  .back-arrow-container {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1000;
+  
+    .back-arrow {
+      font-size: 24px;
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 50%;
+      background-color: transparent;
+      color: #007bff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+  
+      &:hover {
+        background-color: #f0f0f0;
+        color: #0056b3;
+      }
+  
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+  
   
   
   

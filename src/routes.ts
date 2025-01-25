@@ -8,12 +8,17 @@ import { TaskDetailsComponent } from 'src/app/task-details/task-details.componen
 import { BudgetHistoryComponent } from './app/budget-history/budget-history.component';
 
 export const routes: Routes = [
-  { path: 'tasks/:userId', component: TaskDetailsComponent },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'tasks', component: TaskManagementComponent, canActivate: [authGuard] }, // Protected
-  { path: 'budgets', component: BudgetManagementComponent, canActivate: [authGuard] }, // Protected
-  { path: 'home', component: LandingPageComponent, canActivate: [authGuard] }, // Protected
+  {
+    path: 'home',
+    component: LandingPageComponent,
+    children: [
+      { path: 'tasks', component: TaskManagementComponent },
+      { path: 'budgets', component: BudgetManagementComponent  },
+    ],
+  },
+  { path: 'tasks/:userId', component: TaskDetailsComponent,  canActivate: [authGuard] },
   { path: 'budget-history/:userId', component: BudgetHistoryComponent },
   { path: '**', redirectTo: 'login' },
 ];

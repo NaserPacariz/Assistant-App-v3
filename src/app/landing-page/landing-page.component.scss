@@ -28,10 +28,10 @@
       color: #555;
       transition: color 0.3s, border-bottom 0.3s;
 
-      &.active {
-        color: #007bff;
-        font-weight: bold;
-        border-bottom: 2px solid #007bff;
+      &.active-tab {
+        color: #fff;
+        background-color: #007bff;
+        border-radius: 5px;
       }
 
       &:hover {
@@ -54,4 +54,10 @@
       background-color: #bd2130;
     }
   }
+  
+}
+
+router-outlet {
+  display: block;
+  margin-top: 20px; /* Add spacing between tabs and content */
 }

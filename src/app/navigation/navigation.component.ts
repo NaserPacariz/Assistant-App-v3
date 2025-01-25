@@ -8,14 +8,14 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="navigation-arrows">
+    <!-- <div class="navigation-arrows">
       <button class="arrow-btn" [disabled]="!prevRoute" (click)="navigateTo(prevRoute)">
-        &larr; <!-- Left arrow -->
+        &larr; 
       </button>
       <button class="arrow-btn" [disabled]="!nextRoute" (click)="navigateTo(nextRoute)">
-        &rarr; <!-- Right arrow -->
+        &rarr; 
       </button>
-    </div>
+    </div> -->
   `,
   styleUrls: ['./navigation.component.scss'], // Create this file for styles
 })

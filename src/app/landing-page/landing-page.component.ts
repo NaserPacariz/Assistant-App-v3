@@ -6,31 +6,24 @@ import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-landing-page',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule], // Add RouterModule here
   templateUrl: './landing-page.component.html',
   styleUrls: ['./landing-page.component.scss'],
 })
-
-export class LandingPageComponent {
+export class LandingPageComponent implements OnInit {
   role: string | null = null; // Store role from localStorage
-  selectedTab: string = 'tasks'; // Default tab
+  selectedTab: string = 'home'; // Default tab
+
   constructor(private router: Router) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.role = localStorage.getItem('role'); // Fetch role from localStorage
     console.log('User Role:', this.role); // Debugging
-  }  
-
-  adminOnlyFunction() {
-    console.log('Admin function accessed!');
-  }
-  selectTab(tab: string): void {
-    this.selectedTab = tab;
   }
 
   logout(): void {
-      localStorage.removeItem('token');
-      this.router.navigate(['/login']);
+    localStorage.removeItem('token');
+    this.router.navigate(['/login']);
     console.log('Logging out...');
   }
 }
