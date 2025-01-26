@@ -52,12 +52,18 @@ export class BudgetService {
 }
 
   // Fetch budget
-  getBudget(userId: string, month: string): Observable<any> {
-    return this.getAuthHeaders().pipe(
-        switchMap((headers) =>
-            this.http.get(`${this.BASE_URL}/${userId}/${month}`, { headers })
-        )
-    );
-}
+  getBudget(taskId: string, currentMonth: string): Observable<any> {
+    const token = localStorage.getItem('token'); // Retrieve the token
+    if (!token) {
+      throw new Error('Unauthorized: Token not found');
+    }
+  
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+  
+    return this.http.get(`/api/budget/${taskId}`, { headers });
+  }
+  
 
 }

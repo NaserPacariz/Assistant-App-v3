@@ -13,10 +13,10 @@
   <div *ngFor="let task of tasks" class="task-item" [ngClass]="getTaskClass(task.urgency)">
     <div class="task-info">
       <p><strong>Title:</strong> {{ task.title }}</p>
-      <p><strong>Description:</strong> {{ task.description }}</p>
       <p><strong>Due Date:</strong> {{ task.dueDate }}</p>
       <p><strong>Status:</strong> {{ task.status }}</p>
       <p><strong>Urgency:</strong> {{ task.urgency }}</p>
+      <p><strong>Description:</strong> {{ task.description }}</p>
     </div>
     <div class="task-actions">
       <button class="btn btn-warning" (click)="openEditTaskModal(task)">Edit</button>
@@ -85,7 +85,6 @@
         </div>
         <div class="form-actions">
           <button type="submit" class="btn btn-success">Save</button>
-          <button type="button" class="btn btn-secondary" (click)="closeAddTaskModal()">Cancel</button>
         </div>
       </form>
     </div>
@@ -94,33 +93,52 @@
   <!-- Edit Task Modal -->
   <div class="modal" *ngIf="isEditModalOpen">
     <div class="modal-content">
-      <span class="close-button" (click)="closeEditTaskModal()">&times;</span>
-      <h3>Edit Task</h3>
-      <form (ngSubmit)="updateTask()">
+      <div class="modal-header">
+        <div class="header-icon">
+          <i class="fas fa-tasks"></i>
+        </div>
+        <input
+          type="text"
+          [(ngModel)]="editingTask.title"
+          class="task-title-input"
+          placeholder="Name of task"
+        />
+        <button class="close-button" (click)="closeEditTaskModal()">
+          <i class="fas fa-times">X</i>
+        </button>
+      </div>
+      <form (ngSubmit)="updateTask()" class="edit-task-form">
         <div class="form-group">
-          <label for="editTitle">Task Title</label>
-          <input id="editTitle" type="text" [(ngModel)]="editingTask.title" name="editTitle" required />
+          <label for="dueDate">Due Date</label>
+          <input
+            id="dueDate"
+            type="date"
+            [(ngModel)]="editingTask.dueDate"
+            name="dueDate"
+            required
+          />
         </div>
         <div class="form-group">
-          <label for="editDescription">Task Description</label>
-          <textarea id="editDescription" [(ngModel)]="editingTask.description" name="editDescription"></textarea>
-        </div>
-        <div class="form-group">
-          <label for="editDueDate">Due Date</label>
-          <input id="editDueDate" type="date" [(ngModel)]="editingTask.dueDate" name="editDueDate" required />
-        </div>
-        <div class="form-group">
-          <label for="editUrgency">Urgency</label>
-          <select id="editUrgency" [(ngModel)]="editingTask.urgency" name="editUrgency" required>
-            <option value="high">High</option>
-            <option value="medium">Medium</option>
-            <option value="low">Low</option>
+          <label for="urgency">Urgency</label>
+          <select id="urgency" [(ngModel)]="editingTask.urgency" name="urgency" required>
+            <option value="high">High (Red)</option>
+            <option value="medium">Medium (Yellow)</option>
+            <option value="low">Low (Green)</option>
           </select>
         </div>
-        <div class="form-actions">
-          <button type="submit" class="btn btn-success">Update</button>
-          <button type="button" class="btn btn-secondary" (click)="closeEditTaskModal()">Cancel</button>
+        <div class="form-group">
+          <label for="description">Task Description</label>
+          <textarea
+            id="description"
+            [(ngModel)]="editingTask.description"
+            name="description"
+            placeholder="Enter task description"
+            required
+          ></textarea>
         </div>
+        <button type="submit" class="btn btn-success">Update</button>
       </form>
     </div>
   </div>
+  
+</div>

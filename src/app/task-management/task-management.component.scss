@@ -2,7 +2,7 @@
 .task-management-container {
   margin: 0 auto;
   padding: 30px;
-  background: #f9f9f9;
+  background: rgb(247, 248, 250);
   border-radius: 15px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   font-family: 'Roboto', sans-serif;
@@ -118,6 +118,21 @@
   padding: 10px 15px;
 }
 
+.user-info {
+  .user-name {
+    font-weight: 600; /* Make it bold */
+    text-transform: uppercase; /* Make it uppercase */
+    font-size: 15px; /* Adjust size if needed */
+    color: rgb(107, 111, 136);
+  }
+
+  .user-budget {
+    font-weight: 400; /* Regular font weight */
+    font-size: 0.9rem; /* Slightly smaller size to differentiate */
+    color: #555; /* Optional: Lighter color for differentiation */
+  }
+}
+
 .user-header {
   font-size: 18px;
   font-weight: bold;
@@ -231,13 +246,18 @@
   z-index: 1000;
 
   .modal-content {
-    background: white;
+    background: #fff;
     border-radius: 10px;
     padding: 20px;
-    width: 90%;
-    max-width: 400px;
+    width: 400px;
+    height: 400px; /* Set height to 400px */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    text-align: center;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center content vertically */
+    align-items: center; /* Center content horizontally */
 
     .close-button {
       position: absolute;
@@ -274,10 +294,9 @@
     align-items: flex-start; /* Align content to the left */
     padding: 15px;
     width: 300px;
-    height: 100px; /* Fixed height to ensure consistency */
+    height: 140px; /* Fixed height to ensure consistency */
     text-align: center;
-    border-radius: 15px;
-    background: linear-gradient(145deg, #e3f2fd, #bbdefb);
+    border-radius: 5px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
   
@@ -293,14 +312,16 @@
   
     .user-card-content {
       display: flex;
+      justify-content: center;
+      margin-top: 10px;
       align-items: center;
-      gap: 50px;
+      gap: 15px;
       margin-bottom: 15px;
       margin-bottom: auto; /* Push the delete button to the bottom */
   
       .user-avatar {
-        width: 60px;
-        height: 60px;
+        width: 100px;
+        height: 100px;
         border-radius: 50%;
         background-color: #f0f8ff;
         display: flex;
@@ -384,76 +405,137 @@
 
 .modal {
   position: fixed;
-  z-index: 1000;
-  left: 0;
   top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.5); /* Darker overlay */
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
 
   .modal-content {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 30px; /* Added padding for better spacing */
     width: 400px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    height: 400px; /* Slightly increased height */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); /* Softer shadow */
+    text-align: center;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center content vertically */
+    align-items: center; /* Center content horizontally */
 
-    .close {
+    .close-button {
       position: absolute;
-      top: 10px;
-      right: 10px;
+      top: 15px;
+      right: 15px;
+      font-size: 20px;
+      color: #aaa;
+      background: none;
+      border: none;
+      cursor: pointer;
+
+      &:hover {
+        color: #333;
+      }
+    }
+
+    .close-icon {
+      position: absolute;
+      top: 15px;
+      right: 15px;
       font-size: 24px;
       font-weight: bold;
+      color: #666;
+      background: none;
+      border: none;
       cursor: pointer;
+      transition: transform 0.2s ease;
+  
+      &:hover {
+        transform: scale(1.2);
+        color: #ff6b6b;
+      }
     }
 
-    h2 {
-      margin-top: 0;
-    }
-
-    form {
+    .modal-header {
       display: flex;
-      flex-direction: column;
-
-      div {
-        margin-bottom: 15px;
-
-        label {
-          font-weight: bold;
-          margin-bottom: 5px;
-          display: block;
-        }
-
-        input,
-        textarea,
-        select {
-          width: 100%;
-          padding: 8px;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-        }
+      justify-content: center;
+      margin-bottom: 20px;
+  
+      .icon-circle {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 70px;
+        height: 70px;
+        border: 2px solid #ff6b6b; /* Red border */
+        border-radius: 50%;
+        background-color: #fff;
+        color: #ff6b6b;
+        font-size: 36px; /* Adjust icon size */
       }
 
-      button {
-        background-color: #28a745;
-        color: #fff;
-        padding: 10px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
+      h5 {
+        font-size: 20px; /* Slightly larger font */
+        font-weight: 400;
+        margin: 0;
+        color: rgb(99, 99, 99);
+      }
+    }
 
-        &:hover {
-          background-color: #218838;
+    .modal-body {
+      margin: 20px 0; /* Increased spacing around body */
+
+      p {
+        font-size: 16px; /* Larger, more readable text */
+        color: rgb(99, 99, 99);
+        margin: 0;
+      }
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: space-between;
+      width: 65%;
+      margin-top: 20px;
+
+      .btn {
+        padding: 12px 20px; /* Larger buttons */
+        font-size: 14px;
+        border-radius: 8px; /* Rounded buttons */
+        cursor: pointer;
+        font-weight: 600; /* Bold text */
+        transition: background 0.3s;
+
+        &.btn-secondary {
+          background-color: rgb(193, 193, 193);
+          color: rgb(255, 246, 233);
+          border: 1px solid #ccc;
+
+          &:hover {
+            background-color: #d6d6d6;
+          }
+        }
+
+        &.btn-danger {
+          background-color: rgb(241, 94, 94);
+          color: #fff;
+          border: none;
+
+          &:hover {
+            background-color: #c82333;
+          }
         }
       }
     }
   }
 }
+
 
 .task-item {
   padding: 10px;
@@ -498,8 +580,8 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: #dc3545; /* Red color for delete */
-  font-size: 24px; /* Adjust icon size */
+  color: #7e7475; /* Red color for delete */
+  font-size: 18px; /* Adjust icon size */
   transition: color 0.3s, transform 0.2s;
   display: flex;
   justify-content: center;
@@ -542,6 +624,7 @@
     cursor: pointer;
   }
 }
+
 
 
 
