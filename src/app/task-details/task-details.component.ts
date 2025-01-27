@@ -34,6 +34,8 @@ export class TaskDetailsComponent implements OnInit {
   budget: any = null; // This will now be an object, not an array
   loading = false;
   totalBudget: number = 0; // Holds the total budget
+  isDescriptionModalVisible: boolean = false;
+  selectedTaskDescription: string = '';
 
   constructor(private route: ActivatedRoute, private taskService: TaskService, private budgetService: BudgetService, private router: Router, private location: Location) {}
 
@@ -260,4 +262,14 @@ export class TaskDetailsComponent implements OnInit {
       }
     });
   }
+
+  viewDescription(task: any): void {
+    this.selectedTaskDescription = task.description || 'No description available';
+    this.isDescriptionModalVisible = true; // Show the description modal
+  }
+  
+  closeDescriptionModal(): void {
+    this.isDescriptionModalVisible = false; // Close the description modal
+  }
+  
 }

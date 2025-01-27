@@ -827,14 +827,100 @@
       }
     }
   }
+
+  .task-details-container {
+    margin: 20px;
+  }
   
+  .tasks-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+  }
   
+  .tasks-table th, .tasks-table td {
+    text-align: left;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
   
+  .stage-badge {
+    background-color: #007bff;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+  }
   
+  .labels {
+    display: flex;
+    gap: 5px;
+  }
   
+  .label-badge {
+    background-color: #6c757d;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-size: 12px;
+  }
   
+  .task-actions {
+    display: flex;
+    gap: 10px;
+  }
   
+  .modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    z-index: 1000;
+  }
   
+  .modal-content {
+    position: relative;
+  }
   
+  .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+  }
   
+  .btn {
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+    font-size: 14px;
+  }
+  
+  .btn-info {
+    background-color: #17a2b8;
+    color: #fff;
+  }
+  
+  .btn-warning {
+    background-color: #ffc107;
+    color: #fff;
+  }
+  
+  .btn-danger {
+    background-color: #dc3545;
+    color: #fff;
+  }
+  
+  .btn-primary {
+    background-color: #007bff;
+    color: #fff;
+  }
   
