@@ -36,6 +36,9 @@ export class TaskDetailsComponent implements OnInit {
   totalBudget: number = 0; // Holds the total budget
   isDescriptionModalVisible: boolean = false;
   selectedTaskDescription: string = '';
+  deduction = 0;
+  deductionMonth = '';
+  currentMonth: string = '';
 
   constructor(private route: ActivatedRoute, private taskService: TaskService, private budgetService: BudgetService, private router: Router, private location: Location) {}
 
@@ -44,11 +47,18 @@ export class TaskDetailsComponent implements OnInit {
     if (userId) {
       this.userId = userId;
       this.fetchTasksForUser(this.userId);
-      this.fetchTotalBudget(this.userId); // Fetch and store the total budget
+      this.fetchTotalBudget(this.userId);
     } else {
       console.error('User ID is null or undefined.');
     }
+  
+    // Set default month to the current month
+    const currentDate = new Date();
+    this.currentMonth = currentDate.toISOString().slice(0, 7); // YYYY-MM format
+    this.month = this.currentMonth;
+    this.deductionMonth = this.currentMonth;
   }
+  
 
   goBack(): void {
     this.location.back(); // Navigates to the previous page
@@ -208,19 +218,24 @@ export class TaskDetailsComponent implements OnInit {
       return urgencyA - urgencyB;
     });
   }
-  addBudget() {
+  addBudget(): void {
+    if (this.amount <= 0) {
+      alert('Please enter a valid budget amount greater than 0.');
+      return;
+    }
+
     this.loading = true;
     this.budgetService.addBudget(this.userId, this.amount, this.month).subscribe({
       next: () => {
-        alert('Budget added successfully');
+        alert('Budget added successfully.');
         this.loading = false;
-        this.fetchBudget(); // Auto-refresh after adding budget
+        this.fetchBudget();
       },
       error: (error) => {
         console.error('Error adding budget:', error);
-        alert('Failed to add budget');
+        alert('Failed to add budget. Please try again.');
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -260,6 +275,27 @@ export class TaskDetailsComponent implements OnInit {
         alert('Failed to update spendings. Please check the server.');
         this.loading = false;
       }
+    });
+  }
+
+  deductBudget(): void {
+    if (this.deduction <= 0) {
+      alert('Please enter a valid deduction amount greater than 0.');
+      return;
+    }
+
+    this.loading = true;
+    this.budgetService.deductBudget(this.deduction, this.deductionMonth).subscribe({
+      next: () => {
+        alert('Budget deducted successfully.');
+        this.loading = false;
+        this.fetchBudget();
+      },
+      error: (error) => {
+        console.error('Error deducting budget:', error);
+        alert('Failed to deduct budget. Please try again.');
+        this.loading = false;
+      },
     });
   }
 

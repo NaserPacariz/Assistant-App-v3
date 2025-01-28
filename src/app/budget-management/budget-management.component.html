@@ -1,21 +1,85 @@
-<div class="container">
-    <form (ngSubmit)="addBudget()">
-      <input type="text" [(ngModel)]="userId" name="userId" placeholder="User ID" required />
-      <input type="number" [(ngModel)]="amount" name="amount" placeholder="Budget Amount" required />
-      <input type="month" [(ngModel)]="month" name="month" required />
-      <button type="submit">Add Budget</button>
-    </form>
-  
-    <form (ngSubmit)="fetchBudget()">
-      <input type="text" [(ngModel)]="userId" name="userId" placeholder="User ID" required />
-      <input type="month" [(ngModel)]="month" name="month" required />
-      <button type="submit">Get Budget</button>
-    </form>
-  
-    <div class="budget-details" *ngIf="budget">
-      <h3>Budget Details:</h3>
-      <p>Amount: {{ budget.amount }}</p>
-      <p>Spendings: {{ budget.spendings }}</p>
+<div class="budget-management-container">
+  <h2>Budget Management</h2>
+
+  <!-- Add Budget Form -->
+  <form (ngSubmit)="addBudget()" #addBudgetForm="ngForm" class="budget-form">
+    <div class="form-group">
+      <label for="amount">Budget Amount</label>
+      <input
+        type="number"
+        id="amount"
+        [(ngModel)]="amount"
+        name="amount"
+        placeholder="Enter Budget Amount"
+        required
+        #amountInput="ngModel"
+      />
+      <p class="error-message" *ngIf="amountInput.invalid && amountInput.touched">
+        Budget amount is required and must be greater than 0.
+      </p>
     </div>
+    <div class="form-group">
+      <label for="month">Select Month</label>
+      <input
+        type="month"
+        id="month"
+        [(ngModel)]="month"
+        name="month"
+        [value]="currentMonth"
+        required
+      />
+    </div>
+    <button type="submit" class="btn btn-success" [disabled]="addBudgetForm.invalid || loading">
+      Add Budget
+    </button>
+  </form>
+
+  <!-- Deduct Budget Form -->
+  <form (ngSubmit)="deductBudget()" #deductBudgetForm="ngForm" class="budget-form">
+    <div class="form-group">
+      <label for="deduction">Deduction Amount</label>
+      <input
+        type="number"
+        id="deduction"
+        [(ngModel)]="deduction"
+        name="deduction"
+        placeholder="Enter Deduction Amount"
+        required
+        #deductionInput="ngModel"
+      />
+      <p class="error-message" *ngIf="deductionInput.invalid && deductionInput.touched">
+        Deduction amount is required and must be greater than 0.
+      </p>
+    </div>
+    <div class="form-group">
+      <label for="deductMonth">Select Month</label>
+      <input
+        type="month"
+        id="deductMonth"
+        [(ngModel)]="deductionMonth"
+        name="deductMonth"
+        [value]="currentMonth"
+        required
+      />
+    </div>
+    <button type="submit" class="btn btn-warning" [disabled]="deductBudgetForm.invalid || loading">
+      Deduct Budget
+    </button>
+  </form>
+
+  <!-- Budget Details -->
+  <div *ngIf="budget && !loading" class="budget-details">
+    <h3>Budget Details</h3>
+    <p>Amount: {{ budget.amount | currency }}</p>
+    <p>Spendings: {{ budget.spendings | currency }}</p>
+    <progress [value]="budget.spendings" [max]="budget.amount"></progress>
+    <p *ngIf="budget.spendings > budget.amount" class="warning">
+      Warning: Spendings exceed the budget!
+    </p>
   </div>
-  
+  <div *ngIf="!budget && !loading" class="no-budget">
+    No budget details available for the selected month.
+  </div>
+
+  <div class="loading-indicator" *ngIf="loading">Loading...</div>
+</div>

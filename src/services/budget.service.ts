@@ -64,6 +64,8 @@ export class BudgetService {
   
     return this.http.get(`/api/budget/${taskId}`, { headers });
   }
-  
-
+  deductBudget(amount: number, month: string): Observable<any> {
+    const payload = { amount, month };
+    return this.http.post(`${this.BASE_URL}/deduct`, payload);
+  }
 }
