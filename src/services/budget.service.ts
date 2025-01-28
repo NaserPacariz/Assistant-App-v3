@@ -1,13 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Auth } from '@angular/fire/auth';
-import { from, Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { from, Observable, throwError } from 'rxjs';
+import { catchError, switchMap, take } from 'rxjs/operators';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BudgetService {
+  updateBudget(userId: string, month: string, updatedData: { spendings: number }) {
+    return this.http.patch<void>( // Dodaj <void> ili odgovarajući tip ako trebaš odgovor
+      `${this.BASE_URL}/${userId}/${month}.json`,
+      updatedData
+    );
+  }
+  
   private BASE_URL = 'http://localhost:4000/budgets'; // Your backend URL
 
   constructor(private http: HttpClient, private auth: Auth) {}
@@ -64,8 +72,21 @@ export class BudgetService {
   
     return this.http.get(`/api/budget/${taskId}`, { headers });
   }
-  deductBudget(amount: number, month: string): Observable<any> {
-    const payload = { amount, month };
-    return this.http.post(`${this.BASE_URL}/deduct`, payload);
+  deductBudget(userId: string, month: string, deduction: number): Observable<void> {
+    const url = `${this.BASE_URL}/${userId}/${month}`;
+    const token = localStorage.getItem('token');
+  
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+  
+    return this.http.patch<void>(url, { deduction }, { headers }).pipe(
+      catchError((error) => {
+        console.error('Error during budget deduction:', error);
+        return throwError(() => new Error('Failed to deduct budget. Please try again.'));
+      })
+    );
   }
+  
 }

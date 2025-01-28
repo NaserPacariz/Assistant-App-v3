@@ -54,21 +54,28 @@ export class BudgetManagementComponent implements OnInit {
       alert('Please enter a valid deduction amount greater than 0.');
       return;
     }
-
+  
     this.loading = true;
-    this.budgetService.deductBudget(this.deduction, this.deductionMonth).subscribe({
+  
+    const updatedSpendings = (this.budget.spendings || 0) + this.deduction;
+  
+    this.budgetService.updateBudget(this.userId, this.deductionMonth, {
+      spendings: updatedSpendings,
+    }).subscribe({
       next: () => {
         alert('Budget deducted successfully.');
+        this.fetchBudget(); // Ponovno učitaj budžet
         this.loading = false;
-        this.fetchBudget();
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error deducting budget:', error);
         alert('Failed to deduct budget. Please try again.');
         this.loading = false;
       },
     });
   }
+  
+  
   // Fetch Budget Details
   fetchBudget(): void {
     this.loading = true;

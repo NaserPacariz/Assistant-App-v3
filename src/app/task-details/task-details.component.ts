@@ -278,27 +278,6 @@ export class TaskDetailsComponent implements OnInit {
     });
   }
 
-  deductBudget(): void {
-    if (this.deduction <= 0) {
-      alert('Please enter a valid deduction amount greater than 0.');
-      return;
-    }
-
-    this.loading = true;
-    this.budgetService.deductBudget(this.deduction, this.deductionMonth).subscribe({
-      next: () => {
-        alert('Budget deducted successfully.');
-        this.loading = false;
-        this.fetchBudget();
-      },
-      error: (error) => {
-        console.error('Error deducting budget:', error);
-        alert('Failed to deduct budget. Please try again.');
-        this.loading = false;
-      },
-    });
-  }
-
   viewDescription(task: any): void {
     this.selectedTaskDescription = task.description || 'No description available';
     this.isDescriptionModalVisible = true; // Show the description modal
@@ -307,5 +286,45 @@ export class TaskDetailsComponent implements OnInit {
   closeDescriptionModal(): void {
     this.isDescriptionModalVisible = false; // Close the description modal
   }
+  deductBudget(): void {
+    if (this.deduction <= 0) {
+      alert('Please enter a valid deduction amount greater than 0.');
+      return;
+    }
+  
+    if (!this.userId) {
+      console.error('User ID is not defined.');
+      alert('Failed to deduct budget: User ID is missing.');
+      this.loading = false;
+      return;
+    }
+  
+    if (!this.deductionMonth) {
+      console.error('Deduction month is not defined.');
+      alert('Failed to deduct budget: Month is missing.');
+      this.loading = false;
+      return;
+    }
+  
+    console.log('Budget Doc ID:', this.userId);
+    console.log('Current Month:', this.deductionMonth);
+    console.log('Deduction:', this.deduction);
+  
+    this.loading = true;
+  
+    this.budgetService.deductBudget(this.userId, this.deductionMonth, this.deduction).subscribe({
+      next: () => {
+        alert('Budget deducted successfully.');
+        this.loading = false;
+        this.fetchBudget(); // Osvježi trenutni budžet
+      },
+      error: (error) => {
+        console.error('Error deducting budget:', error);
+        alert('Failed to deduct budget. Please try again.');
+        this.loading = false;
+      },
+    });
+  }
+  
   
 }

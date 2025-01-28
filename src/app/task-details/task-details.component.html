@@ -129,23 +129,7 @@
         Deduct Budget
       </button>
     </form>
-  
-    <!-- Budget Details -->
-    <div *ngIf="budget && !loading" class="budget-details">
-      <h3>Budget Details</h3>
-      <p>Amount: {{ budget.amount | currency }}</p>
-      <p>Spendings: {{ budget.spendings | currency }}</p>
-      <progress [value]="budget.spendings" [max]="budget.amount"></progress>
-      <p *ngIf="budget.spendings > budget.amount" class="warning">
-        Warning: Spendings exceed the budget!
-      </p>
-    </div>
-    <div *ngIf="!budget && !loading" class="no-budget">
-      No budget details available for the selected month.
-    </div>
-  
-    <div class="loading-indicator" *ngIf="loading">Loading...</div>
-  </div>
+    
   
   
   <!-- No Tasks Message -->

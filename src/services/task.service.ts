@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators'; // Ovo dodajte
+
 
 @Injectable({
   providedIn: 'root', // Service is provided globally
@@ -130,7 +132,23 @@ deleteUser(userId: string): Observable<any> {
 
   return this.http.delete(`${this.BASE_URL}/users/${userId}`, { headers });
 }
- 
+deductBudget(userId: string, month: string, deduction: number): Observable<void> {
+  const url = `${this.BASE_URL}/${userId}/${month}`;
+  const token = localStorage.getItem('token');
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  });
+
+  return this.http.patch<void>(url, { deduction }, { headers }).pipe(
+    catchError((error) => {
+      console.error('Error during budget deduction:', error);
+      return throwError(() => new Error('Failed to deduct budget. Please try again.'));
+    })
+  );
+}
+
 }
 
 
