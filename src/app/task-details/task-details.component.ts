@@ -7,7 +7,7 @@ import { BudgetService } from '@services/budget.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { RouterModule } from '@angular/router'; // Dodaj ovo
-
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-task-details',
@@ -17,6 +17,7 @@ import { RouterModule } from '@angular/router'; // Dodaj ovo
   imports: [CommonModule, FormsModule, RouterModule] // Add FormsModule to imports
 })
 export class TaskDetailsComponent implements OnInit {
+  http: any;
   openBudgetHistory(): void {
     this.router.navigate(['/budget-history', this.userId]);
   }
@@ -203,17 +204,20 @@ export class TaskDetailsComponent implements OnInit {
     });
   }
   addBudget(): void {
-    if (this.amount <= 0) {
-      alert('Please enter a valid budget amount greater than 0.');
+    if (!this.userId || !this.month || this.amount <= 0) {
+      alert('Invalid input: Make sure all fields are correctly filled.');
       return;
     }
-
+  
+    console.log('Sending addBudget:', { userId: this.userId, month: this.month, amount: this.amount });
+    
     this.loading = true;
+  
     this.budgetService.addBudget(this.userId, this.amount, this.month).subscribe({
       next: () => {
         alert('Budget added successfully.');
         this.loading = false;
-        this.fetchBudget();
+        this.fetchBudget(this.userId, this.month);
       },
       error: (error) => {
         console.error('Error adding budget:', error);
@@ -222,27 +226,24 @@ export class TaskDetailsComponent implements OnInit {
       },
     });
   }
+  
 
   // Fetch Budget
-  fetchBudget() {
-    this.loading = true;
-    this.budgetService.getBudget(this.userId, this.month).subscribe({
-      next: (budget) => {
-        if (typeof budget === 'object' && budget !== null) {
-          this.budget = budget; // Set the budget only if it’s a valid object
-        } else {
-          this.budget = null; // Reset if no valid budget is found
-        }
-        this.loading = false;
+  fetchBudget(userId: string, month: string): void {
+    console.log('Fetching budget:', { userId, month });
+  
+    this.budgetService.fetchBudget(userId, month).subscribe({
+      next: (data) => {
+        this.budget = data;
+        console.log('Budget fetched successfully:', data);
       },
-      error: (error) => {
-        console.error('Error fetching budget:', error);
-        alert('Failed to fetch budget');
-        this.budget = null;
-        this.loading = false;
-      }
+      error: (err) => {
+        console.error('Error fetching budget:', err);
+      },
     });
   }
+  
+
 
   // Update Spendings
   updateSpendings() {
@@ -252,7 +253,7 @@ export class TaskDetailsComponent implements OnInit {
         console.log('Spendings updated successfully:', res);
         alert('Spendings updated successfully!');
         this.loading = false;
-        this.fetchBudget(); // Auto-refresh after updating spendings
+        this.fetchBudget(this.userId, this.month);
       },
       error: (err) => {
         console.error('Error updating spendings:', err);
@@ -300,7 +301,7 @@ export class TaskDetailsComponent implements OnInit {
       next: () => {
         alert('Budget deducted successfully.');
         this.loading = false;
-        this.fetchBudget(); // Osvježi trenutni budžet
+        this.fetchBudget(this.userId, this.month);
       },
       error: (error) => {
         console.error('Error deducting budget:', error);

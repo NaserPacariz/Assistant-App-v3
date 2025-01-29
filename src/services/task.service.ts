@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators'; // Ovo dodajte
+import { catchError, tap } from 'rxjs/operators'; // Ovo dodajte
 
 
 @Injectable({
@@ -79,7 +79,21 @@ export class TaskService {
   }
   
   
+  addBudget(userId: string, amount: number, month: string): Observable<void> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token') || ''}`,
+    });
   
+    return this.http
+      .post<void>(`${this.BASE_URL}/${userId}/${month}`, { amount }, { headers })
+      .pipe(
+        tap(() => console.log('Add budget request successful')),
+        catchError((error) => {
+          console.error('Error adding budget:', error);
+          return throwError(() => new Error('Failed to add budget.'));
+        })
+      );
+  }
   
 
   updateTask(userId: string, taskId: string, updatedTask: any) {
@@ -147,6 +161,22 @@ deductBudget(userId: string, month: string, deduction: number): Observable<void>
       return throwError(() => new Error('Failed to deduct budget. Please try again.'));
     })
   );
+}
+
+fetchBudget(userId: string, month: string): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${localStorage.getItem('token') || ''}`,
+  });
+
+  return this.http
+    .get(`${this.BASE_URL}/${userId}/${month}`, { headers })
+    .pipe(
+      tap((budget) => console.log('Fetched budget:', budget)),
+      catchError((error) => {
+        console.error('Error fetching budget:', error);
+        return throwError(() => new Error('Failed to fetch budget.'));
+      })
+    );
 }
 
 }
