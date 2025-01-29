@@ -130,7 +130,15 @@
       </button>
     </form>
     
-  
+    <div class="budget-history-section">
+      <button 
+        class="btn btn-primary" 
+        [routerLink]="['/budget-history', userId]" 
+        *ngIf="userId">
+        View Budget History
+      </button>
+    </div>
+    
   
   <!-- No Tasks Message -->
   <p *ngIf="tasks.length === 0" class="no-tasks-message">No tasks available for this user.</p>

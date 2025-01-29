@@ -6,13 +6,15 @@ import { CommonModule } from '@angular/common';
 import { BudgetService } from '@services/budget.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { RouterModule } from '@angular/router'; // Dodaj ovo
+
 
 @Component({
   selector: 'app-task-details',
   templateUrl: './task-details.component.html',
   styleUrls: ['./task-details.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule] // Add FormsModule to imports
+  imports: [CommonModule, FormsModule, RouterModule] // Add FormsModule to imports
 })
 export class TaskDetailsComponent implements OnInit {
   openBudgetHistory(): void {
@@ -33,7 +35,6 @@ export class TaskDetailsComponent implements OnInit {
   spendings = 0; // To update spendings
   budget: any = null; // This will now be an object, not an array
   loading = false;
-  totalBudget: number = 0; // Holds the total budget
   isDescriptionModalVisible: boolean = false;
   selectedTaskDescription: string = '';
   deduction = 0;
@@ -47,7 +48,6 @@ export class TaskDetailsComponent implements OnInit {
     if (userId) {
       this.userId = userId;
       this.fetchTasksForUser(this.userId);
-      this.fetchTotalBudget(this.userId);
     } else {
       console.error('User ID is null or undefined.');
     }
@@ -62,22 +62,6 @@ export class TaskDetailsComponent implements OnInit {
 
   goBack(): void {
     this.location.back(); // Navigates to the previous page
-  }
-
-  fetchTotalBudget(userId: string): void {
-    const currentMonth = new Date().toISOString().slice(0, 7);
-    this.budgetService.getBudget(userId, currentMonth).subscribe({
-      next: (data) => {
-        this.totalBudget = data?.amount || 0;
-      },
-      error: (error) => {
-        console.error('Failed to fetch total budget:', error);
-        if (error.message.includes('Unauthorized')) {
-          // Handle unauthorized error, e.g., redirect to login
-          this.router.navigate(['/login']);
-        }
-      },
-    });
   }
   
   

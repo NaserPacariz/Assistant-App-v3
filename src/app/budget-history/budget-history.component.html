@@ -1,5 +1,63 @@
-<div class="total-budget-section">
-  <h3>Total Budget</h3>
-  <p *ngIf="totalBudget > 0">Your current budget: <strong>{{ totalBudget | currency }}</strong></p>
-  <p *ngIf="totalBudget <= 0">No budget available.</p>
+<div class="filter-section">
+  <h2>Budget History</h2>
+
+  <!-- Pretraga -->
+  <div class="form-group">
+    <label for="search">Search by Description:</label>
+    <input
+      id="search"
+      type="text"
+      [(ngModel)]="searchValue"
+      (input)="applyFilters()"
+      placeholder="Search transactions..."
+    />
+  </div>
+
+  <!-- Filter po cijeni -->
+  <div class="form-group">
+    <label>Price Range:</label>
+    <input
+      type="number"
+      placeholder="Min"
+      [(ngModel)]="priceFilter.min"
+      (input)="applyFilters()"
+    />
+    <input
+      type="number"
+      placeholder="Max"
+      [(ngModel)]="priceFilter.max"
+      (input)="applyFilters()"
+    />
+  </div>
+
+  <!-- Sortiranje -->
+  <div class="form-group">
+    <label for="sort">Sort by Date:</label>
+    <select id="sort" [(ngModel)]="sortOption" (change)="applyFilters()">
+      <option value="newest">Newest First</option>
+      <option value="oldest">Oldest First</option>
+    </select>
+  </div>
+</div>
+
+<!-- Tabela za prikaz podataka -->
+<div class="history-section">
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Description</th>
+        <th>Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of filteredHistory">
+        <td>{{ item.date | date: 'short' }}</td>
+        <td>{{ item.description }}</td>
+        <td>{{ item.amount | currency }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="filteredHistory.length === 0">No transactions found.</p>
 </div>

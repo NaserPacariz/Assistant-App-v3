@@ -23,4 +23,37 @@
       color: #28a745; // Green for positive budget
     }
   }
+
+  .filter-section {
+    margin-bottom: 20px;
+  
+    .form-group {
+      margin-bottom: 10px;
+    }
+  }
+  
+  .history-section {
+    table {
+      width: 100%;
+      border-collapse: collapse;
+  
+      th, td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: left;
+      }
+  
+      th {
+        background-color: #f4f4f4;
+      }
+    }
+  
+    p {
+      text-align: center;
+      color: #888;
+    }
+  }
+  
+
+
   

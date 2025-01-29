@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Auth } from '@angular/fire/auth';
 import { from, Observable, throwError } from 'rxjs';
-import { catchError, switchMap, take } from 'rxjs/operators';
+import { catchError, switchMap, take, tap } from 'rxjs/operators';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 
 @Injectable({
@@ -33,31 +33,59 @@ export class BudgetService {
 
 
   // Add budget
-  addBudget(userId: string, amount: number, month: string): Observable<any> {
-    return this.getAuthHeaders().pipe(
-        switchMap((headers) =>
-            this.http.post(this.BASE_URL, { userId, amount, month }, { headers })
-        )
-    );
-}
+  addBudget(userId: string, amount: number, month: string): Observable<void> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token') || ''}`,
+    });
+  
+    return this.http
+      .post<void>(`${this.BASE_URL}/${userId}/${month}`, { amount }, { headers })
+      .pipe(
+        tap(() => console.log('Add budget request successful')),
+        catchError((error) => {
+          console.error('Error adding budget:', error);
+          return throwError(() => new Error('Failed to add budget.'));
+        })
+      );
+  }
+  
+  
   
 
   fetchBudget(userId: string, month: string): Observable<any> {
-    return this.getAuthHeaders().pipe(
-      switchMap((headers) =>
-        this.http.get(`${this.BASE_URL}/${userId}/${month}`, { headers })
-      )
-    );
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token') || ''}`,
+    });
+  
+    return this.http
+      .get(`${this.BASE_URL}/${userId}/${month}`, { headers })
+      .pipe(
+        tap((budget) => console.log('Fetched budget:', budget)),
+        catchError((error) => {
+          console.error('Error fetching budget:', error);
+          return throwError(() => new Error('Failed to fetch budget.'));
+        })
+      );
   }
+  
 
   // Update spending
-  updateSpending(userId: string, month: string, spendings: number): Observable<any> {
-    return this.getAuthHeaders().pipe(
-        switchMap((headers) =>
-            this.http.put(`${this.BASE_URL}/${userId}/${month}`, { spendings }, { headers })
-        )
-    );
-}
+  updateSpending(userId: string, month: string, spendings: number): Observable<void> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token') || ''}`,
+    });
+  
+    return this.http
+      .put<void>(`${this.BASE_URL}/${userId}/${month}`, { spendings }, { headers })
+      .pipe(
+        tap(() => console.log('Update spending request successful')),
+        catchError((error) => {
+          console.error('Error updating spending:', error);
+          return throwError(() => new Error('Failed to update spending.'));
+        })
+      );
+  }
+  
 
   // Fetch budget
   getBudget(taskId: string, currentMonth: string): Observable<any> {
@@ -70,8 +98,11 @@ export class BudgetService {
       Authorization: `Bearer ${token}`,
     });
   
-    return this.http.get(`/api/budget/${taskId}`, { headers });
+    // Prilagođena URL putanja bez `/api`
+    return this.http.get(`http://localhost:4000/budget/${taskId}/${currentMonth}`, { headers });
   }
+  
+  
   deductBudget(userId: string, month: string, deduction: number): Observable<void> {
     const url = `${this.BASE_URL}/${userId}/${month}`;
     const token = localStorage.getItem('token');
@@ -81,12 +112,25 @@ export class BudgetService {
       'Content-Type': 'application/json',
     });
   
+    console.log('Sending PATCH request:', { url, deduction });
+  
     return this.http.patch<void>(url, { deduction }, { headers }).pipe(
+      tap(() => console.log('Deduction request successful')),
       catchError((error) => {
         console.error('Error during budget deduction:', error);
         return throwError(() => new Error('Failed to deduct budget. Please try again.'));
       })
     );
+  }
+  
+  
+  
+  getBudgetHistory(userId: string): Observable<any[]> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token') || ''}` // Uzmite token iz localStorage/sessionStorage
+    });
+  
+    return this.http.get<any[]>(`${this.BASE_URL}/${userId}/history`, { headers });
   }
   
 }
