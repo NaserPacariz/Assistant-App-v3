@@ -9,6 +9,7 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
   providedIn: 'root',
 })
 export class BudgetService {
+  
   updateBudget(userId: string, month: string, updatedData: { spendings: number }) {
     return this.http.patch<void>( // Dodaj <void> ili odgovarajući tip ako trebaš odgovor
       `${this.BASE_URL}/${userId}/${month}.json`,
@@ -32,24 +33,71 @@ export class BudgetService {
 }
 
 
-  // Add budget
-  addBudget(userId: string, amount: number, month: string): Observable<void> {
+addBudget(userId: string, amount: number, month: string): Observable<void> {
+  const url = `${this.BASE_URL}/${userId}/${month}`;
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${localStorage.getItem('token') || ''}`,
+  });
+
+  const transaction = {
+    timestamp: new Date().toISOString(),
+    type: 'add',
+    amount,
+    description: `Added ${amount} to budget for ${month}`,
+  };
+
+  return this.http
+    .patch<void>(url, { amount }, { headers }) // Update the budget
+    .pipe(
+      switchMap(() => this.addTransactionToHistory(userId, transaction)), // Log transaction to history
+      tap(() => console.log('Budget added successfully')),
+      catchError((error) => {
+        console.error('Error adding budget:', error);
+        return throwError(() => new Error('Failed to add budget.'));
+      })
+    );
+}
+
+deductBudget(userId: string, month: string, deduction: number): Observable<void> {
+  const url = `${this.BASE_URL}/${userId}/${month}`;
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${localStorage.getItem('token') || ''}`,
+    'Content-Type': 'application/json',
+  });
+
+  const transaction = {
+    timestamp: new Date().toISOString(),
+    type: 'deduct',
+    amount: deduction,
+    description: `Deducted ${deduction} from budget for ${month}`,
+  };
+
+  return this.http
+    .patch<void>(url, { deduction }, { headers }) // Update the budget
+    .pipe(
+      switchMap(() => this.addTransactionToHistory(userId, transaction)), // Log transaction to history
+      tap(() => console.log('Budget deducted successfully')),
+      catchError((error) => {
+        console.error('Error deducting budget:', error);
+        return throwError(() => new Error('Failed to deduct budget.'));
+      })
+    );
+}
+  
+  addTransactionToHistory(userId: string, transaction: any): Observable<void> {
+    const url = `${this.BASE_URL}/${userId}/history`;
     const headers = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem('token') || ''}`,
     });
-  
-    return this.http
-      .post<void>(`${this.BASE_URL}/${userId}/${month}`, { amount }, { headers })
-      .pipe(
-        tap(() => console.log('Add budget request successful')),
-        catchError((error) => {
-          console.error('Error adding budget:', error);
-          return throwError(() => new Error('Failed to add budget.'));
-        })
-      );
+
+    return this.http.post<void>(url, transaction, { headers }).pipe(
+      tap(() => console.log('Transaction added to history successfully')),
+      catchError((error) => {
+        console.error('Error adding transaction to history:', error);
+        return throwError(() => new Error('Failed to add transaction to history.'));
+      })
+    );
   }
-  
-  
   
 
   fetchBudget(userId: string, month: string): Observable<any> {
@@ -100,27 +148,6 @@ export class BudgetService {
   
     // Prilagođena URL putanja bez `/api`
     return this.http.get(`http://localhost:4000/budget/${taskId}/${currentMonth}`, { headers });
-  }
-  
-  
-  deductBudget(userId: string, month: string, deduction: number): Observable<void> {
-    const url = `${this.BASE_URL}/${userId}/${month}`;
-    const token = localStorage.getItem('token');
-  
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    });
-  
-    console.log('Sending PATCH request:', { url, deduction });
-  
-    return this.http.patch<void>(url, { deduction }, { headers }).pipe(
-      tap(() => console.log('Deduction request successful')),
-      catchError((error) => {
-        console.error('Error during budget deduction:', error);
-        return throwError(() => new Error('Failed to deduct budget. Please try again.'));
-      })
-    );
   }
   
   

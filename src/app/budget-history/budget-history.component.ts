@@ -34,14 +34,30 @@ export class BudgetHistoryComponent implements OnInit {
   fetchBudgetHistory(userId: string): void {
     this.budgetService.getBudgetHistory(userId).subscribe({
       next: (data) => {
-        console.log('Budget history data:', data); // Provjera odgovora
-        this.budgetHistory = Array.isArray(data) ? data : []; // Osigurajte da je `data` niz
+        console.log('Raw Budget history data:', data);
+  
+        // Transform data from object to array
+        this.budgetHistory = Object.values(data || {}).map((item: any) => {
+          console.log('Processing item:', item); // Debug each item
+          return {
+            date: new Date(item.timestamp), // Convert timestamp to Date object
+            description: item.description,
+            amount: item.amount,
+          };
+        });
+  
+        console.log('Transformed Budget history data:', this.budgetHistory);
+  
+        // Initialize the filteredHistory
+        this.filteredHistory = [...this.budgetHistory];
       },
       error: (error) => {
         console.error('Error fetching budget history:', error);
       },
     });
   }
+  
+  
   
 
   applyFilters(): void {
