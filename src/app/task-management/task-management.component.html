@@ -13,15 +13,14 @@
         [class.selected]="selectedUserId === user.uid"
       >
         <div class="user-card-content">
-          <div class="user-avatar">
-            <img
-              src="assets/default-profile.png"
-              alt="User Avatar"
-              *ngIf="user.photoURL"
-              class="profile-photo"
-            />
+          <div class="user-avatar" (click)="triggerFileInput($event, fileInput, user)">
+            <!-- If a photo URL exists, show the image; otherwise, show a placeholder -->
+            <img *ngIf="user.photoURL" [src]="user.photoURL" alt="User Avatar" class="profile-photo" />
             <span *ngIf="!user.photoURL" class="placeholder-icon">👤</span>
+            <!-- Hidden file input -->
+            <input type="file" #fileInput accept="image/*" hidden (change)="uploadPicture(user, $event)" />
           </div>
+          
           <div class="user-info">
             <p class="user-name">{{ user.email.split('@')[0] | uppercase }}</p>
             <p class="user-budget">{{ user.budget | currency: 'USD' }}</p>

@@ -4,6 +4,7 @@ import { TaskService } from '@services/task.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   templateUrl: './task-management.component.html',
@@ -50,7 +51,7 @@ urgency: string = 'low'; // Default value
   
 
 
-  constructor(private taskService: TaskService, private router: Router) {}
+  constructor(private taskService: TaskService, private router: Router, private http: HttpClient) {}
 
   ngOnInit() {
     const token = localStorage.getItem('token');
@@ -94,7 +95,42 @@ urgency: string = 'low'; // Default value
     );
   }
   
-  
+  triggerFileInput(event: Event, fileInput: HTMLInputElement, user: any): void {
+    event.stopPropagation();
+    fileInput.click();
+  }
+
+  /**
+   * Uploads the selected image file to your backend and updates the user's photoURL.
+   */
+  uploadPicture(user: any, event: any): void {
+    const file: File = event.target.files[0];
+    if (!file) {
+      return;
+    }
+    if (!file.type.startsWith('image/')) {
+      alert('Please select a valid image file.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    // Make a POST request to your backend endpoint (adjust the URL if necessary)
+    this.http.post<{ photoURL: string }>('http://localhost:4000/upload-profile-picture', formData)
+      .subscribe({
+        next: (response) => {
+          console.log('File uploaded. New URL:', response.photoURL);
+          user.photoURL = response.photoURL;
+          // Optionally, update the user record in your database here.
+        },
+        error: (error) => {
+          console.error('Upload error:', error);
+        }
+      });
+  }
+
+  // ... rest of your existing methods for tasks, users, etc.
 
   fetchTasks(userId?: string): void {
     const token = localStorage.getItem('token');
