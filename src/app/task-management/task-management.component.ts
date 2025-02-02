@@ -112,23 +112,34 @@ urgency: string = 'low'; // Default value
       alert('Please select a valid image file.');
       return;
     }
-
+  
     const formData = new FormData();
     formData.append('file', file);
-
-    // Make a POST request to your backend endpoint (adjust the URL if necessary)
+  
+    // Upload the file to the backend
     this.http.post<{ photoURL: string }>('http://localhost:4000/upload-profile-picture', formData)
       .subscribe({
         next: (response) => {
           console.log('File uploaded. New URL:', response.photoURL);
           user.photoURL = response.photoURL;
-          // Optionally, update the user record in your database here.
+          // Now update the user record permanently.
+          // Assuming the user's UID is stored in user.uid
+          this.http.put(`http://localhost:4000/update-user-photo/${user.uid}`, { photoURL: response.photoURL })
+            .subscribe({
+              next: (res) => {
+                console.log('User record updated with new photoURL');
+              },
+              error: (err) => {
+                console.error('Error updating user record:', err);
+              }
+            });
         },
         error: (error) => {
           console.error('Upload error:', error);
         }
       });
   }
+  
 
   // ... rest of your existing methods for tasks, users, etc.
 
