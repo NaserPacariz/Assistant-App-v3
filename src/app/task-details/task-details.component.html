@@ -179,22 +179,41 @@
   
 
   <!-- Add Task Modal -->
-  <div class="modal" *ngIf="isAddTaskModalVisible">
-    <div class="modal-content">
+  <div class="add-task-modal" *ngIf="isAddTaskModalVisible">
+    <div class="add-task-modal-content">
       <span class="close-button" (click)="closeAddTaskModal()">&times;</span>
-      <h3>Add a New Task</h3>
-      <form (ngSubmit)="addTask()">
+      <h3 class="modal-title">Add Task</h3>
+      <form (ngSubmit)="addTask()" class="add-task-form">
         <div class="form-group">
           <label for="taskTitle">Task Title</label>
-          <input id="taskTitle" type="text" [(ngModel)]="taskTitle" name="taskTitle" required />
+          <input
+            id="taskTitle"
+            type="text"
+            [(ngModel)]="taskTitle"
+            name="taskTitle"
+            required
+            placeholder="Enter title"
+          />
         </div>
         <div class="form-group">
           <label for="taskDescription">Task Description</label>
-          <textarea id="taskDescription" [(ngModel)]="taskDescription" name="taskDescription" required></textarea>
+          <textarea
+            id="taskDescription"
+            [(ngModel)]="taskDescription"
+            name="taskDescription"
+            required
+            placeholder="Enter description"
+          ></textarea>
         </div>
         <div class="form-group">
           <label for="dueDate">Due Date</label>
-          <input id="dueDate" type="date" [(ngModel)]="dueDate" name="dueDate" required />
+          <input
+            id="dueDate"
+            type="date"
+            [(ngModel)]="dueDate"
+            name="dueDate"
+            required
+          />
         </div>
         <div class="form-group">
           <label for="urgency">Urgency</label>
@@ -205,11 +224,12 @@
           </select>
         </div>
         <div class="form-actions">
-          <button type="submit" class="btn btn-success">Save</button>
+          <button type="submit" class="btn btn-primary">Add Task</button>
         </div>
       </form>
     </div>
   </div>
+  
 
   <!-- Edit Task Modal -->
   <div class="modal" *ngIf="isEditModalOpen">
