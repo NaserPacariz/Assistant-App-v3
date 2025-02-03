@@ -41,6 +41,8 @@ export class TaskDetailsComponent implements OnInit {
   deduction = 0;
   deductionMonth = '';
   currentMonth: string = '';
+  showDeleteConfirmation = false; 
+  selectedTaskId: string | null = null;
 
   constructor(private route: ActivatedRoute, private taskService: TaskService, private budgetService: BudgetService, private router: Router, private location: Location) {}
 
@@ -162,9 +164,14 @@ export class TaskDetailsComponent implements OnInit {
   
 
   confirmAndDeleteTask(taskId: string): void {
-    if (confirm('Are you sure you want to delete this task?')) {
-      this.deleteTask(taskId);
-    }
+    // Instead of using window.confirm, set up to show our modal
+    this.selectedTaskId = taskId;
+    this.showDeleteConfirmation = true;
+  }
+
+  cancelDelete(): void {
+    this.showDeleteConfirmation = false;
+    this.selectedTaskId = null;
   }
 
   deleteTask(taskId: string): void {

@@ -49,6 +49,36 @@
     </table>
   </div>
 
+<!-- Delete Confirmation Modal -->
+<div class="modal delete-confirmation-modal" *ngIf="showDeleteConfirmation">
+  <div class="modal-content">
+    <!-- Top-right 'close' X -->
+    <button class="close-icon" (click)="cancelDelete()">&times;</button>
+
+    <!-- Large circle with X in the center -->
+    <div class="icon-circle">
+      <span class="big-x">&times;</span>
+    </div>
+
+    <!-- Main heading -->
+    <h2 class="modal-title">Are you sure?</h2>
+    <!-- Subtext -->
+    <p class="modal-subtext">
+      Do you really want to delete these records?
+      <br />
+      This process cannot be undone.
+    </p>
+
+    <!-- Footer with two buttons side by side -->
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="cancelDelete()">Cancel</button>
+      <button class="btn btn-danger" (click)="deleteTask(selectedTaskId!)">
+        Delete
+      </button>
+    </div>
+  </div>
+</div>
+
   <div class="modal" *ngIf="isDescriptionModalVisible">
     <div class="modal-content">
       <div class="modal-header">

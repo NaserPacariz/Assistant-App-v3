@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;700&display=swap');
+
 /* Container Styling */
 .task-management-container {
   margin: 0 auto;
@@ -123,13 +125,15 @@
     font-weight: 600; /* Make it bold */
     text-transform: uppercase; /* Make it uppercase */
     font-size: 15px; /* Adjust size if needed */
-    color: rgb(107, 111, 136);
+    color: #25273D;
+    margin-bottom: -5px;
   }
 
   .user-budget {
     font-weight: 400; /* Regular font weight */
     font-size: 0.9rem; /* Slightly smaller size to differentiate */
     color: #555; /* Optional: Lighter color for differentiation */
+    margin-left: -37px;
   }
 }
 
