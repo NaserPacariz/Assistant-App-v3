@@ -42,43 +42,44 @@
   <!-- Add User and Create Task Buttons -->
   <div class="action-buttons">
     <button class="btn btn-primary" (click)="openAddUserModal()">+ Add User</button>
-    <button class="btn btn-secondary" (click)="openAddTaskModal()">+ Create Task</button>
   </div>
 
   <!-- Add User Modal -->
-  <div class="modal" *ngIf="isAddUserModalVisible">
-    <div class="modal-content">
-      <span class="close-button" (click)="closeAddUserModal()">&times;</span>
-      <h3>Add a New User</h3>
-      <form (ngSubmit)="addUser()">
-        <div class="form-group">
-          <label for="email">User Email</label>
-          <input
-            id="email"
-            type="email"
-            [(ngModel)]="newUserEmail"
-            name="email"
-            class="input-field"
-            placeholder="Enter User Email"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label for="budget">Budget</label>
-          <input
-            id="budget"
-            type="number"
-            [(ngModel)]="newUserBudget"
-            name="budget"
-            class="input-field"
-            placeholder="Enter Initial Budget"
-            required
-          />
-        </div>
-        <button type="submit" class="btn btn-success">Add User</button>
-      </form>
-    </div>
+<!-- Add User Modal -->
+<div class="custom-modal" *ngIf="isAddUserModalVisible">
+  <div class="custom-modal-content">
+    <span class="custom-modal-close" (click)="closeAddUserModal()">&times;</span>
+    <h2 class="custom-modal-title">Add a New User</h2>
+    <form (ngSubmit)="addUser()" class="custom-form">
+      <div class="custom-form-group">
+        <label for="email" class="custom-form-label">User Email</label>
+        <input
+          id="email"
+          type="email"
+          [(ngModel)]="newUserEmail"
+          name="email"
+          class="custom-input-field"
+          placeholder="Enter User Email"
+          required
+        />
+      </div>
+      <div class="custom-form-group">
+        <label for="budget" class="custom-form-label">Budget</label>
+        <input
+          id="budget"
+          type="number"
+          [(ngModel)]="newUserBudget"
+          name="budget"
+          class="custom-input-field"
+          placeholder="Enter Initial Budget"
+          required
+        />
+      </div>
+      <button type="submit" class="custom-submit-btn">Add User</button>
+    </form>
   </div>
+</div>
+
 
   <!-- Confirmation Dialog -->
   <div class="modal" *ngIf="isDeleteDialogVisible">

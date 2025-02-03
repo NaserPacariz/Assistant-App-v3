@@ -324,19 +324,6 @@ urgency: string = 'low'; // Default value
     });
   }
   
-
-  openAddTaskModal(): void {
-    this.isAddTaskModalVisible = true;
-    this.editingTask = { 
-      title: '', 
-      description: '', 
-      dueDate: '', 
-      status: 'pending', 
-      urgency: 'low' // Default urgency
-    };
-  }
-  
-  
   closeAddTaskModal(): void {
     this.isAddTaskModalVisible = false;
   }

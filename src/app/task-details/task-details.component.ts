@@ -233,6 +233,17 @@ export class TaskDetailsComponent implements OnInit {
       },
     });
   }
+
+  openAddTaskModal(): void {
+    this.isAddTaskModalVisible = true;
+    this.editingTask = { 
+      title: '', 
+      description: '', 
+      dueDate: '', 
+      status: 'pending', 
+      urgency: 'low' // Default urgency
+    };
+  }
   
 
   // Fetch Budget

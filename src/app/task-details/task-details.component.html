@@ -5,6 +5,10 @@
   </div>
   <h1 class="page-title">Manage user tasks</h1>
 
+<div class="div-add-task">
+  <button class="btn btn-secondary" (click)="openAddTaskModal()">+ Create Task</button>
+</div>
+  
   <!-- Task Items Section -->
   <div class="task-list" *ngIf="tasks.length > 0">
     <table class="tasks-table">
