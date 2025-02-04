@@ -82,4 +82,9 @@ export class BudgetHistoryComponent implements OnInit {
       this.filteredHistory.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     }
   }
+
+  navigateBack(): void {
+    window.history.back(); // Navigate to the previous page
+  }
+  
 }

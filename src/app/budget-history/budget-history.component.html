@@ -1,7 +1,11 @@
+<div class="back-arrow-container">
+  <button class="back-arrow" (click)="navigateBack()">&larr;</button>
+</div>
+
 <div class="filter-section">
   <h2>Budget History</h2>
 
-  <!-- Pretraga -->
+  <!-- Search -->
   <div class="form-group">
     <label for="search">Search by Description:</label>
     <input
@@ -13,32 +17,27 @@
     />
   </div>
 
-  <!-- Filter po cijeni -->
+  <!-- Price Range Filter -->
   <div class="form-group">
     <label>Price Range:</label>
-    <input
-      type="number"
-      placeholder="Min"
-      [(ngModel)]="priceFilter.min"
-      (input)="applyFilters()"
-    />
-    <input
-      type="number"
-      placeholder="Max"
-      [(ngModel)]="priceFilter.max"
-      (input)="applyFilters()"
-    />
+    <div class="price-range">
+      <input
+        type="number"
+        placeholder="Min"
+        [(ngModel)]="priceFilter.min"
+        (input)="applyFilters()"
+      />
+      <span>-</span>
+      <input
+        type="number"
+        placeholder="Max"
+        [(ngModel)]="priceFilter.max"
+        (input)="applyFilters()"
+      />
+    </div>
   </div>
 
-  <input
-  type="text"
-  [(ngModel)]="searchValue"
-  (input)="applyFilters()"
-  placeholder="Search by description..."
-/>
-
-
-  <!-- Sortiranje -->
+  <!-- Sort by Date -->
   <div class="form-group">
     <label for="sort">Sort by Date:</label>
     <select id="sort" [(ngModel)]="sortOption" (change)="applyFilters()">
@@ -48,7 +47,7 @@
   </div>
 </div>
 
-<!-- Tabela za prikaz podataka -->
+<!-- Table for displaying data -->
 <div class="history-section">
   <table>
     <thead>

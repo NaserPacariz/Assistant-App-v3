@@ -25,35 +25,136 @@
   }
 
   .filter-section {
-    margin-bottom: 20px;
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  
+    h2 {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333333;
+      text-align: center;
+      margin-bottom: 20px;
+    }
   
     .form-group {
-      margin-bottom: 10px;
+      margin-bottom: 15px;
+  
+      label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #555555;
+        display: block;
+        margin-bottom: 8px;
+      }
+  
+      input,
+      select {
+        width: 60%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 14px;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  
+        &:focus {
+          border-color: #007bff;
+          box-shadow: 0 0 6px rgba(0, 123, 255, 0.3);
+        }
+      }
+  
+      .price-range {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+  
+        span {
+          font-size: 14px;
+          font-weight: bold;
+          color: #555555;
+        }
+      }
     }
   }
-  
   .history-section {
+    margin-top: 20px;
+  
     table {
       width: 100%;
       border-collapse: collapse;
+      background-color: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   
-      th, td {
-        padding: 10px;
-        border: 1px solid #ddd;
+      th,
+      td {
+        padding: 15px;
         text-align: left;
+        border-bottom: 1px solid #eeeeee;
+        font-size: 14px;
+        color: #333333;
       }
   
       th {
-        background-color: #f4f4f4;
+        background-color: #f9f9f9;
+        font-weight: 600;
+      }
+  
+      tr:nth-child(even) {
+        background-color: #f8f8f8; /* Light stripe for rows */
+      }
+  
+      tr:hover {
+        background-color: #f1faff; /* Light blue hover effect */
+      }
+  
+      td:last-child {
+        text-align: right; /* Align amount column to the right */
       }
     }
   
     p {
       text-align: center;
-      color: #888;
+      color: #888888;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+  }
+  .back-arrow-container {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1000;
+  
+    .back-arrow {
+      font-size: 20px;
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 50%;
+      background-color: #ffffff;
+      color: #007bff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: all 0.3s ease;
+  
+      &:hover {
+        background-color: #e0e0e0;
+        color: #0056b3;
+        transform: scale(1.1);
+      }
+  
+      &:focus {
+        outline: none;
+      }
     }
   }
   
-
 
   
