@@ -178,6 +178,7 @@ export class TaskDetailsComponent implements OnInit {
     this.taskService.deleteTask(this.userId, taskId).subscribe({
       next: () => {
         this.tasks = this.tasks.filter((task) => task.id !== taskId);
+        this.showDeleteConfirmation = false;
       },
       error: (error) => {
         console.error('Error deleting task:', error);
