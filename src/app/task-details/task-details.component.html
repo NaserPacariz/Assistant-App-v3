@@ -83,6 +83,16 @@
   </div>
 </div>
 
+<!-- Success Popup Modal -->
+<div class="success-modal" *ngIf="showSuccessPopup">
+  <div class="success-modal-content">
+    <div class="success-modal-body">
+      <h2>Task deleted successfully!</h2>
+    </div>
+  </div>
+</div>
+
+
   <div class="modal" *ngIf="isDescriptionModalVisible">
     <div class="modal-content">
       <div class="modal-header">
@@ -257,8 +267,7 @@
   </div>
   
   
-  <!-- Edit Task Modal -->
-  <div class="modal" *ngIf="isEditModalOpen">
+  <div class="modal edit-task-modal" *ngIf="isEditModalOpen">
     <div class="modal-content">
       <div class="modal-header">
         <div class="header-icon">
@@ -282,12 +291,13 @@
             type="date"
             [(ngModel)]="editingTask.dueDate"
             name="dueDate"
+            class="form-input"
             required
           />
         </div>
         <div class="form-group">
           <label for="urgency">Urgency</label>
-          <select id="urgency" [(ngModel)]="editingTask.urgency" name="urgency" required>
+          <select id="urgency" [(ngModel)]="editingTask.urgency" name="urgency" class="form-input" required>
             <option value="high">High (Red)</option>
             <option value="medium">Medium (Yellow)</option>
             <option value="low">Low (Green)</option>
@@ -299,6 +309,7 @@
             id="description"
             [(ngModel)]="editingTask.description"
             name="description"
+            class="form-input description-input"
             placeholder="Enter task description"
             required
           ></textarea>

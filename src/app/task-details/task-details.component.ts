@@ -46,6 +46,7 @@ export class TaskDetailsComponent implements OnInit {
   selectedTaskId: string | null = null;
   isLoading: boolean = false;
   isSuccess: boolean = false;
+  showSuccessPopup: boolean = false; // Controls popup visibility
 
   constructor(private route: ActivatedRoute, private taskService: TaskService, private budgetService: BudgetService, private router: Router, private location: Location) {}
 
@@ -200,13 +201,27 @@ export class TaskDetailsComponent implements OnInit {
   deleteTask(taskId: string): void {
     this.taskService.deleteTask(this.userId, taskId).subscribe({
       next: () => {
+        // Remove the task from the list
         this.tasks = this.tasks.filter((task) => task.id !== taskId);
         this.showDeleteConfirmation = false;
+
+        // Show the success popup
+        this.showSuccessPopup = true;
+
+        // Automatically close the popup after 3 seconds
+        setTimeout(() => {
+          this.showSuccessPopup = false;
+        }, 3000); // 3 seconds
       },
       error: (error) => {
         console.error('Error deleting task:', error);
       },
     });
+  }
+
+  // Close the success popup manually
+  closeSuccessPopup(): void {
+    this.showSuccessPopup = false;
   }
 
   getTaskClass(urgency: string): string {

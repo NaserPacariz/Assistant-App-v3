@@ -917,7 +917,7 @@
   }
   
   input {
-    width: 100%;
+    width: 70%;
     padding: 10px;
     margin: 10px 0;
     border: 1px solid #ccc;
@@ -1268,4 +1268,110 @@
   font-weight: 600;
   color: #4d4646;
   width: 100%;
+}
+
+.edit-task-modal {
+  .modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center align all child elements */
+    padding: 20px;
+    gap: 20px; /* Space between inputs */
+    width: 100%;
+    max-width: 450px;
+    margin: 0 auto; /* Center the modal on the screen */
+  }
+
+  .edit-task-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 80%; /* Ensure the form spans the modal width */
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      width: 100%; /* Stretch inputs to fill the container */
+
+      label {
+        margin-bottom: 5px;
+        font-size: 14px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .form-input,
+      textarea,
+      select {
+        width: 100%; /* Ensure inputs take full width */
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+
+        &:focus {
+          border-color: #007bff;
+          box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+        }
+      }
+
+      .description-input {
+        resize: none;
+        height: 120px; /* Adjust the height for better UX */
+      }
+    }
+
+    button {
+      align-self: center; /* Center-align the button */
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      color: white;
+      background-color: #28a745;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #218838;
+      }
+    }
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%; /* Ensure header spans full width */
+    margin-bottom: 20px;
+
+    .task-title-input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+
+      &:focus {
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+      }
+    }
+
+    .close-button {
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: #666;
+      cursor: pointer;
+
+      &:hover {
+        color: #333;
+      }
+    }
+  }
 }
