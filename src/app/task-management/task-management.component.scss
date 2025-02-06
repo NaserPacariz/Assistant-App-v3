@@ -58,17 +58,19 @@
   display: inline-flex; /* Use flex for better alignment */
   justify-content: center; /* Center content horizontally */
   align-items: center; /* Center content vertically */
-  padding: 8px 12px; /* Uniform padding */
+  padding: 10px 20px; /* Uniform padding */
   font-size: 14px; /* Standard font size */
   font-weight: 600; /* Bold font */
   text-align: center; /* Center text */
-  border-radius: 5px; /* Rounded corners */
+  border-radius: 6px; /* Rounded corners */
   cursor: pointer; /* Pointer cursor on hover */
   color: #fff; /* White text */
   transition: background 0.3s ease, transform 0.2s ease; /* Smooth hover effect */
   width: 120px; /* Fixed width for uniform size */
   height: 40px; /* Fixed height for uniform size */
   box-sizing: border-box; /* Include padding in width/height */
+  border: 0;
+  transition: transform 0.2s, background-color 0.3s;
 }
 
 .btn-primary {
@@ -258,13 +260,14 @@
     flex-direction: column; /* Stack content vertically */
     justify-content: space-between; /* Push content to edges */
     align-items: flex-start; /* Align content to the left */
-    padding: 15px;
+    padding: 20px;
     width: 300px;
     height: 140px; /* Fixed height to ensure consistency */
     text-align: center;
     border-radius: 5px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 10px;
   
     &:hover {
       transform: translateY(-5px);
@@ -289,7 +292,8 @@
         width: 100px;
         height: 100px;
         border-radius: 50%;
-        background-color: #f0f8ff;
+        border: 3px solid #007bff;
+        background: linear-gradient(145deg, #90caf9, #64b5f6);
         display: flex;
         justify-content: center;
         align-items: center;

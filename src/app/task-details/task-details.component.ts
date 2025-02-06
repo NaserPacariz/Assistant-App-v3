@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { RouterModule } from '@angular/router'; // Dodaj ovo
 import { HttpClient } from '@angular/common/http';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-task-details',
@@ -43,6 +44,8 @@ export class TaskDetailsComponent implements OnInit {
   currentMonth: string = '';
   showDeleteConfirmation = false; 
   selectedTaskId: string | null = null;
+  isLoading: boolean = false;
+  isSuccess: boolean = false;
 
   constructor(private route: ActivatedRoute, private taskService: TaskService, private budgetService: BudgetService, private router: Router, private location: Location) {}
 
@@ -60,6 +63,8 @@ export class TaskDetailsComponent implements OnInit {
     this.currentMonth = currentDate.toISOString().slice(0, 7); // YYYY-MM format
     this.month = this.currentMonth;
     this.deductionMonth = this.currentMonth;
+    const formattedDate = formatDate(new Date(), 'longDate', 'en-US');
+    console.log(formattedDate); // Output: "January 1, 2023"
   }
   
 
@@ -108,6 +113,9 @@ export class TaskDetailsComponent implements OnInit {
   }
 
   addTask(): void {
+    this.isLoading = true; // Show spinner
+    this.isSuccess = false; // Reset success state
+  
     const newTask = {
       title: this.taskTitle,
       description: this.taskDescription,
@@ -115,17 +123,32 @@ export class TaskDetailsComponent implements OnInit {
       urgency: this.urgency,
       status: 'pending',
     };
+  
     this.taskService.createTask(this.userId, newTask).subscribe({
       next: (response) => {
-        this.tasks.push({ ...newTask, id: response.taskId });
-        this.sortTasksByUrgency(); // Sort tasks after adding
-        this.closeAddTaskModal();
+        setTimeout(() => {
+          // Add the task to the list
+          this.tasks.push({ ...newTask, id: response.taskId });
+          this.sortTasksByUrgency();
+  
+          // Switch from spinner to green checkmark
+          this.isLoading = false;
+          this.isSuccess = true;
+  
+          setTimeout(() => {
+            // Hide the success checkmark and close the modal
+            this.isSuccess = false;
+            this.isAddTaskModalVisible = false;
+          }, 1500); // Display green checkmark for 1.5 seconds
+        }, 1000); // Simulated loading time
       },
       error: (error) => {
         console.error('Error creating task:', error);
+        this.isLoading = false; // Hide spinner on error
       },
     });
   }
+  
 
   openEditTaskModal(task: any): void {
     this.editingTask = { ...task }; // Clone task data to avoid direct mutation

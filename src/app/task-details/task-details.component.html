@@ -181,9 +181,35 @@
   <!-- Add Task Modal -->
   <div class="add-task-modal" *ngIf="isAddTaskModalVisible">
     <div class="add-task-modal-content">
-      <span class="close-button" (click)="closeAddTaskModal()">&times;</span>
-      <h3 class="modal-title">Add Task</h3>
-      <form (ngSubmit)="addTask()" class="add-task-form">
+      <!-- Close Button -->
+      <span
+        class="close-button"
+        (click)="closeAddTaskModal()"
+        *ngIf="!isLoading && !isSuccess"
+      >
+        &times;
+      </span>
+  
+      <!-- Title -->
+      <h3 class="modal-title" *ngIf="!isLoading && !isSuccess">Add Task</h3>
+  
+      <!-- Spinner -->
+      <div class="spinner-container" *ngIf="isLoading">
+        <div class="spinner"></div>
+      </div>
+  
+      <!-- Success Message -->
+      <div class="success-container" *ngIf="isSuccess">
+        <i class="fas fa-check-circle success-icon"></i>
+        <p class="after-spinner-text">Task Added Successfully! ✔️</p>
+      </div>
+  
+      <!-- Task Form -->
+      <form
+        (ngSubmit)="addTask()"
+        class="add-task-form"
+        *ngIf="!isLoading && !isSuccess"
+      >
         <div class="form-group">
           <label for="taskTitle">Task Title</label>
           <input
@@ -230,7 +256,7 @@
     </div>
   </div>
   
-
+  
   <!-- Edit Task Modal -->
   <div class="modal" *ngIf="isEditModalOpen">
     <div class="modal-content">
