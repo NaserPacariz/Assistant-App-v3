@@ -810,42 +810,76 @@
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    border-radius: 10px; /* Rounded corners */
+    overflow: hidden; /* Prevent table overflow */
   }
   
-  .tasks-table th, .tasks-table td {
-    text-align: left;
-    padding: 10px;
+  .tasks-table th,
+  .tasks-table td {
+    padding: 15px;
     border-bottom: 1px solid #ddd;
+    text-align: center;
+    vertical-align: middle;
+    background-color: #f8f9fa; /* Light background for readability */
   }
-
-  .tasks-table th:nth-child(4), /* Stage */
-.tasks-table td:nth-child(4) {
-  width: 10%;
-}
-
-.tasks-table td:nth-child(4) {
-  background: linear-gradient(to bottom, 
-  #ffffff 15%,    /* Top 15% white */
-  #007bff 15%,    /* Middle color starts here */
-  #007bff 90%,    /* Middle color ends here */
-  #ffffff 90%     /* Bottom 10% white */
-);
-border-radius: 20%;
-}
+  
+  .tasks-table th {
+    background-color: #343a40;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  
+  .tasks-table tbody tr:nth-child(odd) {
+    background-color: #ffffff; /* Alternating row colors */
+  }
+  
+  .tasks-table tbody tr:nth-child(even) {
+    background-color: #f3f3f3; /* Light gray contrast */
+  }
+  
+  .tasks-table tbody tr:hover {
+    background-color: #e9ecef; /* Highlight on hover */
+    transition: background 0.2s ease-in-out;
+  }
+  
+  .task-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .task-actions .btn {
+    min-width: 100px;
+    padding: 8px 10px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 5px;
+    transition: background 0.3s ease, transform 0.2s ease;
+  
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
   
   .stage-badge {
     background-color: #007bff;
     color: #fff;
-    padding: 4px 8px;
+    padding: 6px 12px;
     border-radius: 12px;
     font-size: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   
   .labels {
     display: flex;
+    flex-wrap: wrap; /* Wrap labels */
     gap: 5px;
-    margin-top: -2px;
-    margin-left: -5px;
   }
   
   .label-badge {
@@ -854,11 +888,79 @@ border-radius: 20%;
     padding: 4px 8px;
     border-radius: 8px;
     font-size: 12px;
+    white-space: nowrap; /* Prevent breaking */
   }
   
-  .task-actions {
-    display: flex;
-    gap: 10px;
+  @media (max-width: 1060px) {
+    .tasks-table {
+      font-size: 14px;
+    }
+  
+    .tasks-table th,
+    .tasks-table td {
+      text-align: center;
+      padding: 10px;
+    }
+  
+    .task-actions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column; /* Stack buttons vertically */
+      gap: 5px;
+    }
+  
+    .task-actions .btn {
+      min-width: 80px;
+      font-size: 12px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .tasks-table {
+      font-size: 12px;
+      overflow-x: auto;
+    }
+  
+    .tasks-table th,
+    .tasks-table td {
+      padding: 8px;
+    }
+  
+    .task-actions {
+      flex-direction: column;
+      gap: 5px;
+    }
+  
+    .task-actions .btn {
+      padding: 6px 8px;
+      min-width: 70px;
+      font-size: 10px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .tasks-table {
+      font-size: 10px;
+      display: block;
+      overflow-x: auto;
+    }
+  
+    .tasks-table th,
+    .tasks-table td {
+      padding: 6px;
+    }
+  
+    .task-actions {
+      flex-direction: column;
+      gap: 3px;
+    }
+  
+    .task-actions .btn {
+      padding: 4px 6px;
+      min-width: 60px;
+      font-size: 9px;
+    }
   }
   
   .modal {
