@@ -421,7 +421,7 @@
           cursor: pointer;
   
           &:hover {
-            background-color: #218838;
+            background-color: #0056b3;
           }
         }
       }
@@ -659,7 +659,7 @@
     z-index: 1000;
   
     .back-arrow {
-      font-size: 24px;
+      font-size: 26px;
       width: 40px;
       height: 40px;
       border: none;
@@ -670,7 +670,6 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       transition: all 0.3s ease;
   
       &:hover {
@@ -796,7 +795,7 @@
         transition: background-color 0.3s;
   
         &:hover {
-          background-color: #218838;
+          background-color: #0056b3;
         }
       }
     }
@@ -1053,7 +1052,7 @@
   }
   
   button:hover {
-    background-color: #218838;
+    background-color: #0056b3;
   }
   
   div {
