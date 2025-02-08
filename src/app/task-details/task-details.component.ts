@@ -57,6 +57,7 @@ export class TaskDetailsComponent implements OnInit {
   isSuccess: boolean = false;
   showSuccessPopup: boolean = false; // Controls popup visibility
   isMobileView: boolean = false;
+  taskName: string = ''; // Task name for both adding and deducting
 
   constructor(private route: ActivatedRoute, private taskService: TaskService, private budgetService: BudgetService, private router: Router, private location: Location) {}
 
@@ -260,16 +261,18 @@ export class TaskDetailsComponent implements OnInit {
     });
   }
   addBudget(): void {
-    if (!this.userId || !this.month || this.amount <= 0) {
+    if (!this.userId || !this.month || this.amount <= 0 || !this.taskName.trim()) {
       alert('Invalid input: Make sure all fields are correctly filled.');
       return;
     }
   
-    console.log('Sending addBudget:', { userId: this.userId, month: this.month, amount: this.amount });
-    
+    const description = `Added ${this.amount} budget for task "${this.taskName}"`;
+  
+    console.log('Sending addBudget:', { userId: this.userId, month: this.month, amount: this.amount, description });
+  
     this.loading = true;
   
-    this.budgetService.addBudget(this.userId, this.amount, this.month).subscribe({
+    this.budgetService.addBudget(this.userId, this.amount, this.month, description).subscribe({
       next: () => {
         alert('Budget added successfully.');
         this.loading = false;
@@ -282,7 +285,7 @@ export class TaskDetailsComponent implements OnInit {
       },
     });
   }
-
+  
   openAddTaskModal(): void {
     this.isAddTaskModalVisible = true;
     this.editingTask = { 
@@ -339,32 +342,23 @@ export class TaskDetailsComponent implements OnInit {
     this.isDescriptionModalVisible = false; // Close the description modal
   }
   deductBudget(): void {
-    if (this.deduction <= 0) {
-      alert('Please enter a valid deduction amount greater than 0.');
+    if (!this.userId || this.deduction <= 0 || !this.deductionMonth || !this.taskName.trim()) {
+      alert('Invalid input: Make sure all fields are correctly filled.');
       return;
     }
   
-    if (!this.userId) {
-      console.error('User ID is not defined.');
-      alert('Failed to deduct budget: User ID is missing.');
-      this.loading = false;
-      return;
-    }
+    const description = `Deducted ${this.deduction} budget for task "${this.taskName}"`;
   
-    if (!this.deductionMonth) {
-      console.error('Deduction month is not defined.');
-      alert('Failed to deduct budget: Month is missing.');
-      this.loading = false;
-      return;
-    }
-  
-    console.log('Budget Doc ID:', this.userId);
-    console.log('Current Month:', this.deductionMonth);
-    console.log('Deduction:', this.deduction);
+    console.log('Sending deductBudget:', {
+      userId: this.userId,
+      deductionMonth: this.deductionMonth,
+      deduction: this.deduction,
+      description,
+    });
   
     this.loading = true;
   
-    this.budgetService.deductBudget(this.userId, this.deductionMonth, this.deduction).subscribe({
+    this.budgetService.deductBudget(this.userId, this.deductionMonth, this.deduction, description).subscribe({
       next: () => {
         alert('Budget deducted successfully.');
         this.loading = false;
@@ -377,6 +371,4 @@ export class TaskDetailsComponent implements OnInit {
       },
     });
   }
-  
-  
-}
+}  

@@ -158,6 +158,21 @@
           required
         />
       </div>
+      <div class="form-group">
+        <label for="taskName">Task Name</label>
+        <input
+          type="text"
+          id="taskName"
+          [(ngModel)]="taskName"
+          name="taskName"
+          placeholder="Enter Task Name"
+          required
+          #taskNameInput="ngModel"
+        />
+        <p class="error-message" *ngIf="taskNameInput.invalid && taskNameInput.touched">
+          Task name is required.
+        </p>
+      </div>
       <button type="submit" class="btn btn-success" [disabled]="addBudgetForm.invalid || loading">
         Add Budget
       </button>
@@ -191,11 +206,27 @@
           required
         />
       </div>
+      <div class="form-group">
+        <label for="deductTaskName">Task Name</label>
+        <input
+          type="text"
+          id="deductTaskName"
+          [(ngModel)]="taskName"
+          name="taskName"
+          placeholder="Enter Task Name"
+          required
+          #deductTaskNameInput="ngModel"
+        />
+        <p class="error-message" *ngIf="deductTaskNameInput.invalid && deductTaskNameInput.touched">
+          Task name is required.
+        </p>
+      </div>
       <button type="submit" class="btn btn-warning" [disabled]="deductBudgetForm.invalid || loading">
         Deduct Budget
       </button>
     </form>
-    
+  </div>
+  
     <div class="budget-history-section">
       <button 
         class="btn btn-primary" 

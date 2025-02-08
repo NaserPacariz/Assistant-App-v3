@@ -19,6 +19,7 @@ export class BudgetManagementComponent implements OnInit {
   loading = false;
   currentMonth: string = '';
   userId: string = '';
+  taskName: string = '';
 
   constructor(private budgetService: BudgetService) {}
 
@@ -29,26 +30,25 @@ export class BudgetManagementComponent implements OnInit {
   }
 
   addBudget(): void {
-    if (this.amount <= 0) {
-      alert('Please enter a valid budget amount greater than 0.');
+    if (!this.userId || this.amount <= 0 || !this.month.trim() || !this.taskName.trim()) {
+      alert('Please ensure all fields are filled correctly.');
       return;
     }
-
-    this.loading = true;
-    this.budgetService.addBudget(this.userId, this.amount, this.month).subscribe({
+  
+    const description = `Added ${this.amount} to budget for task "${this.taskName}"`;
+  
+    this.budgetService.addBudget(this.userId, this.amount, this.month, description).subscribe({
       next: () => {
         alert('Budget added successfully.');
-        this.loading = false;
-        this.fetchBudget();
+        this.fetchBudget(); // Refresh the budget data
       },
       error: (error) => {
         console.error('Error adding budget:', error);
-        alert('Failed to add budget. Please try again.');
-        this.loading = false;
+        alert('Failed to add budget.');
       },
     });
   }
-
+  
   deductBudget(): void {
     if (this.deduction <= 0) {
       alert('Please enter a valid deduction amount greater than 0.');

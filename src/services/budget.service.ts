@@ -33,7 +33,7 @@ export class BudgetService {
 }
 
 
-addBudget(userId: string, amount: number, month: string): Observable<void> {
+addBudget(userId: string, amount: number, month: string, description: string): Observable<void> {
   const url = `${this.BASE_URL}/${userId}/${month}`;
   const headers = new HttpHeaders({
     Authorization: `Bearer ${localStorage.getItem('token') || ''}`,
@@ -43,7 +43,7 @@ addBudget(userId: string, amount: number, month: string): Observable<void> {
     timestamp: new Date().toISOString(),
     type: 'add',
     amount,
-    description: `Added ${amount} to budget for ${month}`,
+    description, // Use the passed description
   };
 
   return this.http
@@ -58,7 +58,7 @@ addBudget(userId: string, amount: number, month: string): Observable<void> {
     );
 }
 
-deductBudget(userId: string, month: string, deduction: number): Observable<void> {
+deductBudget(userId: string, month: string, deduction: number, description: string): Observable<void> {
   const url = `${this.BASE_URL}/${userId}/${month}`;
   const headers = new HttpHeaders({
     Authorization: `Bearer ${localStorage.getItem('token') || ''}`,
@@ -69,7 +69,7 @@ deductBudget(userId: string, month: string, deduction: number): Observable<void>
     timestamp: new Date().toISOString(),
     type: 'deduct',
     amount: deduction,
-    description: `Deducted ${deduction} from budget for ${month}`,
+    description, // Use the passed description
   };
 
   return this.http
@@ -83,7 +83,7 @@ deductBudget(userId: string, month: string, deduction: number): Observable<void>
       })
     );
 }
-  
+
   addTransactionToHistory(userId: string, transaction: any): Observable<void> {
     const url = `${this.BASE_URL}/${userId}/history`;
     const headers = new HttpHeaders({
@@ -154,10 +154,16 @@ deductBudget(userId: string, month: string, deduction: number): Observable<void>
   
   getBudgetHistory(userId: string): Observable<any[]> {
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${localStorage.getItem('token') || ''}` // Uzmite token iz localStorage/sessionStorage
+      Authorization: `Bearer ${localStorage.getItem('token') || ''}`,
     });
   
-    return this.http.get<any[]>(`${this.BASE_URL}/${userId}/history`, { headers });
+    return this.http.get<any[]>(`${this.BASE_URL}/${userId}/history`, { headers }).pipe(
+      tap((data) => console.log('Fetched Budget History:', data)), // Debug API response
+      catchError((error) => {
+        console.error('Error fetching budget history:', error);
+        return throwError(() => new Error('Failed to fetch budget history.'));
+      })
+    );
   }
   
 }
