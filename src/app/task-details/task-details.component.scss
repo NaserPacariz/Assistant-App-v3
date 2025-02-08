@@ -1491,3 +1491,60 @@
     }
   }
 }
+
+.mobile-task-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .task-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    h4 {
+      font-size: 18px;
+      margin: 0;
+      color: #333;
+    }
+
+    p {
+      font-size: 14px;
+      margin: 0;
+      color: #555;
+
+      strong {
+        color: #333;
+      }
+    }
+  }
+}
+
+@media (max-width: 549px) {
+  .table-responsive {
+    display: none; /* Hide the table for mobile view */
+  }
+
+  .mobile-task-cards {
+    display: flex; /* Show task cards */
+  }
+  .stage-badge{
+    padding: 10px 12px;
+    margin-left: 7px;
+  }
+}
+
+@media (min-width: 550px) {
+  .mobile-task-cards {
+    display: none; /* Hide task cards for larger screens */
+  }
+
+  .table-responsive {
+    display: block; /* Show the table */
+  }
+}

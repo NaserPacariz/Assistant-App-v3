@@ -9,6 +9,7 @@ import { Location } from '@angular/common';
 import { RouterModule } from '@angular/router'; // Dodaj ovo
 import { HttpClient } from '@angular/common/http';
 import { formatDate } from '@angular/common';
+import { HostListener} from '@angular/core';
 
 @Component({
   selector: 'app-task-details',
@@ -21,6 +22,14 @@ export class TaskDetailsComponent implements OnInit {
   http: any;
   openBudgetHistory(): void {
     this.router.navigate(['/budget-history', this.userId]);
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkScreenSize();
+  }
+  checkScreenSize() {
+    this.isMobileView = window.innerWidth <= 549;
   }
   
   userId: string = '';
@@ -47,6 +56,7 @@ export class TaskDetailsComponent implements OnInit {
   isLoading: boolean = false;
   isSuccess: boolean = false;
   showSuccessPopup: boolean = false; // Controls popup visibility
+  isMobileView: boolean = false;
 
   constructor(private route: ActivatedRoute, private taskService: TaskService, private budgetService: BudgetService, private router: Router, private location: Location) {}
 

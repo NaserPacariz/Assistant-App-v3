@@ -11,49 +11,69 @@
   
   <!-- Task Items Section -->
   <div class="task-list" *ngIf="tasks.length > 0">
-    <div class="table-responsive">
-    <table class="tasks-table">
-      <thead>
-        <tr>
-          <th>Title</th>
-          <th>Start Date</th>
-          <th>End Date</th>
-          <th>Stage</th>
-          <th>Labels</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let task of tasks">
-          <td>{{ task.title || 'Untitled' }}</td>
-          <td>{{ task.startDate || 'No Start Date' }}</td>
-          <td>{{ task.endDate || 'No End Date' }}</td>
-          <td>
-            <span class="stage-badge">{{ task.stage || 'No Stage' }}</span>
-          </td>
-          <td>
-            <div class="labels">
-              <span *ngFor="let label of task.labels" class="label-badge">
-                {{ label }}
-              </span>
-            </div>
-          </td>
-          <td class="task-actions">
-            <button class="btn btn-info" (click)="viewDescription(task)">
-              View Description
-            </button>
-            <button class="btn btn-warning" (click)="openEditTaskModal(task)">
-              Edit
-            </button>
-            <button class="btn btn-danger" (click)="confirmAndDeleteTask(task.id)">
-              Delete
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-responsive" *ngIf="!isMobileView">
+      <table class="tasks-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Stage</th>
+            <th>Labels</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let task of tasks">
+            <td>{{ task.title || 'Untitled' }}</td>
+            <td>{{ task.startDate || 'No Start Date' }}</td>
+            <td>{{ task.endDate || 'No End Date' }}</td>
+            <td>
+              <span class="stage-badge">{{ task.stage || 'No Stage' }}</span>
+            </td>
+            <td>
+              <div class="labels">
+                <span *ngFor="let label of task.labels" class="label-badge">
+                  {{ label }}
+                </span>
+              </div>
+            </td>
+            <td class="task-actions">
+              <button class="btn btn-info" (click)="viewDescription(task)">
+                View Description
+              </button>
+              <button class="btn btn-warning" (click)="openEditTaskModal(task)">
+                Edit
+              </button>
+              <button class="btn btn-danger" (click)="confirmAndDeleteTask(task.id)">
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <!-- Mobile View -->
+    <div *ngIf="isMobileView" class="mobile-task-cards">
+      <div class="task-card" *ngFor="let task of tasks">
+        <h4>{{ task.title || 'Untitled' }}</h4>
+        <p><strong>Start Date:</strong> {{ task.startDate || 'No Start Date' }}</p>
+        <p><strong>End Date:</strong> {{ task.endDate || 'No End Date' }}</p>
+        <p><strong>Stage:</strong> <span class="stage-badge">{{ task.stage || 'No Stage' }}</span></p>
+        <div class="labels">
+          <strong>Labels:</strong>
+          <span *ngFor="let label of task.labels" class="label-badge">{{ label }}</span>
+        </div>
+        <div class="task-actions">
+          <button class="btn btn-info" (click)="viewDescription(task)">View Description</button>
+          <button class="btn btn-warning" (click)="openEditTaskModal(task)">Edit</button>
+          <button class="btn btn-danger" (click)="confirmAndDeleteTask(task.id)">Delete</button>
+        </div>
+      </div>
     </div>
   </div>
+  
 
 <!-- Delete Confirmation Modal -->
 <div class="modal delete-confirmation-modal" *ngIf="showDeleteConfirmation">
