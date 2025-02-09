@@ -18,6 +18,7 @@ export class BudgetHistoryComponent implements OnInit {
   sortOption: string = 'newest'; // Sortiraj po datumu, default "najnoviji"
   searchValue: string = ''; // Vrijednost za pretragu
   priceFilter: { min: number | null; max: number | null } = { min: null, max: null }; // Raspon cijena
+  match: any;
 
   constructor(private route: ActivatedRoute, private budgetService: BudgetService) {}
 
@@ -48,7 +49,10 @@ export class BudgetHistoryComponent implements OnInit {
   
         console.log('Transformed Budget history data:', this.budgetHistory);
   
-        // Initialize the filteredHistory
+        // Sort by newest first
+        this.budgetHistory.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  
+        // Initialize the filteredHistory with sorted data
         this.filteredHistory = [...this.budgetHistory];
       },
       error: (error) => {
@@ -56,32 +60,37 @@ export class BudgetHistoryComponent implements OnInit {
       },
     });
   }
-  
-  
-  
 
   applyFilters(): void {
     this.filteredHistory = this.budgetHistory.filter((item) => {
-      // Pretraga po vrijednosti
+      // Safely handle missing or undefined descriptions
+      const description = item.description || '';
+      
+      // Extract the task name from the description (assuming format: 'task "taskName"')
+      const taskNameMatch = description.match(/task "(.+?)"/);
+      const taskName = taskNameMatch ? taskNameMatch[1].toLowerCase() : '';
+  
+      // Check if the search value matches the task name
       const matchesSearch = this.searchValue
-        ? item.description.toLowerCase().includes(this.searchValue.toLowerCase())
+        ? taskName.includes(this.searchValue.toLowerCase())
         : true;
-
-      // Filter po rasponu cijena
+  
+      // Filter by price range
       const matchesPrice =
         (this.priceFilter.min === null || item.amount >= this.priceFilter.min) &&
         (this.priceFilter.max === null || item.amount <= this.priceFilter.max);
-
+  
       return matchesSearch && matchesPrice;
     });
-
-    // Sortiranje
+  
+    // Sort by date (newest or oldest)
     if (this.sortOption === 'newest') {
       this.filteredHistory.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     } else if (this.sortOption === 'oldest') {
       this.filteredHistory.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     }
   }
+  
 
   navigateBack(): void {
     window.history.back(); // Navigate to the previous page

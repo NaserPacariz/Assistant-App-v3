@@ -58,6 +58,8 @@ export class TaskDetailsComponent implements OnInit {
   showSuccessPopup: boolean = false; // Controls popup visibility
   isMobileView: boolean = false;
   taskName: string = ''; // Task name for both adding and deducting
+  taskNameValid: boolean = true; // Validation flag
+  taskTitles: string[] = [];
 
   constructor(private route: ActivatedRoute, private taskService: TaskService, private budgetService: BudgetService, private router: Router, private location: Location) {}
 
@@ -84,34 +86,37 @@ export class TaskDetailsComponent implements OnInit {
     this.location.back(); // Navigates to the previous page
   }
   
+  validateTaskName(): void {
+    const normalizedTaskName = this.taskName.trim().toLowerCase();
+    this.taskNameValid = this.taskTitles.includes(normalizedTaskName);
+    console.log('Task Name Valid:', this.taskNameValid); // Debugging
+  }
   
 
   fetchTasksForUser(userId: string): void {
     this.taskService.getTasksByUserId(userId).subscribe({
       next: (response) => {
-        // Ensure tasks is an array
         if (Array.isArray(response)) {
-          this.tasks = response; // Directly assign if it's an array
+          this.tasks = response; // Keep the full task objects
+          this.taskTitles = response.map((task: any) => task.title); // Map task titles for validation
         } else if (typeof response === 'object') {
-          // Convert object to array if necessary
-          this.tasks = Object.entries(response || {}).map(([taskId, taskData]: [string, any]) => ({
-            id: taskId,
-            ...taskData, // Spread task details
-          }));
-          this.sortTasksByUrgency(); // Sort tasks after fetching
+          this.tasks = Object.values(response || {}); // Keep the full task objects
+          this.taskTitles = this.tasks.map((task: any) => task.title); // Map task titles for validation
         } else {
           console.error('Unexpected tasks format:', response);
-          this.tasks = []; // Fallback to empty array
+          this.tasks = [];
+          this.taskTitles = [];
         }
       },
       error: (error) => {
         console.error('Error fetching tasks for user:', error);
         this.tasks = [];
+        this.taskTitles = [];
       },
     });
   }
   
-
+  
   openCreateTaskModal(): void {
     this.isAddTaskModalVisible = true;
     this.taskTitle = '';
@@ -261,30 +266,33 @@ export class TaskDetailsComponent implements OnInit {
     });
   }
   addBudget(): void {
-    if (!this.userId || !this.month || this.amount <= 0 || !this.taskName.trim()) {
-      alert('Invalid input: Make sure all fields are correctly filled.');
-      return;
-    }
-  
-    const description = `Added ${this.amount} budget for task "${this.taskName}"`;
-  
-    console.log('Sending addBudget:', { userId: this.userId, month: this.month, amount: this.amount, description });
-  
-    this.loading = true;
-  
-    this.budgetService.addBudget(this.userId, this.amount, this.month, description).subscribe({
-      next: () => {
-        alert('Budget added successfully.');
-        this.loading = false;
-        this.fetchBudget(this.userId, this.month);
-      },
-      error: (error) => {
-        console.error('Error adding budget:', error);
-        alert('Failed to add budget. Please try again.');
-        this.loading = false;
-      },
-    });
+  this.validateTaskName(); // Validate the task name before proceeding
+
+  if (!this.userId || this.amount <= 0 || !this.month.trim() || !this.taskNameValid) {
+    alert('There is no task with that name');
+    return;
   }
+
+  const description = `Added ${this.amount} budget for task "${this.taskName}"`;
+
+  console.log('Sending addBudget:', { userId: this.userId, month: this.month, amount: this.amount, description });
+
+  this.loading = true;
+
+  this.budgetService.addBudget(this.userId, this.amount, this.month, description).subscribe({
+    next: () => {
+      alert('Budget added successfully.');
+      this.loading = false;
+      this.fetchBudget(this.userId, this.month);
+    },
+    error: (error) => {
+      console.error('Error adding budget:', error);
+      alert('Failed to add budget. Please try again.');
+      this.loading = false;
+    },
+  });
+}
+
   
   openAddTaskModal(): void {
     this.isAddTaskModalVisible = true;
@@ -342,7 +350,9 @@ export class TaskDetailsComponent implements OnInit {
     this.isDescriptionModalVisible = false; // Close the description modal
   }
   deductBudget(): void {
-    if (!this.userId || this.deduction <= 0 || !this.deductionMonth || !this.taskName.trim()) {
+    this.validateTaskName(); // Validate the task name before proceeding
+  
+    if (!this.userId || this.deduction <= 0 || !this.deductionMonth || !this.taskNameValid) {
       alert('Invalid input: Make sure all fields are correctly filled.');
       return;
     }

@@ -165,67 +165,73 @@
           id="taskName"
           [(ngModel)]="taskName"
           name="taskName"
+          (input)="validateTaskName()"
           placeholder="Enter Task Name"
           required
           #taskNameInput="ngModel"
         />
-        <p class="error-message" *ngIf="taskNameInput.invalid && taskNameInput.touched">
-          Task name is required.
+        <p class="error-message" *ngIf="!taskNameValid">
+          Task name does not exist in the list. Please select a valid task.
         </p>
       </div>
-      <button type="submit" class="btn btn-success" [disabled]="addBudgetForm.invalid || loading">
+      <button type="submit" class="btn btn-success"   [disabled]="!taskNameValid || amount <= 0 || !month.trim() || loading">
         Add Budget
       </button>
     </form>
   
-    <!-- Deduct Budget Form -->
-    <form (ngSubmit)="deductBudget()" #deductBudgetForm="ngForm" class="budget-form">
-      <div class="form-group">
-        <label for="deduction">Deduction Amount</label>
-        <input
-          type="number"
-          id="deduction"
-          [(ngModel)]="deduction"
-          name="deduction"
-          placeholder="Enter Deduction Amount"
-          required
-          #deductionInput="ngModel"
-        />
-        <p class="error-message" *ngIf="deductionInput.invalid && deductionInput.touched">
-          Deduction amount is required and must be greater than 0.
-        </p>
-      </div>
-      <div class="form-group">
-        <label for="deductMonth">Select Month</label>
-        <input
-          type="month"
-          id="deductMonth"
-          [(ngModel)]="deductionMonth"
-          name="deductMonth"
-          [value]="currentMonth"
-          required
-        />
-      </div>
-      <div class="form-group">
-        <label for="deductTaskName">Task Name</label>
-        <input
-          type="text"
-          id="deductTaskName"
-          [(ngModel)]="taskName"
-          name="taskName"
-          placeholder="Enter Task Name"
-          required
-          #deductTaskNameInput="ngModel"
-        />
-        <p class="error-message" *ngIf="deductTaskNameInput.invalid && deductTaskNameInput.touched">
-          Task name is required.
-        </p>
-      </div>
-      <button type="submit" class="btn btn-warning" [disabled]="deductBudgetForm.invalid || loading">
-        Deduct Budget
-      </button>
-    </form>
+<!-- Deduct Budget Form -->
+<form (ngSubmit)="deductBudget()" #deductBudgetForm="ngForm" class="budget-form">
+  <div class="form-group">
+    <label for="deduction">Deduction Amount</label>
+    <input
+      type="number"
+      id="deduction"
+      [(ngModel)]="deduction"
+      name="deduction"
+      placeholder="Enter Deduction Amount"
+      required
+      #deductionInput="ngModel"
+    />
+    <p class="error-message" *ngIf="deductionInput.invalid && deductionInput.touched">
+      Deduction amount is required and must be greater than 0.
+    </p>
   </div>
+  <div class="form-group">
+    <label for="deductMonth">Select Month</label>
+    <input
+      type="month"
+      id="deductMonth"
+      [(ngModel)]="deductionMonth"
+      name="deductionMonth"
+      [value]="currentMonth"
+      required
+    />
+  </div>
+  <div class="form-group">
+    <label for="deductTaskName">Task Name</label>
+    <input
+      type="text"
+      id="deductTaskName"
+      [(ngModel)]="taskName"
+      name="taskName"
+      (input)="validateTaskName()"
+      placeholder="Enter Task Name"
+      required
+      #deductTaskNameInput="ngModel"
+    />
+    <p class="error-message" *ngIf="!taskNameValid">
+      Task name does not exist in the list. Please select a valid task.
+    </p>
+  </div>
+  <button
+    type="submit"
+    class="btn btn-warning"
+    [disabled]="!taskNameValid || deductBudgetForm.invalid || loading"
+  >
+    Deduct Budget
+  </button>
+</form>
+
   
     <div class="budget-history-section">
       <button 
