@@ -3,15 +3,15 @@
     justify-content: space-between;
     align-items: center;
     position: fixed;
-    top: 20px; /* Positioned at the top */
-    left: 20px; /* Add spacing for better alignment */
-    right: 20px; /* Add spacing for better alignment */
+    top: 20px;
+    left: 20px;
+    right: 20px;
     z-index: 1000;
   
     .arrow-btn {
-      font-size: 20px; /* Slightly smaller font for balance */
-      width: 50px; /* Circle size */
-      height: 50px; /* Circle size */
+      font-size: 20px;
+      width: 50px;
+      height: 50px;
       border: none;
       border-radius: 50%;
       background-color: transparent;
@@ -21,23 +21,22 @@
       justify-content: center;
       cursor: pointer;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   
       &:hover {
-        background-color: #0056b3; /* Darker blue on hover */
-        transform: scale(1.1); /* Slight enlargement on hover */
+        background-color: #0056b3;
+        transform: scale(1.1);
       }
   
       &:disabled {
         background-color: #ccc;
         cursor: not-allowed;
-        transform: none; /* Prevent hover effect on disabled */
+        transform: none;
       }
     }
   
-    /* For smaller screens */
     @media (max-width: 768px) {
-      top: 15px; /* Adjusted top spacing for smaller screens */
+      top: 15px;
       left: 15px;
       right: 15px;
   

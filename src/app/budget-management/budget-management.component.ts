@@ -8,7 +8,7 @@ import { BudgetService } from 'src/services/budget.service';
   templateUrl: './budget-management.component.html',
   styleUrls: ['./budget-management.component.scss'],
   standalone: true,
-  imports: [FormsModule, CommonModule], // Ensure FormsModule is included here
+  imports: [FormsModule, CommonModule],
 })
 export class BudgetManagementComponent implements OnInit {
   amount = 0;
@@ -40,7 +40,7 @@ export class BudgetManagementComponent implements OnInit {
     this.budgetService.addBudget(this.userId, this.amount, this.month, description).subscribe({
       next: () => {
         alert('Budget added successfully.');
-        this.fetchBudget(); // Refresh the budget data
+        this.fetchBudget();
       },
       error: (error) => {
         console.error('Error adding budget:', error);
@@ -64,7 +64,7 @@ export class BudgetManagementComponent implements OnInit {
     }).subscribe({
       next: () => {
         alert('Budget deducted successfully.');
-        this.fetchBudget(); // Ponovno učitaj budžet
+        this.fetchBudget();
         this.loading = false;
       },
       error: (error: any) => {
@@ -75,8 +75,6 @@ export class BudgetManagementComponent implements OnInit {
     });
   }
   
-  
-  // Fetch Budget Details
   fetchBudget(): void {
     this.loading = true;
     this.budgetService.getBudget(this.userId, this.month).subscribe({

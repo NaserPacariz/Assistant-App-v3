@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { BudgetService } from '@services/budget.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { RouterModule } from '@angular/router'; // Dodaj ovo
+import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { formatDate } from '@angular/common';
 import { HostListener} from '@angular/core';
@@ -16,7 +16,7 @@ import { HostListener} from '@angular/core';
   templateUrl: './task-details.component.html',
   styleUrls: ['./task-details.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule] // Add FormsModule to imports
+  imports: [CommonModule, FormsModule, RouterModule]
 })
 export class TaskDetailsComponent implements OnInit {
   http: any;
@@ -43,8 +43,8 @@ export class TaskDetailsComponent implements OnInit {
   urgency: string = 'low';
   amount = 0;
   month = '';
-  spendings = 0; // To update spendings
-  budget: any = null; // This will now be an object, not an array
+  spendings = 0;
+  budget: any = null;
   loading = false;
   isDescriptionModalVisible: boolean = false;
   selectedTaskDescription: string = '';
@@ -55,10 +55,10 @@ export class TaskDetailsComponent implements OnInit {
   selectedTaskId: string | null = null;
   isLoading: boolean = false;
   isSuccess: boolean = false;
-  showSuccessPopup: boolean = false; // Controls popup visibility
+  showSuccessPopup: boolean = false;
   isMobileView: boolean = false;
-  taskName: string = ''; // Task name for both adding and deducting
-  taskNameValid: boolean = true; // Validation flag
+  taskName: string = '';
+  taskNameValid: boolean = true;
   taskTitles: string[] = [];
 
   constructor(private route: ActivatedRoute, private taskService: TaskService, private budgetService: BudgetService, private router: Router, private location: Location) {}
@@ -71,25 +71,24 @@ export class TaskDetailsComponent implements OnInit {
     } else {
       console.error('User ID is null or undefined.');
     }
-  
-    // Set default month to the current month
+
     const currentDate = new Date();
-    this.currentMonth = currentDate.toISOString().slice(0, 7); // YYYY-MM format
+    this.currentMonth = currentDate.toISOString().slice(0, 7);
     this.month = this.currentMonth;
     this.deductionMonth = this.currentMonth;
     const formattedDate = formatDate(new Date(), 'longDate', 'en-US');
-    console.log(formattedDate); // Output: "January 1, 2023"
+    console.log(formattedDate);
   }
   
 
   goBack(): void {
-    this.location.back(); // Navigates to the previous page
+    this.location.back();
   }
   
   validateTaskName(): void {
     const normalizedTaskName = this.taskName.trim().toLowerCase();
     this.taskNameValid = this.taskTitles.includes(normalizedTaskName);
-    console.log('Task Name Valid:', this.taskNameValid); // Debugging
+    console.log('Task Name Valid:', this.taskNameValid);
   }
   
 
@@ -97,11 +96,11 @@ export class TaskDetailsComponent implements OnInit {
     this.taskService.getTasksByUserId(userId).subscribe({
       next: (response) => {
         if (Array.isArray(response)) {
-          this.tasks = response; // Keep the full task objects
-          this.taskTitles = response.map((task: any) => task.title); // Map task titles for validation
+          this.tasks = response;
+          this.taskTitles = response.map((task: any) => task.title);
         } else if (typeof response === 'object') {
-          this.tasks = Object.values(response || {}); // Keep the full task objects
-          this.taskTitles = this.tasks.map((task: any) => task.title); // Map task titles for validation
+          this.tasks = Object.values(response || {});
+          this.taskTitles = this.tasks.map((task: any) => task.title);
         } else {
           console.error('Unexpected tasks format:', response);
           this.tasks = [];
@@ -130,8 +129,8 @@ export class TaskDetailsComponent implements OnInit {
   }
 
   addTask(): void {
-    this.isLoading = true; // Show spinner
-    this.isSuccess = false; // Reset success state
+    this.isLoading = true;
+    this.isSuccess = false;
   
     const newTask = {
       title: this.taskTitle,
@@ -144,31 +143,28 @@ export class TaskDetailsComponent implements OnInit {
     this.taskService.createTask(this.userId, newTask).subscribe({
       next: (response) => {
         setTimeout(() => {
-          // Add the task to the list
           this.tasks.push({ ...newTask, id: response.taskId });
           this.sortTasksByUrgency();
-  
-          // Switch from spinner to green checkmark
+
           this.isLoading = false;
           this.isSuccess = true;
   
           setTimeout(() => {
-            // Hide the success checkmark and close the modal
             this.isSuccess = false;
             this.isAddTaskModalVisible = false;
-          }, 1500); // Display green checkmark for 1.5 seconds
-        }, 1000); // Simulated loading time
+          }, 1500);
+        }, 1000);
       },
       error: (error) => {
         console.error('Error creating task:', error);
-        this.isLoading = false; // Hide spinner on error
+        this.isLoading = false;
       },
     });
   }
   
 
   openEditTaskModal(task: any): void {
-    this.editingTask = { ...task }; // Clone task data to avoid direct mutation
+    this.editingTask = { ...task };
     this.isEditModalOpen = true;
   }
 
@@ -183,10 +179,8 @@ export class TaskDetailsComponent implements OnInit {
         next: () => {
           const index = this.tasks.findIndex((t) => t.id === this.editingTask.id);
           if (index > -1) {
-            // Update the task in the array
             this.tasks[index] = { ...this.editingTask };
   
-            // Re-sort the tasks to reflect the updated urgency order
             this.tasks.sort((a, b) => {
               const urgencyOrder: { [key: string]: number } = { high: 1, medium: 2, low: 3 };
               return urgencyOrder[a.urgency] - urgencyOrder[b.urgency];
@@ -204,7 +198,6 @@ export class TaskDetailsComponent implements OnInit {
   
 
   confirmAndDeleteTask(taskId: string): void {
-    // Instead of using window.confirm, set up to show our modal
     this.selectedTaskId = taskId;
     this.showDeleteConfirmation = true;
   }
@@ -217,17 +210,14 @@ export class TaskDetailsComponent implements OnInit {
   deleteTask(taskId: string): void {
     this.taskService.deleteTask(this.userId, taskId).subscribe({
       next: () => {
-        // Remove the task from the list
         this.tasks = this.tasks.filter((task) => task.id !== taskId);
         this.showDeleteConfirmation = false;
 
-        // Show the success popup
         this.showSuccessPopup = true;
 
-        // Automatically close the popup after 3 seconds
         setTimeout(() => {
           this.showSuccessPopup = false;
-        }, 3000); // 3 seconds
+        }, 3000);
       },
       error: (error) => {
         console.error('Error deleting task:', error);
@@ -235,7 +225,6 @@ export class TaskDetailsComponent implements OnInit {
     });
   }
 
-  // Close the success popup manually
   closeSuccessPopup(): void {
     this.showSuccessPopup = false;
   }
@@ -266,7 +255,7 @@ export class TaskDetailsComponent implements OnInit {
     });
   }
   addBudget(): void {
-  this.validateTaskName(); // Validate the task name before proceeding
+  this.validateTaskName();
 
   if (!this.userId || this.amount <= 0 || !this.month.trim() || !this.taskNameValid) {
     alert('There is no task with that name');
@@ -301,12 +290,10 @@ export class TaskDetailsComponent implements OnInit {
       description: '', 
       dueDate: '', 
       status: 'pending', 
-      urgency: 'low' // Default urgency
+      urgency: 'low'
     };
   }
   
-
-  // Fetch Budget
   fetchBudget(userId: string, month: string): void {
     console.log('Fetching budget:', { userId, month });
   
@@ -321,9 +308,6 @@ export class TaskDetailsComponent implements OnInit {
     });
   }
   
-
-
-  // Update Spendings
   updateSpendings() {
     this.loading = true;
     this.budgetService.updateSpending(this.userId, this.month, this.spendings).subscribe({
@@ -343,14 +327,14 @@ export class TaskDetailsComponent implements OnInit {
 
   viewDescription(task: any): void {
     this.selectedTaskDescription = task.description || 'No description available';
-    this.isDescriptionModalVisible = true; // Show the description modal
+    this.isDescriptionModalVisible = true;
   }
   
   closeDescriptionModal(): void {
-    this.isDescriptionModalVisible = false; // Close the description modal
+    this.isDescriptionModalVisible = false;
   }
   deductBudget(): void {
-    this.validateTaskName(); // Validate the task name before proceeding
+    this.validateTaskName();
   
     if (!this.userId || this.deduction <= 0 || !this.deductionMonth || !this.taskNameValid) {
       alert('Invalid input: Make sure all fields are correctly filled.');

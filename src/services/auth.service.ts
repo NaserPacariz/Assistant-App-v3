@@ -8,9 +8,9 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class AuthService {
-  private BASE_URL = 'http://localhost:4000'; // Adjust backend URL as needed
+  private BASE_URL = 'http://localhost:4000';
 
-  constructor(private http: HttpClient, private firebaseAuth: Auth, private router: Router) {} // Inject Router here
+  constructor(private http: HttpClient, private firebaseAuth: Auth, private router: Router) {}
 
   login(email: string, password: string): Observable<any> {
     const auth = getAuth();
@@ -26,9 +26,8 @@ export class AuthService {
               localStorage.setItem('role', res.role);
               localStorage.setItem('uid', userCredential.user.uid);
 
-              // Redirect to return URL or default to 'home'
               const returnUrl = localStorage.getItem('returnUrl') || '/home';
-              this.router.navigate([returnUrl]); // Use router to navigate
+              this.router.navigate([returnUrl]);
 
               observer.next(res);
               observer.complete();

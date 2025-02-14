@@ -2,7 +2,6 @@
   <h1>Welcome to the Assistant App</h1>
   <p>You have successfully logged in. Choose an option below:</p>
 
-  <!-- Tabs -->
   <div class="tab-container">
     <button
       routerLink="/home/tasks"
@@ -20,10 +19,8 @@
     </button>
   </div>
 
-  <!-- Tab Content -->
   <router-outlet></router-outlet>
 
-  <!-- Logout Button -->
   <button (click)="logout()" class="logout-button">
     Logout
   </button>

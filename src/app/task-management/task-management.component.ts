@@ -22,7 +22,7 @@ export class TaskManagementComponent implements OnInit {
   }
   newUserEmail = '';
   newUserBudget: number | null = null;
-  userToDelete: string | null = null; // Track which user is being deleted
+  userToDelete: string | null = null;
   isAddUserModalVisible = false;
   isDeleteDialogVisible = false
   isAddTaskModalVisible = false;
@@ -40,13 +40,13 @@ export class TaskManagementComponent implements OnInit {
   adminUserId: string = '';
   showTasks: boolean = false;
   loading: boolean = false;
-  users: any[] = []; // To store the list of users
+  users: any[] = [];
   assignUserInput: string = '';
-  filteredUsers: any[] = []; // List of users filtered by input
-  assignedUserId: string = ''; // Stores the selected user's ID
-  editingTask: any = null; // Holds the task being edited
-isEditModalOpen = false; // Controls the visibility of the edit modal
-urgency: string = 'low'; // Default value
+  filteredUsers: any[] = [];
+  assignedUserId: string = '';
+  editingTask: any = null;
+isEditModalOpen = false;
+urgency: string = 'low';
 
   
 
@@ -62,12 +62,11 @@ urgency: string = 'low'; // Default value
       this.role = role;
       this.userId = uid;
 
-      // Only fetch tasks for regular users; admins fetch manually
       console.log(`Role: ${this.role}, UserID: ${this.userId}`);
       if (this.role === 'user') {
         this.fetchTasks(this.userId);
       } else if (this.role === 'admin') {
-        this.fetchUsers(); // Fetch all users for admin
+        this.fetchUsers();
       }
     } else {
       console.error('Unable to determine role or user ID.');
@@ -78,12 +77,11 @@ urgency: string = 'low'; // Default value
     this.loading = true;
     this.taskService.getUsers().subscribe(
       (users) => {
-        console.log('Fetched users:', users); // Debugging log
-        // Ensure the users array includes the budget property
+        console.log('Fetched users:', users); 
         this.users = users.map((user) => ({
           ...user,
-          name: user.email.split('@')[0], // Extract name from email
-          budget: user.budget || 0, // Include budget (default to 0 if not provided)
+          name: user.email.split('@')[0], 
+          budget: user.budget || 0,
         }));
         this.loading = false;
       },
@@ -100,9 +98,6 @@ urgency: string = 'low'; // Default value
     fileInput.click();
   }
 
-  /**
-   * Uploads the selected image file to your backend and updates the user's photoURL.
-   */
   uploadPicture(user: any, event: any): void {
     const file: File = event.target.files[0];
     if (!file) {
@@ -116,14 +111,11 @@ urgency: string = 'low'; // Default value
     const formData = new FormData();
     formData.append('file', file);
   
-    // Upload the file to the backend
     this.http.post<{ photoURL: string }>('http://localhost:4000/upload-profile-picture', formData)
       .subscribe({
         next: (response) => {
           console.log('File uploaded. New URL:', response.photoURL);
           user.photoURL = response.photoURL;
-          // Now update the user record permanently.
-          // Assuming the user's UID is stored in user.uid
           this.http.put(`http://localhost:4000/update-user-photo/${user.uid}`, { photoURL: response.photoURL })
             .subscribe({
               next: (res) => {
@@ -140,9 +132,6 @@ urgency: string = 'low'; // Default value
       });
   }
   
-
-  // ... rest of your existing methods for tasks, users, etc.
-
   fetchTasks(userId?: string): void {
     const token = localStorage.getItem('token');
 
@@ -235,21 +224,19 @@ urgency: string = 'low'; // Default value
       description: this.taskDescription.trim(),
       dueDate: this.dueDate || '',
       status: 'pending',
-      urgency: this.editingTask?.urgency || 'low' // Default to 'low'
+      urgency: this.editingTask?.urgency || 'low'
     };
     
   
-    console.log('Creating task with payload:', newTask); // Debugging log
+    console.log('Creating task with payload:', newTask);
   
     this.taskService.createTask(this.assignedUserId, newTask).subscribe({
       next: (response) => {
         console.log('Task created successfully:', response);
   
-        // Add the newly created task to the tasks array
         const createdTask = { id: response.taskId, ...newTask };
         this.tasks.push(createdTask);
   
-        // Close the modal
         this.closeAddTaskModal();
       },
       error: (error) => {
@@ -263,7 +250,7 @@ urgency: string = 'low'; // Default value
   confirmAndDeleteTask(taskId: string, userId: string): void {
     const isConfirmed = window.confirm('Are you sure you want to delete this task?');
     if (isConfirmed) {
-      this.deleteTask(taskId, userId); // Call the existing deleteTask method
+      this.deleteTask(taskId, userId);
     }
   }
   
@@ -309,13 +296,12 @@ urgency: string = 'low'; // Default value
       next: () => {
         alert('Task updated successfully!');
   
-        // Update the task in the local array
         const taskIndex = this.tasks.findIndex((task) => task.id === id);
         if (taskIndex > -1) {
           this.tasks[taskIndex] = { id, userId, ...updatedTaskData };
         }
-        this.sortTasksByUrgency(); // Sort tasks after updating
-        this.closeEditTaskModal(); // Close the modal
+        this.sortTasksByUrgency();
+        this.closeEditTaskModal();
       },
       error: (error) => {
         console.error('Error updating task:', error);
@@ -330,14 +316,11 @@ urgency: string = 'low'; // Default value
   
 
   openEditTaskModal(task: any, userId: string): void {
-  this.editingTask = { ...task }; // Clone the task data
-  this.editingTask.userId = userId; // Add userId to the task for backend update
+  this.editingTask = { ...task };
+  this.editingTask.userId = userId;
   this.isEditModalOpen = true;
 }
 
-  
-  
-  // Method to close the edit modal
   closeEditTaskModal(): void {
     this.editingTask = null;
     this.isEditModalOpen = false;
@@ -365,22 +348,22 @@ urgency: string = 'low'; // Default value
   }
   
   selectUser(user: any): void {
-    this.assignUserInput = user.name; // Set the input value to the selected user's name
-    this.assignedUserId = user.uid; // Assign the user ID to `assignedUserId`
-    this.filteredUsers = []; // Clear the dropdown
+    this.assignUserInput = user.name;
+    this.assignedUserId = user.uid;
+    this.filteredUsers = [];
   }
   
 
   fetchTasksForUser(userId: string): void {
     this.router.navigate(['/tasks', userId]);
-    this.selectedUserId = userId; // Store the selected user ID
+    this.selectedUserId = userId;
     this.taskService.getTasksByUserId(userId).subscribe({
       next: (tasks) => {
         this.tasks = Object.entries(tasks || {}).map(([taskId, taskData]: [string, any]) => ({
           id: taskId,
-          ...taskData, // Spread task details (title, description, etc.)
+          ...taskData,
         }));
-        this.sortTasksByUrgency(); // Sort tasks after fetching
+        this.sortTasksByUrgency();
       },
       error: (error) => {
         console.error('Error fetching tasks for user:', error);
@@ -421,7 +404,7 @@ urgency: string = 'low'; // Default value
     this.taskService.addUser(this.newUserEmail, this.newUserBudget).subscribe({
       next: (response) => {
         alert('User added successfully!');
-        this.fetchUsers(); // Refresh the user list
+        this.fetchUsers();
         this.closeAddUserModal();
       },
       error: (error) => {
@@ -449,7 +432,7 @@ urgency: string = 'low'; // Default value
     this.taskService.deleteUser(this.userToDelete).subscribe({
       next: () => {
         alert('User deleted successfully!');
-        this.fetchUsers(); // Refresh the user list
+        this.fetchUsers();
         this.closeDeleteDialog();
       },
       error: (error) => {

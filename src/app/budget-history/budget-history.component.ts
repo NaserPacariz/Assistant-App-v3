@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BudgetService } from 'src/services/budget.service';
-import { FormsModule } from '@angular/forms'; // Dodaj ovo
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -9,15 +9,15 @@ import { CommonModule } from '@angular/common';
   templateUrl: './budget-history.component.html',
   styleUrls: ['./budget-history.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule], // Dodaj FormsModule ovde
+  imports: [CommonModule, FormsModule],
 })
 export class BudgetHistoryComponent implements OnInit {
   userId: string = '';
-  budgetHistory: any[] = []; // Svi podaci o budžetu
-  filteredHistory: any[] = []; // Filtrirani podaci
-  sortOption: string = 'newest'; // Sortiraj po datumu, default "najnoviji"
-  searchValue: string = ''; // Vrijednost za pretragu
-  priceFilter: { min: number | null; max: number | null } = { min: null, max: null }; // Raspon cijena
+  budgetHistory: any[] = [];
+  filteredHistory: any[] = [];
+  sortOption: string = 'newest';
+  searchValue: string = '';
+  priceFilter: { min: number | null; max: number | null } = { min: null, max: null };
   match: any;
 
   constructor(private route: ActivatedRoute, private budgetService: BudgetService) {}
@@ -36,12 +36,11 @@ export class BudgetHistoryComponent implements OnInit {
     this.budgetService.getBudgetHistory(userId).subscribe({
       next: (data) => {
         console.log('Raw Budget history data:', data);
-  
-        // Transform data from object to array
+
         this.budgetHistory = Object.values(data || {}).map((item: any) => {
-          console.log('Processing item:', item); // Debug each item
+          console.log('Processing item:', item);
           return {
-            date: new Date(item.timestamp), // Convert timestamp to Date object
+            date: new Date(item.timestamp),
             description: item.description,
             amount: item.amount,
           };
@@ -49,10 +48,8 @@ export class BudgetHistoryComponent implements OnInit {
   
         console.log('Transformed Budget history data:', this.budgetHistory);
   
-        // Sort by newest first
         this.budgetHistory.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   
-        // Initialize the filteredHistory with sorted data
         this.filteredHistory = [...this.budgetHistory];
       },
       error: (error) => {
@@ -63,27 +60,22 @@ export class BudgetHistoryComponent implements OnInit {
 
   applyFilters(): void {
     this.filteredHistory = this.budgetHistory.filter((item) => {
-      // Safely handle missing or undefined descriptions
       const description = item.description || '';
-      
-      // Extract the task name from the description (assuming format: 'task "taskName"')
+
       const taskNameMatch = description.match(/task "(.+?)"/);
       const taskName = taskNameMatch ? taskNameMatch[1].toLowerCase() : '';
-  
-      // Check if the search value matches the task name
+
       const matchesSearch = this.searchValue
         ? taskName.includes(this.searchValue.toLowerCase())
         : true;
-  
-      // Filter by price range
+
       const matchesPrice =
         (this.priceFilter.min === null || item.amount >= this.priceFilter.min) &&
         (this.priceFilter.max === null || item.amount <= this.priceFilter.max);
   
       return matchesSearch && matchesPrice;
     });
-  
-    // Sort by date (newest or oldest)
+
     if (this.sortOption === 'newest') {
       this.filteredHistory.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     } else if (this.sortOption === 'oldest') {
@@ -93,7 +85,7 @@ export class BudgetHistoryComponent implements OnInit {
   
 
   navigateBack(): void {
-    window.history.back(); // Navigate to the previous page
+    window.history.back();
   }
   
 }

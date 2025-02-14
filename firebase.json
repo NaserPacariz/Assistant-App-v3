@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "assistant-app-v3",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

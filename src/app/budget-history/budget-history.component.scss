@@ -56,14 +56,14 @@
 
     input,
     select {
-      width: 100%; /* Make all input and select fields full width */
+      width: 100%;
       max-width: 100%;
       padding: 10px;
       border: 1px solid #ddd;
       border-radius: 8px;
       font-size: 14px;
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
-      box-sizing: border-box; /* Ensure padding is included in width */
+      box-sizing: border-box;
 
       &:focus {
         border-color: #007bff;

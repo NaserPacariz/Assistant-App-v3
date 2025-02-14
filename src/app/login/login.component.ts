@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router, ActivatedRoute } from '@angular/router'; // Import Router for navigation
+import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '@services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, CommonModule, RouterModule], // Include RouterModule for navigation
+  imports: [FormsModule, CommonModule, RouterModule],
   template: `
     <div class="login-container">
       <h1>Login</h1>
@@ -44,22 +44,21 @@ export class LoginComponent {
     this.authService.login(this.email, this.password).subscribe(
       (res) => {
         console.log('Login successful:', res);
-        localStorage.setItem('token', res.token); // Save token in local storage
-        this.router.navigate(['/home']); // Redirect to the landing page after login
+        localStorage.setItem('token', res.token);
+        this.router.navigate(['/home']);
       },
       (err) => {
         console.error('Login error:', err);
-        this.error = 'Login failed: Invalid email or password'; // User-friendly error message
+        this.error = 'Login failed: Invalid email or password';
       }
     );
   }
   login(): void {
-    const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home'; // Get the return URL
-    localStorage.setItem('returnUrl', returnUrl); // Save it to localStorage
+    const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
+    localStorage.setItem('returnUrl', returnUrl);
 
     this.authService.login(this.email, this.password).subscribe({
       next: () => {
-        // Clear the return URL after successful login
         localStorage.removeItem('returnUrl');
       },
       error: (err) => {

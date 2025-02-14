@@ -21,6 +21,6 @@ bootstrapApplication(AppComponent, {
     provideDatabase(() => getDatabase()),
     provideHttpClient(),
     provideRouter(routes),
-    { provide: LOCALE_ID, useValue: 'en-US' }, // Provide LOCALE_ID for English (US)
+    { provide: LOCALE_ID, useValue: 'en-US' },
   ],
 }).catch((err) => console.error(err));

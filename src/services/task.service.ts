@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators'; // Ovo dodajte
+import { catchError, tap } from 'rxjs/operators';
 
 
 @Injectable({
-  providedIn: 'root', // Service is provided globally
+  providedIn: 'root',
 })
 export class TaskService {
   HttpClient: any;
@@ -14,13 +14,13 @@ export class TaskService {
     return this.http.get(`${this.BASE_URL}/tasks`);
   }
   
-  private BASE_URL = 'http://localhost:4000'; // Update as needed
+  private BASE_URL = 'http://localhost:4000';
 
   constructor(private http: HttpClient) {}
 
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
-    console.log('Authorization Token:', token); // Log the token
+    console.log('Authorization Token:', token);
     if (!token) {
       console.error('No token found in local storage!');
       throw new Error('Unauthorized: Token is required');
@@ -33,9 +33,9 @@ export class TaskService {
   
 
   deleteTask(userId: string, taskId: string) {
-    const token = localStorage.getItem('token'); // Get token from local storage
+    const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`, // Add Authorization header
+      Authorization: `Bearer ${token}`,
     });
 
     return this.http.delete(`${this.BASE_URL}/tasks/${userId}/${taskId}`, {
@@ -51,12 +51,12 @@ export class TaskService {
     }
   
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`, // Pass the token in the header
+      Authorization: `Bearer ${token}`,
     });
   
     const url = `${this.BASE_URL}/${endpoint}`;
     console.log(`Making GET request to URL: ${url}`);
-    return this.http.get(url, { headers }); // Ensure headers are passed with the request
+    return this.http.get(url, { headers });
   }
   
   getUsers(): Observable<any[]> {
@@ -72,7 +72,7 @@ export class TaskService {
   
   
   createTask(userId: string, newTask: { title: string; description: string; dueDate: string; status: string }): Observable<any> {
-    const token = localStorage.getItem('token'); // Retrieve the token from local storage
+    const token = localStorage.getItem('token');
     const headers = { Authorization: `Bearer ${token}` };
   
     return this.http.post(`${this.BASE_URL}/tasks/${userId}`, newTask, { headers });
@@ -97,9 +97,9 @@ export class TaskService {
   
 
   updateTask(userId: string, taskId: string, updatedTask: any) {
-    const token = localStorage.getItem('token'); // Get token from local storage
+    const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`, // Add Authorization header
+      Authorization: `Bearer ${token}`,
     });
   
     return this.http.put(
@@ -110,7 +110,7 @@ export class TaskService {
   }
 
   getTasksByUserId(userId: string): Observable<any> {
-    const token = localStorage.getItem('token'); // Retrieve the token from local storage
+    const token = localStorage.getItem('token');
     const headers = { Authorization: `Bearer ${token}` };
   
     return this.http.get(`${this.BASE_URL}/tasks/${userId}`, { headers });
@@ -118,30 +118,30 @@ export class TaskService {
   
   
   addUser(email: string, budget: number): Observable<any> {
-    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+    const token = localStorage.getItem('token');
     if (!token) {
       console.error('No token found in local storage!');
       return throwError('Unauthorized: No token available');
     }
   
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`, // Add token to Authorization header
+      Authorization: `Bearer ${token}`,
     });
   
-    const body = { email, budget }; // Request payload
+    const body = { email, budget };
     return this.http.post(`${this.BASE_URL}/users`, body, { headers });
   }
   
 
 deleteUser(userId: string): Observable<any> {
-  const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+  const token = localStorage.getItem('token');
   if (!token) {
     console.error('No token found in local storage!');
     return throwError('Unauthorized: No token available');
   }
 
   const headers = new HttpHeaders({
-    Authorization: `Bearer ${token}` // Add token to Authorization header
+    Authorization: `Bearer ${token}`
   });
 
   return this.http.delete(`${this.BASE_URL}/users/${userId}`, { headers });
@@ -178,7 +178,6 @@ fetchBudget(userId: string, month: string): Observable<any> {
       })
     );
 }
-
 }
 
 

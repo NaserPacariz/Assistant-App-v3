@@ -1,7 +1,6 @@
 <div class="budget-management-container">
   <h2>Budget Management</h2>
 
-  <!-- Add Budget Form -->
   <form (ngSubmit)="addBudget()" #addBudgetForm="ngForm" class="budget-form">
     <div class="form-group">
       <label for="amount">Budget Amount</label>
@@ -34,7 +33,6 @@
     </button>
   </form>
 
-  <!-- Deduct Budget Form -->
   <form (ngSubmit)="deductBudget()" #deductBudgetForm="ngForm" class="budget-form">
     <div class="form-group">
       <label for="deduction">Deduction Amount</label>
@@ -67,7 +65,6 @@
     </button>
   </form>
 
-  <!-- Budget Details -->
   <div *ngIf="budget && !loading" class="budget-details">
     <h3>Budget Details</h3>
     <p>Amount: {{ budget.amount | currency }}</p>

@@ -17,7 +17,7 @@ import { CommonModule } from '@angular/common';
       </button>
     </div> -->
   `,
-  styleUrls: ['./navigation.component.scss'], // Create this file for styles
+  styleUrls: ['./navigation.component.scss'],
 })
 export class NavigationComponent implements OnInit {
   currentRouteIndex: number | null = null;
@@ -28,12 +28,12 @@ export class NavigationComponent implements OnInit {
 
   ngOnInit(): void {
     this.updateNavigation();
-    this.router.events.subscribe(() => this.updateNavigation()); // Listen for route changes
+    this.router.events.subscribe(() => this.updateNavigation());
   }
 
   updateNavigation(): void {
-    const currentRoute = this.router.url.replace('/', ''); // Current route path
-    const routePaths = routes.map((route) => route.path); // Get all route paths
+    const currentRoute = this.router.url.replace('/', '');
+    const routePaths = routes.map((route) => route.path);
 
     this.currentRouteIndex = routePaths.indexOf(currentRoute);
     this.prevRoute =

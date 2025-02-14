@@ -5,7 +5,6 @@
 <div class="filter-section">
   <h2>Budget History</h2>
 
-  <!-- Search -->
   <div class="form-group">
     <label for="search">Search by Description:</label>
     <input
@@ -17,7 +16,6 @@
     />
   </div>
 
-  <!-- Price Range Filter -->
   <div class="form-group">
     <label>Price Range:</label>
     <div class="price-range">
@@ -37,7 +35,6 @@
     </div>
   </div>
 
-  <!-- Sort by Date -->
   <div class="form-group">
     <label for="sort">Sort by Date:</label>
     <select id="sort" [(ngModel)]="sortOption" (change)="applyFilters()">
@@ -47,7 +44,6 @@
   </div>
 </div>
 
-<!-- Table for displaying data -->
 <div class="history-section">
   <table>
     <thead>

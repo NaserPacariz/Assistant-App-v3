@@ -11,13 +11,13 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 export class BudgetService {
   
   updateBudget(userId: string, month: string, updatedData: { spendings: number }) {
-    return this.http.patch<void>( // Dodaj <void> ili odgovarajući tip ako trebaš odgovor
+    return this.http.patch<void>(
       `${this.BASE_URL}/${userId}/${month}.json`,
       updatedData
     );
   }
   
-  private BASE_URL = 'http://localhost:4000/budgets'; // Your backend URL
+  private BASE_URL = 'http://localhost:4000/budgets';
 
   constructor(private http: HttpClient, private auth: Auth) {}
 
@@ -43,13 +43,13 @@ addBudget(userId: string, amount: number, month: string, description: string): O
     timestamp: new Date().toISOString(),
     type: 'add',
     amount,
-    description, // Use the passed description
+    description,
   };
 
   return this.http
-    .patch<void>(url, { amount }, { headers }) // Update the budget
+    .patch<void>(url, { amount }, { headers })
     .pipe(
-      switchMap(() => this.addTransactionToHistory(userId, transaction)), // Log transaction to history
+      switchMap(() => this.addTransactionToHistory(userId, transaction)),
       tap(() => console.log('Budget added successfully')),
       catchError((error) => {
         console.error('Error adding budget:', error);
@@ -69,13 +69,13 @@ deductBudget(userId: string, month: string, deduction: number, description: stri
     timestamp: new Date().toISOString(),
     type: 'deduct',
     amount: deduction,
-    description, // Use the passed description
+    description,
   };
 
   return this.http
-    .patch<void>(url, { deduction }, { headers }) // Update the budget
+    .patch<void>(url, { deduction }, { headers })
     .pipe(
-      switchMap(() => this.addTransactionToHistory(userId, transaction)), // Log transaction to history
+      switchMap(() => this.addTransactionToHistory(userId, transaction)),
       tap(() => console.log('Budget deducted successfully')),
       catchError((error) => {
         console.error('Error deducting budget:', error);
@@ -99,7 +99,6 @@ deductBudget(userId: string, month: string, deduction: number, description: stri
     );
   }
   
-
   fetchBudget(userId: string, month: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem('token') || ''}`,
@@ -116,8 +115,6 @@ deductBudget(userId: string, month: string, deduction: number, description: stri
       );
   }
   
-
-  // Update spending
   updateSpending(userId: string, month: string, spendings: number): Observable<void> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem('token') || ''}`,
@@ -134,10 +131,8 @@ deductBudget(userId: string, month: string, deduction: number, description: stri
       );
   }
   
-
-  // Fetch budget
   getBudget(taskId: string, currentMonth: string): Observable<any> {
-    const token = localStorage.getItem('token'); // Retrieve the token
+    const token = localStorage.getItem('token');
     if (!token) {
       throw new Error('Unauthorized: Token not found');
     }
@@ -146,7 +141,6 @@ deductBudget(userId: string, month: string, deduction: number, description: stri
       Authorization: `Bearer ${token}`,
     });
   
-    // Prilagođena URL putanja bez `/api`
     return this.http.get(`http://localhost:4000/budget/${taskId}/${currentMonth}`, { headers });
   }
   
@@ -158,7 +152,7 @@ deductBudget(userId: string, month: string, deduction: number, description: stri
     });
   
     return this.http.get<any[]>(`${this.BASE_URL}/${userId}/history`, { headers }).pipe(
-      tap((data) => console.log('Fetched Budget History:', data)), // Debug API response
+      tap((data) => console.log('Fetched Budget History:', data)),
       catchError((error) => {
         console.error('Error fetching budget history:', error);
         return throwError(() => new Error('Failed to fetch budget history.'));
