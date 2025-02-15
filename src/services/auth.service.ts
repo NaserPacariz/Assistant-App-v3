@@ -18,10 +18,15 @@ export class AuthService {
       signInWithEmailAndPassword(auth, email, password)
         .then(async (userCredential) => {
           const idToken = await userCredential.user.getIdToken();
+          
+          console.log('Generated Firebase Token:', idToken); // Debugging step
+          
           const payload = { firebaseToken: idToken };
 
           this.http.post(`${this.BASE_URL}/login`, payload).subscribe(
             (res: any) => {
+              console.log('Login response:', res); // Debugging step
+
               localStorage.setItem('token', res.token);
               localStorage.setItem('role', res.role);
               localStorage.setItem('uid', userCredential.user.uid);
@@ -32,10 +37,16 @@ export class AuthService {
               observer.next(res);
               observer.complete();
             },
-            (err) => observer.error(err)
+            (err) => {
+              console.error('Login API Error:', err); // Debugging step
+              observer.error(err);
+            }
           );
         })
-        .catch((error) => observer.error(error));
+        .catch((error) => {
+          console.error('Firebase Auth Error:', error); // Debugging step
+          observer.error(error);
+        });
     });
   }
 }
