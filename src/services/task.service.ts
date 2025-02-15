@@ -14,7 +14,7 @@ export class TaskService {
     return this.http.get(`${this.BASE_URL}/tasks`);
   }
   
-  private BASE_URL = 'http://localhost:4000';
+  private BASE_URL = 'https://backend-eight-delta-39.vercel.app';
 
   constructor(private http: HttpClient) {}
 

@@ -17,7 +17,7 @@ export class BudgetService {
     );
   }
   
-  private BASE_URL = 'http://localhost:4000/budgets';
+  private BASE_URL = 'https://backend-eight-delta-39.vercel.app/budgets';
 
   constructor(private http: HttpClient, private auth: Auth) {}
 
