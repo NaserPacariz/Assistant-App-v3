@@ -141,7 +141,7 @@ deductBudget(userId: string, month: string, deduction: number, description: stri
       Authorization: `Bearer ${token}`,
     });
   
-    return this.http.get(`http://localhost:4000/budget/${taskId}/${currentMonth}`, { headers });
+    return this.http.get(`https://backend-eight-delta-39.vercel.app/budget/${taskId}/${currentMonth}`, { headers });
   }
   
   
