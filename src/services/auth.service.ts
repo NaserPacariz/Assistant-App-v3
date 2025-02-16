@@ -19,34 +19,34 @@ export class AuthService {
         .then(async (userCredential) => {
           const idToken = await userCredential.user.getIdToken();
           
-          console.log('Generated Firebase Token:', idToken); // Debugging step
-          
+          console.log("Generated Token:", idToken); // ✅ Debugging
+  
           const payload = { firebaseToken: idToken };
-
+  
           this.http.post(`${this.BASE_URL}/login`, payload).subscribe(
             (res: any) => {
-              console.log('Login response:', res); // Debugging step
-
+              console.log("Login Response:", res); // ✅ Debugging
+  
               localStorage.setItem('token', res.token);
               localStorage.setItem('role', res.role);
               localStorage.setItem('uid', userCredential.user.uid);
-
+  
               const returnUrl = localStorage.getItem('returnUrl') || '/home';
               this.router.navigate([returnUrl]);
-
+  
               observer.next(res);
               observer.complete();
             },
             (err) => {
-              console.error('Login API Error:', err); // Debugging step
+              console.error("Login Error:", err); // ✅ Debugging
               observer.error(err);
             }
           );
         })
         .catch((error) => {
-          console.error('Firebase Auth Error:', error); // Debugging step
+          console.error("Firebase Login Error:", error); // ✅ Debugging
           observer.error(error);
         });
     });
   }
-}
+}  
