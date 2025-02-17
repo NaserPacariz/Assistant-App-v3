@@ -1,15 +1,7 @@
 {
-    "builds": [
-      {
-        "src": "dist/assistant-app/**/*",
-        "use": "@vercel/static"
-      }
-    ],
-    "routes": [
-      {
-        "src": "/(.*)",
-        "dest": "/index.html"
-      }
-    ]
-  }
-  
+  "version": 2,
+  "public": "dist/assistant-app-v3",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

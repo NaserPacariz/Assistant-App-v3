@@ -11,8 +11,10 @@ import { NgModule, LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localeEn from '@angular/common/locales/en';
 
-registerLocaleData(localeEn, 'en');
+// ✅ Always use the deployed backend URL
+(window as any).API_URL = 'https://backend-eight-delta-39.vercel.app';
 
+registerLocaleData(localeEn, 'en');
 
 bootstrapApplication(AppComponent, {
   providers: [
