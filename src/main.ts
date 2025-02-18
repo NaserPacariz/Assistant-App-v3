@@ -12,7 +12,7 @@ import { registerLocaleData } from '@angular/common';
 import localeEn from '@angular/common/locales/en';
 
 // ✅ Always use the deployed backend URL
-(window as any).API_URL = 'https://backend-eight-delta-39.vercel.app';
+(window as any).BASE_URL = 'https://backend-rouge-ten-87.vercel.app';
 
 registerLocaleData(localeEn, 'en');
 

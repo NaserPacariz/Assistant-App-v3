@@ -111,12 +111,12 @@ urgency: string = 'low';
     const formData = new FormData();
     formData.append('file', file);
   
-    this.http.post<{ photoURL: string }>('https://backend-eight-delta-39.vercel.app/upload-profile-picture', formData)
+    this.http.post<{ photoURL: string }>('https://backend-rouge-ten-87.vercel.app/upload-profile-picture', formData)
       .subscribe({
         next: (response) => {
           console.log('File uploaded. New URL:', response.photoURL);
           user.photoURL = response.photoURL;
-          this.http.put(`https://backend-eight-delta-39.vercel.app/update-user-photo/${user.uid}`, { photoURL: response.photoURL })
+          this.http.put(`https://backend-rouge-ten-87.vercel.app/update-user-photo/${user.uid}`, { photoURL: response.photoURL })
             .subscribe({
               next: (res) => {
                 console.log('User record updated with new photoURL');

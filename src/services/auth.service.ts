@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class AuthService {
-  private BASE_URL = "https://backend-eight-delta-39.vercel.app";
+  private BASE_URL = "https://backend-rouge-ten-87.vercel.app";
 
   constructor(private http: HttpClient, private firebaseAuth: Auth, private router: Router) {}
 
