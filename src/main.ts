@@ -11,10 +11,8 @@ import { NgModule, LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localeEn from '@angular/common/locales/en';
 
-// ✅ Always use the deployed backend URL
-(window as any).BASE_URL = 'https://backend-rouge-ten-87.vercel.app';
-
 registerLocaleData(localeEn, 'en');
+
 
 bootstrapApplication(AppComponent, {
   providers: [

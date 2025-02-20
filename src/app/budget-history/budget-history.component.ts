@@ -83,9 +83,7 @@ export class BudgetHistoryComponent implements OnInit {
     }
   }
   
-
   navigateBack(): void {
     window.history.back();
-  }
-  
+  } 
 }

@@ -17,7 +17,7 @@ export class BudgetService {
     );
   }
   
-  private BASE_URL = 'backend-rouge-ten-87.vercel.app/budgets';
+  private BASE_URL = 'http://localhost:4000/budgets';
 
   constructor(private http: HttpClient, private auth: Auth) {}
 
@@ -141,7 +141,7 @@ deductBudget(userId: string, month: string, deduction: number, description: stri
       Authorization: `Bearer ${token}`,
     });
   
-    return this.http.get(`https://backend-rouge-ten-87.vercel.app/budget/${taskId}/${currentMonth}`, { headers });
+    return this.http.get(`http://localhost:4000/budget/${taskId}/${currentMonth}`, { headers });
   }
   
   
@@ -158,6 +158,5 @@ deductBudget(userId: string, month: string, deduction: number, description: stri
         return throwError(() => new Error('Failed to fetch budget history.'));
       })
     );
-  }
-  
+  } 
 }

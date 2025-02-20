@@ -14,7 +14,7 @@ export class TaskService {
     return this.http.get(`${this.BASE_URL}/tasks`);
   }
   
-  private BASE_URL = 'https://backend-rouge-ten-87.vercel.app';
+  private BASE_URL = 'http://localhost:4000';
 
   constructor(private http: HttpClient) {}
 
@@ -67,7 +67,7 @@ export class TaskService {
     }
   
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-    return this.http.get<any[]>('https://backend-rouge-ten-87.vercel.app/users', { headers });
+    return this.http.get<any[]>('http://localhost:4000/users', { headers });
   }
   
   
@@ -179,7 +179,3 @@ fetchBudget(userId: string, month: string): Observable<any> {
     );
 }
 }
-
-
-
-

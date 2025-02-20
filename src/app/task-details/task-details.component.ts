@@ -365,4 +365,4 @@ export class TaskDetailsComponent implements OnInit {
       },
     });
   }
-}  
+}

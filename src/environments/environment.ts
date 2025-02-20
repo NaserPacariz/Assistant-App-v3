@@ -1,7 +1,5 @@
 export const environment = {
-    production: true,
-    backendUrl: "https://backend-rouge-ten-87.vercel.app",
-    frontendUrl: "https://assistant-app-v3.vercel.app",
+    production: false,
     firebaseConfig: {
         apiKey: "AIzaSyD8cwiXdUnZtcHVPfXdQB_zzYbAHTRcfEA",
         authDomain: "assistant-app-96c72.firebaseapp.com",

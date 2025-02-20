@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class AuthService {
-  private BASE_URL = "https://backend-rouge-ten-87.vercel.app";
+  private BASE_URL = 'http://localhost:4000';
 
   constructor(private http: HttpClient, private firebaseAuth: Auth, private router: Router) {}
 
@@ -18,35 +18,24 @@ export class AuthService {
       signInWithEmailAndPassword(auth, email, password)
         .then(async (userCredential) => {
           const idToken = await userCredential.user.getIdToken();
-          
-          console.log("Generated Token:", idToken); // ✅ Debugging
-  
           const payload = { firebaseToken: idToken };
-  
+
           this.http.post(`${this.BASE_URL}/login`, payload).subscribe(
             (res: any) => {
-              console.log("Login Response:", res); // ✅ Debugging
-  
               localStorage.setItem('token', res.token);
               localStorage.setItem('role', res.role);
               localStorage.setItem('uid', userCredential.user.uid);
-  
+
               const returnUrl = localStorage.getItem('returnUrl') || '/home';
               this.router.navigate([returnUrl]);
-  
+
               observer.next(res);
               observer.complete();
             },
-            (err) => {
-              console.error("Login Error:", err); // ✅ Debugging
-              observer.error(err);
-            }
+            (err) => observer.error(err)
           );
         })
-        .catch((error) => {
-          console.error("Firebase Login Error:", error); // ✅ Debugging
-          observer.error(error);
-        });
+        .catch((error) => observer.error(error));
     });
   }
-}  
+}
