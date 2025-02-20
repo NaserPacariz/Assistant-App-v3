@@ -13,7 +13,6 @@ import localeEn from '@angular/common/locales/en';
 
 registerLocaleData(localeEn, 'en');
 
-
 bootstrapApplication(AppComponent, {
   providers: [
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
