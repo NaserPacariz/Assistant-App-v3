@@ -67,7 +67,7 @@ export class TaskService {
     }
   
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-    return this.http.get<any[]>('http://localhost:4000/users', { headers });
+    return this.http.get<any[]>('https://backend-production-cdf8.up.railway.app/users', { headers });
   }
   
   
