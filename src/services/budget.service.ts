@@ -17,7 +17,7 @@ export class BudgetService {
     );
   }
   
-  private BASE_URL = 'https://assistant-app-v3-rf4fimx2t-naser-pacarizs-projects.vercel.app/budgets';
+  private BASE_URL = 'https://assistant-app-v3-pfzcru5pe-naser-pacarizs-projects.vercel.app/budgets';
 
   constructor(private http: HttpClient, private auth: Auth) {}
 
