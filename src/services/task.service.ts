@@ -67,7 +67,7 @@ export class TaskService {
     }
   
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-    return this.http.get<any[]>('https://backend-production-cdf8.up.railway.app/users', { headers });
+    return this.http.get<any[]>('https://assistant-app-v3-rf4fimx2t-naser-pacarizs-projects.vercel.app/users', { headers });
   }
   
   
