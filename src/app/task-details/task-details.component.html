@@ -25,8 +25,8 @@
         <tbody>
           <tr *ngFor="let task of tasks">
             <td>{{ task.title || 'Untitled' }}</td>
-            <td>{{ task.startDate || 'No Start Date' }}</td>
-            <td>{{ task.endDate || 'No End Date' }}</td>
+            <td>{{ task.startDate ? (task.startDate | date:'dd/MM/yyyy') : 'No Start Date' }}</td>
+            <td>{{ task.dueDate   ? (task.dueDate   | date:'dd/MM/yyyy') : 'No End Date'   }}</td>
             <td>
               <span class="stage-badge">{{ task.stage || 'No Stage' }}</span>
             </td>
