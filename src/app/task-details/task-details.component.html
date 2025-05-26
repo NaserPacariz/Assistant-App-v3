@@ -323,6 +323,17 @@
       </div>
       <form (ngSubmit)="updateTask()" class="edit-task-form">
         <div class="form-group">
+          <label for="startDate">Start Date</label>
+          <input
+            id="startDate"
+            type="date"
+            [(ngModel)]="editingTask.startDate"
+            name="startDate"
+            class="form-input"
+            required
+          />
+        </div>        
+        <div class="form-group">
           <label for="dueDate">Due Date</label>
           <input
             id="dueDate"

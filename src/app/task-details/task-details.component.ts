@@ -101,7 +101,8 @@ fetchTasksForUser(userId: string): void {
         this.tasks = Object.entries(response).map(
           ([taskId, taskData]: [string, any]) => ({
             id: taskId,
-            ...taskData
+            ...taskData,
+            startDate: taskData.startDate || taskData.dueDate
           })
         );
       } else {
@@ -110,6 +111,7 @@ fetchTasksForUser(userId: string): void {
 
       // Keep your title list up to date
       this.taskTitles = this.tasks.map((t) => (t.title || '').toLowerCase());
+      this.sortTasksByUrgency();
     },
     error: (err) => {
       console.error('Error fetching tasks:', err);
@@ -141,6 +143,7 @@ fetchTasksForUser(userId: string): void {
       title: this.taskTitle,
       description: this.taskDescription,
       dueDate: this.dueDate,
+      startDate:   this.dueDate,
       urgency: this.urgency,
       status: 'pending',
     };
