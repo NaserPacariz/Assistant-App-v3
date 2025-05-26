@@ -60,6 +60,7 @@ export class TaskDetailsComponent implements OnInit {
   taskName: string = '';
   taskNameValid: boolean = true;
   taskTitles: string[] = [];
+  minDate!: string;
 
   constructor(private route: ActivatedRoute, private taskService: TaskService, private budgetService: BudgetService, private router: Router, private location: Location) {}
 
@@ -76,6 +77,7 @@ export class TaskDetailsComponent implements OnInit {
     this.currentMonth = currentDate.toISOString().slice(0, 7);
     this.month = this.currentMonth;
     this.deductionMonth = this.currentMonth;
+    this.minDate = new Date().toISOString().slice(0, 10);
     const formattedDate = formatDate(new Date(), 'longDate', 'en-US');
     console.log(formattedDate);
   }
