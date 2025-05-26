@@ -92,28 +92,33 @@ export class TaskDetailsComponent implements OnInit {
   }
   
 
-  fetchTasksForUser(userId: string): void {
-    this.taskService.getTasksByUserId(userId).subscribe({
-      next: (response) => {
-        if (Array.isArray(response)) {
-          this.tasks = response;
-          this.taskTitles = response.map((task: any) => task.title);
-        } else if (typeof response === 'object') {
-          this.tasks = Object.values(response || {});
-          this.taskTitles = this.tasks.map((task: any) => task.title);
-        } else {
-          console.error('Unexpected tasks format:', response);
-          this.tasks = [];
-          this.taskTitles = [];
-        }
-      },
-      error: (error) => {
-        console.error('Error fetching tasks for user:', error);
+// task-details.component.ts
+fetchTasksForUser(userId: string): void {
+  this.taskService.getTasksByUserId(userId).subscribe({
+    next: (response) => {
+      if (response && typeof response === 'object') {
+        // Build an array of { id, ...taskData } so you keep every field
+        this.tasks = Object.entries(response).map(
+          ([taskId, taskData]: [string, any]) => ({
+            id: taskId,
+            ...taskData
+          })
+        );
+      } else {
         this.tasks = [];
-        this.taskTitles = [];
-      },
-    });
-  }
+      }
+
+      // Keep your title list up to date
+      this.taskTitles = this.tasks.map((t) => (t.title || '').toLowerCase());
+    },
+    error: (err) => {
+      console.error('Error fetching tasks:', err);
+      this.tasks = [];
+      this.taskTitles = [];
+    },
+  });
+}
+
   
   
   openCreateTaskModal(): void {
